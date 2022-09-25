@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Octoprint Monitor", "Octoprint Monitor\Octoprint Monitor.csproj", "{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4 Scripts", "T4 Scripts", "{006F3FDF-3353-4904-97DE-B4BE8F8B7339}"
+	ProjectSection(SolutionItems) = preProject
+		..\T4Scripts\GenerateAngularApi.t4 = ..\T4Scripts\GenerateAngularApi.t4
+		..\T4Scripts\GetApiStructure.t4 = ..\T4Scripts\GetApiStructure.t4
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedWebServer.Server", "..\IntegratedWebServer\Server\IntegratedWebServer.Server\IntegratedWebServer.Server.csproj", "{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedWebServer.Core", "..\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj", "{3D54B608-FAF1-455A-9090-253F38809BEB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itamure.Core", "..\Itamure\Itamure.Core\Itamure.Core.csproj", "{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoprintApi", "OctoprintApi\OctoprintApi.csproj", "{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A0B5F65-5D96-46F5-BF8A-FE1FCAD641A6}
+	EndGlobalSection
+EndGlobal

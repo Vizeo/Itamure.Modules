@@ -1,0 +1,76 @@
+﻿<div class="printerWidget">
+    <canvas #myCanvas id="printPreview"></canvas>
+
+    <div *ngIf="PrinterState != null && 
+         IsOnline(PrinterState)">
+        <div class="printer" (click)="ShowWindow()">
+            <div class="columns">
+                <div class="left">
+                    <div class="temperatures area">
+                        <div class="areaTitle">Printer</div>
+                        <div class="Name property">
+                            <span class="title">Name:</span>
+                            <span class="value">{{PrinterState.Name}}</span>
+                        </div>
+                        <div class="State property">
+                            <span class="title">State:</span>
+                            <span class="value">{{PrinterState.State}}</span>
+                        </div>
+                    </div>
+
+                    <div class="temperatures area">
+                        <div class="areaTitle">Temperatures</div>
+                        <div class="tool property">
+                            <span class="title">Tool:</span>
+                            <span class="value">{{PrinterState.ToolActual}}/{{PrinterState.ToolTarget}}</span>
+                        </div>
+                        <div class="bed property">
+                            <span class="title">Bed:</span>
+                            <span class="value">{{PrinterState.BedActual}}/{{PrinterState.BedTarget}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right">
+                    <div class="temperatures area">
+                        <div class="areaTitle">Job</div>
+                        <div class="jobState property">
+                            <span class="title">State:</span>
+                            <span class="value">{{PrinterState.JobState}}</span>
+                        </div>
+                        <div class="fileName property">
+                            <span class="title">File:</span>
+                            <span class="value">{{PrinterState.FileName}}</span>
+                        </div>
+                    </div>
+
+                    <div class="time area">
+                        <div class="areaTitle">Print Time</div>
+                        <div class="property">
+                            <span class="title">Estimated:</span>
+                            <span class="value">{{GetTime(PrinterState.EstimatedPrintTime)}}</span>
+                        </div>
+                        <div class="property">
+                            <span class="title">Running:</span>
+                            <span class="value">{{GetTime(PrinterState.PrintTime)}}</span>
+                        </div>
+                        <div class="printTimeLeft property">
+                            <span class="title">Remainig:</span>
+                            <span class="value">{{GetTime(PrinterState.PrintTimeLeft)}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="progress property">
+                    <progress [value]="PrinterState.JobProgress" max="100"></progress>
+                    <div class="overlay">
+                        <div class="ptitle">{{Round(PrinterState.JobProgress)}}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="PrinterState == null">
+        Waiting for printer info
+    </div>
+</div>

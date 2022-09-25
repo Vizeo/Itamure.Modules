@@ -2,4 +2,11 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
-/.vs/Itamure.Modules/FileContentIndex
+**/.vs
+/obj
+*.tt
+*.t4
+**/obj
+**/node_modules
+**/.vscode
+**/.angular
