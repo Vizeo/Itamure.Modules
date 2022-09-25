@@ -11,6 +11,7 @@ namespace OctoprintMonitor
         private Service? _service;
         private bool _gettingStatus = false;
         private JobFile? _jobFile;
+        private string? _initError;
 
         public PrinterConnection(PrinterInfo printerInfo)
         {
@@ -18,11 +19,13 @@ namespace OctoprintMonitor
 
             if (printerInfo == null)
             {
+                _initError = "printerInfo cannot be null";
                 throw new ArgumentNullException("printerInfo cannot be null");
             }
 
             if (printerInfo.Address == null)
             {
+                _initError = "printerInfo.Address cannot be null";
                 throw new ArgumentNullException("printerInfo.Address cannot be null");
             }
             else
@@ -31,7 +34,10 @@ namespace OctoprintMonitor
                 {
                     _service = new Service(PrinterInfo.Address, PrinterInfo.ApiKey);
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    _initError = $"Error: Attempting to connect to: {PrinterInfo.Address}. {e.Message}";
+                }
             }
         }
 
@@ -74,87 +80,94 @@ namespace OctoprintMonitor
 
                 if (!_gettingStatus)
                 {
-                    if(_service != null &&
-                        !string.IsNullOrWhiteSpace(PrinterInfo.ApiKey) &&
-                        PrinterInfo.ApiKey.Length > 10)
+                    if (_service != null)
                     {
-                        try
+                        if (!string.IsNullOrWhiteSpace(PrinterInfo.ApiKey) &&
+                            PrinterInfo.ApiKey.Length > 10)
                         {
-                            _gettingStatus = true;
-                            var connection = await _service.Connection();
-                            result.State = connection.Current.State;
-
-                            if (connection.Current.State != "Closed")
+                            try
                             {
-                                var printer = await _service.Printer();
+                                _gettingStatus = true;
+                                var connection = await _service.Connection();
+                                result.State = connection.Current.State;
 
-                                if (printer.State.Flags.Error)
+                                if (connection.Current.State != "Closed")
                                 {
-                                    result.State = "Error";
-                                }
-                                else if (printer.State.Flags.Ready)
-                                {
-                                    result.State = "Ready";
-                                }
-                                else if (printer.State.Flags.Pausing)
-                                {
-                                    result.State = "Pausing";
-                                }
-                                else if (printer.State.Flags.Cancelling)
-                                {
-                                    result.State = "Cancelling";
-                                }
-                                else if (printer.State.Flags.Printing)
-                                {
-                                    result.State = "Printing";
-                                }
-                                else if (printer.State.Flags.Paused)
-                                {
-                                    result.State = "Paused";
-                                }
+                                    var printer = await _service.Printer();
 
-                                if (printer.Temperature.Tool0 != null)
-                                {
-                                    result.ToolActual = printer.Temperature.Tool0.Actual;
-                                    result.ToolTarget = printer.Temperature.Tool0.Target;
+                                    if (printer.State.Flags.Error)
+                                    {
+                                        result.State = "Error";
+                                    }
+                                    else if (printer.State.Flags.Ready)
+                                    {
+                                        result.State = "Ready";
+                                    }
+                                    else if (printer.State.Flags.Pausing)
+                                    {
+                                        result.State = "Pausing";
+                                    }
+                                    else if (printer.State.Flags.Cancelling)
+                                    {
+                                        result.State = "Cancelling";
+                                    }
+                                    else if (printer.State.Flags.Printing)
+                                    {
+                                        result.State = "Printing";
+                                    }
+                                    else if (printer.State.Flags.Paused)
+                                    {
+                                        result.State = "Paused";
+                                    }
+
+                                    if (printer.Temperature.Tool0 != null)
+                                    {
+                                        result.ToolActual = printer.Temperature.Tool0.Actual;
+                                        result.ToolTarget = printer.Temperature.Tool0.Target;
+                                    }
+
+                                    if (printer.Temperature.Bed != null)
+                                    {
+                                        result.BedActual = printer.Temperature.Bed.Actual;
+                                        result.BedTarget = printer.Temperature.Bed.Target;
+                                    }
+
+                                    var jobInformationResponse = await _service.Job();
+                                    result.JobState = jobInformationResponse.State;
+                                    result.JobProgress = jobInformationResponse.Progress.Completion;
+                                    result.PrintTime = jobInformationResponse.Progress.PrintTime;
+                                    result.PrintTimeLeft = jobInformationResponse.Progress.PrintTimeLeft;
+                                    result.EstimatedPrintTime = jobInformationResponse.Job.EstimatedPrintTime;
+                                    result.FileName = jobInformationResponse.Job.File.Name;
+
+                                    if (!string.IsNullOrWhiteSpace(result.FileName))
+                                    {
+                                        var value = await _service.DownloadCurrentFile(jobInformationResponse.Job.File);
+                                    }
+
+                                    _jobFile = jobInformationResponse.Job.File;
                                 }
-
-                                if (printer.Temperature.Bed != null)
+                                else
                                 {
-                                    result.BedActual = printer.Temperature.Bed.Actual;
-                                    result.BedTarget = printer.Temperature.Bed.Target;
+                                    _jobFile = null;
                                 }
-
-                                var jobInformationResponse = await _service.Job();
-                                result.JobState = jobInformationResponse.State;
-                                result.JobProgress = jobInformationResponse.Progress.Completion;
-                                result.PrintTime = jobInformationResponse.Progress.PrintTime;
-                                result.PrintTimeLeft = jobInformationResponse.Progress.PrintTimeLeft;
-                                result.EstimatedPrintTime = jobInformationResponse.Job.EstimatedPrintTime;
-                                result.FileName = jobInformationResponse.Job.File.Name;
-
-                                if (!string.IsNullOrWhiteSpace(result.FileName))
-                                {
-                                    var value = await _service.DownloadCurrentFile(jobInformationResponse.Job.File);
-                                }
-
-                                _jobFile = jobInformationResponse.Job.File;
+                                return result;
                             }
-                            else
+                            finally
                             {
-                                _jobFile = null;
+                                _gettingStatus = false;
                             }
-                            return result;
                         }
-                        finally
+                        else
                         {
-                            _gettingStatus = false;
+                            _jobFile = null;
+                            result.State = $"Missing or Invalid API Key";
                         }
                     }
                     else
                     {
                         _jobFile = null;
-                        result.State = "Missing or Invalid API Key";
+                        result.State = _initError;
                     }
                 }
                 else

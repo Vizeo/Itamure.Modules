@@ -9,7 +9,7 @@ namespace OctoprintMonitor
         public static IList<T> Retrieve<T>(this ObjectStore objectStore)
             where T : class, IEntity, new()
         {
-            return objectStore.Retreive<T>(typeof(T).Name);
+            return objectStore.Retrieve<T>(typeof(T).Name);
         }
 
         public static void Store<T>(this ObjectStore objectStore, T item)

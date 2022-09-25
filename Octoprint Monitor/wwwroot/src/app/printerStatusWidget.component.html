@@ -1,7 +1,8 @@
 ﻿<div class="printerWidget">
+    <img #thumbnail id="thumbnail" />
     <canvas #myCanvas id="printPreview"></canvas>
 
-    <div *ngIf="PrinterState != null && 
+    <div *ngIf="PrinterState != null &&
          IsOnline()">
         <div class="printer" (click)="ShowWindow()">
             <div class="columns">

@@ -1,8 +1,9 @@
 ﻿import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 // @ts-ignore
-import * as THREE from 'three';
-// @ts-ignore
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+//import * as THREE from 'three';
+//// @ts-ignore
+//import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 // @ts-ignore
 import { WebGLPreview } from 'gcode-preview';
 
@@ -12,7 +13,7 @@ import { WebGLPreview } from 'gcode-preview';
     styleUrls: ['./printerStatusWidget.component.less']
 })
 export class PrinterStatusWidgetComponent {
-    constructor() {
+    constructor(private domSanitizer: DomSanitizer) {
         let params = (new URL(document.location.href)).searchParams;
         this._printerId = Number(params.get("printerId"));
     }
@@ -20,16 +21,12 @@ export class PrinterStatusWidgetComponent {
     private context: HTMLCanvasElement | undefined;
 
     @ViewChild('myCanvas', { static: false })
-    canvas: ElementRef | undefined;
+    Canvas: ElementRef | undefined;
 
-    @HostListener('window:resize', ['$event'])
-    onResize(event: any) {
-        this.preview.camera.aspect = window.innerWidth / window.innerHeight;
-        this.preview.camera.updateProjectionMatrix();
-        this.preview.renderer.setSize(window.innerWidth, window.innerHeight);
-    }
+    @ViewChild('thumbnail', { static: false })
+    Thumbnail: HTMLImageElement | undefined;
 
-    public preview: any;
+    private _preview: any;
     public PrinterState: PrinterState | null = null;
 
     private _downloadedFile: string | null = null;
@@ -49,57 +46,58 @@ export class PrinterStatusWidgetComponent {
     public ngAfterViewInit() {
         window.addEventListener("OctoprintMonitor.PrinterStatusUpdated", (u) => this.Received((<CustomEvent>u).detail));
 
-        this.context = (this.canvas!.nativeElement as HTMLCanvasElement);
+        this.context = (this.Canvas!.nativeElement as HTMLCanvasElement);
 
-        this.preview = new WebGLPreview({
+        this._preview = new WebGLPreview({
             canvas: this.context,
-            topLayerColor: new THREE.Color('lime').getHex(),
-            lastSegmentColor: new THREE.Color('red').getHex(),
-            //buildVolume: { x: 180, y: 180, z: 180 },
             initialCameraPosition: [0, 400, 450],
             allowDragNDrop: false,
         });
-
-        this.preview.renderTravel = false;
-        this.preview.render();
-        this.preview.animate();
-    }
+    }   
 
     private async Received(data: PrinterState) {
         if (this._printerId == data.PrinterId) {
             this.PrinterState = data;
-            if (this.IsOnline() &&
-                this._downloadedFile != this.PrinterState.FileName) {
-                this._downloadedFile = this.PrinterState.FileName!;
+            if (this.IsOnline())
+            {
+                if (this._downloadedFile != this.PrinterState.FileName) {
+                    this._downloadedFile = this.PrinterState.FileName!;
 
-                const url = "/OctoprintMonitor/Api/OctoprintMonitorService/GetCurrentGCode?printerId=" + this.PrinterState.PrinterId;
+                    const url = "/OctoprintMonitor/Api/OctoprintMonitorService/GetCurrentGCode?printerId=" + this.PrinterState.PrinterId;
 
-                const response = await fetch(url);
-                if (response.status !== 200) {
-                    console.error('ERROR. Status Code: ' + response.status);
-                    return;
-                }
+                    const response = await fetch(url);
+                    if (response.status !== 200) {
+                        console.error('ERROR. Status Code: ' + response.status);
+                        return;
+                    }
 
-                this._gcode = await response.text();
+                    this._gcode = await response.text();
 
-                this.preview.clear();
-                this.preview.processGCode(this._gcode);
-                //this.preview.scene.background = new THREE.Color(0xffffff);
+                    this._preview.parser.parseGCode(this._gcode);
+                    let thumb = this._preview.parser.metadata.thumbnails['220x124'];
 
-                const controls = new OrbitControls(this.preview.camera, this.preview.renderer.domElement);
-                controls.autoRotate = true;
+                    if (this.Thumbnail != null) {
+                        if (thumb != null) {
+                            //Can't figure out how to get this to work in angular so using javascript below
+                            //this.Thumbnail.src = thumb?.src ?? 'https://via.placeholder.com/120x60?text=noThumbnail';
 
-                this.preview.animate = () => {
-                    requestAnimationFrame(this.preview.animate);
-                    controls.update();
-                    this.preview.renderer.render(this.preview.scene, this.preview.camera);
+                            (<any>document!.getElementById('thumbnail'))!.src = thumb?.src ?? 'https://via.placeholder.com/120x60?text=noThumbnail';
+                        }
+                        else {
+                            (<any>document!.getElementById('thumbnail'))!.src = null;
+                            //this.Thumbnail.src = "";
+                        }
+                    }
                 }
             }
             else {
-                this.preview.clear();
+                if (this.Thumbnail != null) {
+                    (<any>document!.getElementById('thumbnail'))!.src = null;
+                    //this.Thumbnail.src = "";
+                }
             }
         }
-	}
+    }
 
     public IsOnline(): boolean {
         return this.PrinterState != null &&

@@ -49,6 +49,7 @@ namespace OctoprintMonitor
 
             RegisterEvent<PrinterStatus>("Printer Status Updated", OctoprintMonitorPermissions.CanViewWidgetProcess);
             RegisterWidget<PrinterStatusWidget>("Printer Status", OctoprintMonitorPermissions.CanViewWidgetProcess);
+            RegisterWidget<PrinterStatus3DWidget>("Printer Status 3D", OctoprintMonitorPermissions.CanViewWidgetProcess);
         }
 
         internal static Module? CurrentModule { get; private set; }

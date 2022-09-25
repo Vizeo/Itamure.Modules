@@ -1,4 +1,5 @@
-﻿using OctoprintMonitor.Entities;
+﻿using Itamure.Core;
+using OctoprintMonitor.Entities;
 using RizeDb;
 using System.IO;
 
@@ -8,7 +9,7 @@ namespace OctoprintMonitor
     {
         private object _lock = new object();
         private List<PrinterConnection> _printerConnections;
-        private List<PrinterStatusWidget> _printerStatusWidgets;
+        private List<Widget> _printerStatusWidgets;
         private bool _running = true;
         private int _updateFrequencySeconds;
 
@@ -22,7 +23,7 @@ namespace OctoprintMonitor
                 _printerConnections.Add(new PrinterConnection(printerInfo));
             }
 
-            _printerStatusWidgets = new List<PrinterStatusWidget>();    
+            _printerStatusWidgets = new List<Widget>();    
 
             var thread = new System.Threading.Thread(() => UpdateLoop());
             thread.IsBackground = true;

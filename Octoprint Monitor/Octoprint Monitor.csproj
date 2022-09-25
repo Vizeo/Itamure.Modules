@@ -16,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="wwwroot\**">
+		<Content Include="wwwroot\dist\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
@@ -29,7 +29,6 @@
 		<Content Remove="wwwroot\.angular\**" />
 		<Content Remove="wwwroot\.vscode\**" />
 		<Content Remove="wwwroot\node_modules\**" />
-		<Content Remove="wwwroot\dist\**" />
 		<EmbeddedResource Remove="wwwroot\.angular\**" />
 		<EmbeddedResource Remove="wwwroot\.vscode\**" />
 		<EmbeddedResource Remove="wwwroot\node_modules\**" />
@@ -40,18 +39,14 @@
 		<None Remove="wwwroot\dist\**" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="wwwroot\src\app\printDetails.component.ts" />
-	  <None Remove="wwwroot\src\app\settings - Copy.component.html" />
-	  <None Remove="wwwroot\src\app\settings - Copy.component.less" />
-	</ItemGroup>
+
 
 	<ItemGroup>
 		<EmbeddedResource Include="Itamure.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="RizeDb" Version="2.0.0-beta2" />
+		<PackageReference Include="RizeDb" Version="2.0.0-beta3" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -2,11 +2,19 @@
     min-height: 200px;
     min-width: 300px;
     position: relative;
-    background-color: #e0e0e0;
+    background-color: white;
     height: 100%;
+    display: flex;
+    justify-content: center;
+
+    #thumbnail {
+        //width: 100px;
+        //height: 100%;
+        opacity: 0.77;
+    }
 
     #printPreview {
-        width: 100%;
+        display: none;
     }
 
     .printer {
@@ -15,6 +23,7 @@
         right: 0;
         top: 0;
         bottom: 0;
+        mix-blend-mode: multiply;
 
         .areaTitle {
             color: blue;
@@ -71,6 +80,7 @@
                     width: 100%;
 
                     .ptitle {
+                        //mix-blend-mode: difference;
                     }
                 }
             }

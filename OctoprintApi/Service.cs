@@ -22,8 +22,16 @@ namespace OctoprintApi
             address = address.ToLower();
             Uri myUri = new Uri(address);
 
-            var ips = Dns.GetHostEntry(myUri.Host);
-            var ip = ips.AddressList.FirstOrDefault(i => i.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            IPAddress ip = null;
+            if (myUri.HostNameType != UriHostNameType.IPv4)
+            {
+                var ips = Dns.GetHostEntry(myUri.Host);
+                ip = ips.AddressList.FirstOrDefault(i => i.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            }
+            else
+            {
+                ip = IPAddress.Parse(myUri.Host);
+            }
 
             if (ip != null)
             {
