@@ -6,16 +6,12 @@
   "compilationOptions": {},
   "targets": {
     ".NETCoreApp,Version=v6.0": {
-      "OctoprintMonitor/1.0.0": {
+      "ScreenControl/1.0.0": {
         "dependencies": {
-          "IntegratedWebServer.Core": "1.0.0",
-          "IntegratedWebServer.Server": "1.0.0",
-          "Itamure.Core": "1.0.0-beta5",
-          "OctoprintApi": "1.0.0",
-          "RizeDb": "2.0.0-beta3"
+          "Itamure.Core": "1.0.0-beta5"
         },
         "runtime": {
-          "OctoprintMonitor.dll": {}
+          "ScreenControl.dll": {}
         }
       },
       "Castle.Core/5.1.0": {
@@ -29,19 +25,31 @@
           }
         }
       },
-      "RizeDb/2.0.0-beta3": {
+      "Itamure.Core/1.0.0-beta5": {
         "dependencies": {
-          "System.Memory": "4.5.5"
+          "Castle.Core": "5.1.0",
+          "System.Text.Json": "6.0.5"
         },
         "runtime": {
-          "lib/net6.0/RizeDb.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.0.0"
+          "lib/net6.0/IntegratedWebServer.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net6.0/IntegratedWebServer.Server.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net6.0/InterprocessCommunication.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net6.0/Itamure.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       },
       "System.Diagnostics.EventLog/6.0.0": {},
-      "System.Memory/4.5.5": {},
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
       "System.Text.Encodings.Web/6.0.0": {
         "dependencies": {
@@ -59,48 +67,11 @@
             "fileVersion": "6.0.622.26707"
           }
         }
-      },
-      "IntegratedWebServer.Core/1.0.0": {
-        "runtime": {
-          "IntegratedWebServer.Core.dll": {}
-        }
-      },
-      "IntegratedWebServer.Server/1.0.0": {
-        "dependencies": {
-          "IntegratedWebServer.Core": "1.0.0",
-          "System.Memory": "4.5.5",
-          "System.Text.Json": "6.0.5"
-        },
-        "runtime": {
-          "IntegratedWebServer.Server.dll": {}
-        }
-      },
-      "Itamure.Core/1.0.0-beta5": {
-        "dependencies": {
-          "Castle.Core": "5.1.0",
-          "System.Text.Json": "6.0.5"
-        },
-        "runtime": {
-          "Itamure.Core.dll": {}
-        }
-      },
-      "OctoprintApi/1.0.0": {
-        "runtime": {
-          "OctoprintApi.dll": {}
-        }
-      },
-      "InterprocessCommunication/1.0.0.0": {
-        "runtime": {
-          "InterprocessCommunication.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
       }
     }
   },
   "libraries": {
-    "OctoprintMonitor/1.0.0": {
+    "ScreenControl/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -112,12 +83,12 @@
       "path": "castle.core/5.1.0",
       "hashPath": "castle.core.5.1.0.nupkg.sha512"
     },
-    "RizeDb/2.0.0-beta3": {
+    "Itamure.Core/1.0.0-beta5": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-J7pE1BVjTi845zqJahyKdmZWxLc/DifQCujVk6EcGQMwojTl+ZtwCjZXvrmmPXfzby6DOznrVTqF/dZF8p1RCA==",
-      "path": "rizedb/2.0.0-beta3",
-      "hashPath": "rizedb.2.0.0-beta3.nupkg.sha512"
+      "sha512": "sha512-7laKkZdphHOMzmMfKCpJu6LajauJunF09vd7Nh3gXJlDqV1+wqCn6etzE/dhbVs33uNVcDcpUc8uzyDRWuT+aQ==",
+      "path": "itamure.core/1.0.0-beta5",
+      "hashPath": "itamure.core.1.0.0-beta5.nupkg.sha512"
     },
     "System.Diagnostics.EventLog/6.0.0": {
       "type": "package",
@@ -125,13 +96,6 @@
       "sha512": "sha512-lcyUiXTsETK2ALsZrX+nWuHSIQeazhqPphLfaRxzdGaG93+0kELqpgEHtwWOlQe7+jSFnKwaCAgL4kjeZCQJnw==",
       "path": "system.diagnostics.eventlog/6.0.0",
       "hashPath": "system.diagnostics.eventlog.6.0.0.nupkg.sha512"
-    },
-    "System.Memory/4.5.5": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
-      "path": "system.memory/4.5.5",
-      "hashPath": "system.memory.4.5.5.nupkg.sha512"
     },
     "System.Runtime.CompilerServices.Unsafe/6.0.0": {
       "type": "package",
@@ -153,31 +117,6 @@
       "sha512": "sha512-SSH+YYrMpvLcy7Orzb5K1tSyffnFacWahyxCCjYH1PbSHdAF4dekmIetBurFKgtTHDmwEe/J2Csi/7niRH6d/g==",
       "path": "system.text.json/6.0.5",
       "hashPath": "system.text.json.6.0.5.nupkg.sha512"
-    },
-    "IntegratedWebServer.Core/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "IntegratedWebServer.Server/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Itamure.Core/1.0.0-beta5": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "OctoprintApi/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "InterprocessCommunication/1.0.0.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
     }
   }
 }

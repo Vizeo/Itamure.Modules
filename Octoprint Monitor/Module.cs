@@ -28,7 +28,7 @@ namespace OctoprintMonitor
             CurrentModule = this;
 
             string? path = null;
-#if DEBUG
+#if !DEBUG
             //Folder path for web files durring development
             var exeLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
             if (exeLocation != null)
