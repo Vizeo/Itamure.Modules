@@ -89,8 +89,6 @@ namespace OctoprintMonitor
 
         public override string WebRouteBase => WEB_ROUTE_BASE;
 
-        internal Notification Notification { get; } = new Notification("Octoprint Monitor Notification");
-
         protected override void Start()
         {
             _stream = GetFileStream("Database.db", false);

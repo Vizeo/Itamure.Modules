@@ -19,6 +19,7 @@ namespace ScreenControl
         public Module()
         {
             AddScheduledTasks(new ScreenOffTask());
+            AddScheduledTasks(new ScreenOnTask());
         }
 
         public override string? AdministrationWebPath => null;

@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup Label="Globals">
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+	  <IsPackable>true</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <EnableDefaultContentItems>false</EnableDefaultContentItems>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Itamure.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Itamure.Core" Version="1.0.0-beta5" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<DefineConstants>STD</DefineConstants>
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<AssemblyName>CalendarTools</AssemblyName>
+		<RootNamespace>CalendarTools</RootNamespace>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<Deterministic>False</Deterministic>
+		<Company>MyCompany</Company>
+		<Authors>Me</Authors>
+		<Copyright></Copyright>
+		<Product>CalendarTools</Product>
+		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
+		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
+		<OutputType>Exe</OutputType>
+	</PropertyGroup>
+</Project>

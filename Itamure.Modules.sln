@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itamure.Core", "..\Itamure\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoprintApi", "OctoprintApi\OctoprintApi.csproj", "{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Screen Control", "Screen Control\Screen Control.csproj", "{748B62F6-A234-4023-A881-BF5334378F99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calendar Tools", "Calendar Tools\Calendar Tools.csproj", "{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +47,10 @@ Global
 		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.Build.0 = Release|Any CPU
-		{748B62F6-A234-4023-A881-BF5334378F99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{748B62F6-A234-4023-A881-BF5334378F99}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{748B62F6-A234-4023-A881-BF5334378F99}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{748B62F6-A234-4023-A881-BF5334378F99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
