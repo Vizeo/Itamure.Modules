@@ -1,4 +1,5 @@
 ﻿using CalendarTools;
+using CalendarTools.Events;
 using CalendarTools.Tasks;
 using IntegratedWebServer.Core;
 using IntegratedWebServer.Core.RequestProcessors;
@@ -18,15 +19,17 @@ namespace CalendarTools
 
         private IRequestProcessor? _requestProcessor;
         private IEnumerable<KeyValuePair<string, Type>> _mappedRequestProcessors;
+        private Stream? _stream;
 
         internal static Module? CurrentModule { get; private set; }
+        internal static RizeDb.ObjectStore? ObjectStore { get; private set; }
 
         public Module()
         {
             CurrentModule = this;
 
             string? path = null;
-#if !DEBUG
+#if DEBUG
             //Folder path for web files durring development
             var exeLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
             if (exeLocation != null)
@@ -44,6 +47,7 @@ namespace CalendarTools
 
             AddScheduledTasks(new CalendarToolsTask());
 
+            RegisterEvent<CalendarsUpdated>("Calendars Updated", CalendarToolsPermissions.WidgetPermissions);
             RegisterWidget<CalendarToolsWidget>("CalendarTools Widget", CalendarToolsPermissions.WidgetPermissions);
             ShowWidget(new CalendarToolsWidget());
         }
@@ -83,10 +87,19 @@ namespace CalendarTools
 
         protected override void Start()
         {
+            _stream = GetFileStream("Database.db", false);
+            ObjectStore = new RizeDb.ObjectStore(_stream, Environment.MachineName);
         }
 
         public override void Stop()
         {
+            ObjectStore?.Dispose();
+            _stream!.Close();
+        }
+
+        public class SystemModuleSettings
+        {
+            public bool InitSetup { get; set; }
         }
     }
 }

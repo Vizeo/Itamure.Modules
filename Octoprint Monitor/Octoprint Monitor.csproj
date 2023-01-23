@@ -46,13 +46,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="RizeDb" Version="2.0.0-beta3" />
+		<PackageReference Include="Itamure.Core" Version="1.0.0-beta6" />
+		<PackageReference Include="RizeDb" Version="2.0.0-beta4" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj" />
-		<ProjectReference Include="..\..\IntegratedWebServer\Server\IntegratedWebServer.Server\IntegratedWebServer.Server.csproj" />
-		<ProjectReference Include="..\..\Itamure\Itamure.Core\Itamure.Core.csproj" />
 		<ProjectReference Include="..\OctoprintApi\OctoprintApi.csproj" />
 	</ItemGroup>
 

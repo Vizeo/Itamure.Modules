@@ -1,0 +1,63 @@
+.settings {
+  padding: 5px;
+  min-width: 460px;
+  overflow: auto;
+
+  input {
+      outline: none;
+  }
+
+  .row {
+    display: table-row;
+
+    .cell {
+      display: table-cell;
+      padding: 3px;
+    }
+  }
+
+  .name {
+    width: 120px;
+  }
+
+  .color {
+    height: 20px;
+  }
+
+  .icon {
+    padding-left: 10px !important;
+    &:hover {
+        color: lawngreen;
+        cursor: pointer;
+    }
+
+    .disabled {
+        color: darkgray;
+        cursor: not-allowed;
+    }
+  }
+
+  .icalContainer {
+    width: 100%;
+
+    .icalAddress {
+      width: 100%;
+    }
+  }
+}
+
+.validatingContainer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .validateNotice {
+      background-color: dodgerblue;
+      color: white;
+      padding: 5px;
+  }
+}

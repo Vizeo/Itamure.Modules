@@ -1,4 +1,4 @@
-﻿using Ical.Net;
+﻿using CalendarTools.Events;
 using Itamure.Core;
 
 namespace CalendarTools.Tasks
@@ -17,9 +17,55 @@ namespace CalendarTools.Tasks
 
         public void Run(IScheduledTaskInterface scheduledTaskInterface)
         {
-            HttpClient httpClient = new HttpClient();
-            var result = httpClient.GetStringAsync("https://calendar.google.com/calendar/ical/chrisjwoods%40gmail.com/private-f2b69ea77805a10046174445731f63ce/basic.ics").Result;
-            var calendar = Calendar.Load(result);
+            var users = Module.CurrentModule?.AvaliableUsers;
+            var calendars = Module.ObjectStore?.Retrieve<Entities.Calendar>();
+            if (calendars != null)
+            {
+                var title = "Updating Calendars";
+                try
+                {
+                    var count = 0;
+                    foreach (var calendar in calendars)
+                    {
+                        var userName = "All";
+                        if (calendar.UserId.HasValue)
+                        {
+                            var user = users?.FirstOrDefault(u => u.Id == calendar.UserId);
+                            if (user == null)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                userName = user.Name;
+                            }
+                        }
+
+                        try
+                        {
+                            scheduledTaskInterface.SendProgress(title, calendars.Count(), count);
+                            if (calendar.ICalAddress != null)
+                            {
+                                calendar.Data = CalendarManager.GetCalendarData(calendar.ICalAddress).Result;
+                                Module.ObjectStore?.Store(calendar);
+                                scheduledTaskInterface.WriteAndRecord($"Calendar {calendar.Name} for {userName} updated");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            scheduledTaskInterface.WriteAndRecord($"Calendar {calendar.Name} for {userName} update failed");
+                            scheduledTaskInterface.LogException(new Exception($"Unable to update calendar {calendar.Name} for user {userName}", ex), SystemLogType.Warning, GetType().Assembly.FullName);
+                        }
+
+                        count++;
+                    }
+                }
+                finally
+                {
+                    scheduledTaskInterface.EndProgress(title);
+                    Module.CurrentModule?.SendEvent(new CalendarsUpdated());
+                }
+            }
         }
     }
 }

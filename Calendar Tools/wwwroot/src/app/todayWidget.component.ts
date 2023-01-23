@@ -1,5 +1,6 @@
-import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { CalendarToolsService, CalendarItemData } from './Services/calendarTools.service';
 
 @Component({
     selector: 'todayWidget',
@@ -7,137 +8,82 @@ import { DomSanitizer } from '@angular/platform-browser';
     styleUrls: ['./todayWidget.component.less']
 })
 export class TodayWidgetComponent {
-    constructor(private domSanitizer: DomSanitizer) {
-    //    let params = (new URL(document.location.href)).searchParams;
-    //    this._printerId = Number(params.get("printerId"));
+  constructor(private calendarToolsService: CalendarToolsService) {
+    this.GetCalendars();
+
+    setInterval(() => {
+      if (this._startDate != null &&
+        (new Date).getDate() != this._startDate.getDate()) {
+        this.GetCalendars();
+      }
+
+      this.ScrollToTop();
+    }, 60000);
+  }
+
+  @ViewChild("list")
+  List!: ElementRef;
+
+  private _startDate?: Date;
+
+  public Days?: Day[];
+
+  private ScrollToTop() {
+    //TODO: Only do this if not scrolled recently
+    if (this.List != null) {
+      this.List.nativeElement.scrollTo(0, 0);
+    }
+  }
+  
+  private async GetCalendars() {
+    let totalDays = 14; //14 Days
+    let curTime = new Date();
+
+    let start = new Date(curTime.getFullYear(), curTime.getMonth(), curTime.getDate());
+    this._startDate = start;
+    let end = new Date(start);
+    end.setDate(end.getDate() + totalDays); 
+
+    let events = await this.calendarToolsService.GetCalendarItems(start, end);
+    this.Days = new Array<Day>();
+
+    for (let j = 0; j < totalDays; j++) {
+      let day = new Day();
+      this.Days.push(day);
+      day.Date = new Date(start);
+      day.Date.setDate(day.Date.getDate() + j);
+      day.AllDay = new Array<CalendarItemData>();
+      day.Events = new Array<CalendarItemData>();
+
+      let end = new Date(day.Date);
+      end.setDate(end.getDate() + 1);
+
+      for (let i = 0; i < events.length; i++) {
+        let event = events[i];
+
+        if ((event.StartDate! >= day.Date && event.EndDate! <= end) ||
+          (event.StartDate! <= day.Date && event.EndDate! > day.Date)) {
+
+          if (event.IsAllDay) {
+            day.AllDay.push(event);
+          }
+          else {
+            day.Events.push(event);
+          }
+        }
+      }
     }
 
-    //private context: HTMLCanvasElement | undefined;
+    this.ScrollToTop();
+  }
 
-    //@ViewChild('myCanvas', { static: false })
-    //Canvas: ElementRef | undefined;
-
-    //@ViewChild('thumbnail', { static: false })
-    //Thumbnail: HTMLImageElement | undefined;
-
-    //private _preview: any;
-    //public PrinterState: PrinterState | null = null;
-
-    //private _downloadedFile: string | null = null;
-    //private _printerId: number | null;
-    //private _gcode: string | null = null;
-
-    //public ShowWindow() {
-    //    if (this.IsOnline() &&
-    //        this.PrinterState != null) {
-    //        let iframeWindow: HTMLIFrameElement = (<any>window).showWindow(this.PrinterState.Name, "/OctoprintMonitor/PrinterDetails?printerId=" + this._printerId, { Center: true });
-    //        if (iframeWindow != null) {
-    //            (<any>iframeWindow).GCode = this._gcode;
-    //        }
-    //    }
-    //}
-
-    //public ngAfterViewInit() {
-    //    window.addEventListener("OctoprintMonitor.PrinterStatusUpdated", (u) => this.Received((<CustomEvent>u).detail));
-
-    //    this.context = (this.Canvas!.nativeElement as HTMLCanvasElement);
-
-    //    this._preview = new WebGLPreview({
-    //        canvas: this.context,
-    //        initialCameraPosition: [0, 400, 450],
-    //        allowDragNDrop: false,
-    //    });
-    //}   
-
-    //private async Received(data: PrinterState) {
-    //    if (this._printerId == data.PrinterId) {
-    //        this.PrinterState = data;
-    //        if (this.IsOnline())
-    //        {
-    //            if (this._downloadedFile != this.PrinterState.FileName) {
-    //                this._downloadedFile = this.PrinterState.FileName!;
-
-    //                const url = "/OctoprintMonitor/Api/OctoprintMonitorService/GetCurrentGCode?printerId=" + this.PrinterState.PrinterId;
-
-    //                const response = await fetch(url);
-    //                if (response.status !== 200) {
-    //                    console.error('ERROR. Status Code: ' + response.status);
-    //                    return;
-    //                }
-
-    //                this._gcode = await response.text();
-
-    //                this._preview.parser.parseGCode(this._gcode);
-    //                let thumb = this._preview.parser.metadata.thumbnails['220x124'];
-
-    //                if (this.Thumbnail != null) {
-    //                    if (thumb != null) {
-    //                        //Can't figure out how to get this to work in angular so using javascript below
-    //                        //this.Thumbnail.src = thumb?.src ?? 'https://via.placeholder.com/120x60?text=noThumbnail';
-
-    //                        (<any>document!.getElementById('thumbnail'))!.src = thumb?.src ?? 'https://via.placeholder.com/120x60?text=noThumbnail';
-    //                    }
-    //                    else {
-    //                        (<any>document!.getElementById('thumbnail'))!.src = null;
-    //                        //this.Thumbnail.src = "";
-    //                    }
-    //                }
-    //            }
-    //        }
-    //        else {
-    //            if (this.Thumbnail != null) {
-    //                (<any>document!.getElementById('thumbnail'))!.src = null;
-    //                //this.Thumbnail.src = "";
-    //            }
-    //        }
-    //    }
-    //}
-
-    //public IsOnline(): boolean {
-    //    return this.PrinterState != null &&
-    //        this.PrinterState.State != 'Closed' &&
-    //        this.PrinterState.State != 'Offline' &&
-    //        this.PrinterState.State != "Missing or Invalid API Key";
-    //}
-
-    //public GetTime(value: number | null | undefined): string {
-    //    if (value == null) {
-    //        return "-";
-    //    }
-
-    //    var h = Math.floor(value! / 3600);
-    //    var m = Math.floor(value! % 3600 / 60);
-    //    var s = Math.floor(value! % 3600 % 60);
-
-    //    var hDisplay = (h > 0 ? (h < 10 ? "0" : "") + h : "00") + ":";
-    //    var mDisplay = (m > 0 ? (m < 10 ? "0" : "") + m : "00") + ":";
-    //    var sDisplay = s > 0 ? (s < 10 ? "0" : "") + s : "00";
-    //    return hDisplay + mDisplay + sDisplay;
-    //}
-
-    //public Round(value: number | null | undefined): string {
-    //    if (value == null) {
-    //        return "0";
-    //    }
-
-    //    return Math.round(value).toString();
-    //}
+  public ngAfterViewInit() {
+    window.addEventListener("CalendarTools.CalendarsUpdated", (u) => this.GetCalendars());    
+  }
 }
 
-//class PrinterState {
-//	PrinterId?: number;
-//	State?: string;
-//	Name?: string;
-//	ToolActual?: number;
-//	ToolTarget?: number;
-//	BedActual?: number;
-//	BedTarget?: number;
-//	JobState?: string;
-//	JobProgress?: number;
-//	PrintTime?: number;
-//	PrintTimeLeft?: number;
-//	EstimatedPrintTime?: number;
-//	FileName?: string;
-//	Url?: string;
-//	LocalInstaceRunning?: boolean;
-//}
+class Day {
+  public Date?: Date;
+  public AllDay?: CalendarItemData[];
+  public Events?: CalendarItemData[];
+}

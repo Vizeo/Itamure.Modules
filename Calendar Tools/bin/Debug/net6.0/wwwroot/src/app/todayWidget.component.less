@@ -1,89 +1,22 @@
-﻿.printerWidget {
-    min-height: 200px;
-    min-width: 300px;
-    position: relative;
-    background-color: white;
-    height: 100%;
+.list {
+  overflow: auto;
+  height: 100%;
+  padding: 5px;
+
+  .calItem {
     display: flex;
-    justify-content: center;
+    flex-direction: row;
 
-    #thumbnail {
-        //width: 100px;
-        //height: 100%;
-        opacity: 0.77;
+    .time {
+      width: 38px;
     }
 
-    #printPreview {
-        display: none;
+    .colorBox {
+      width: 5px;
+      height: 20px;
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-bottom: 2px;
     }
-
-    .printer {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        mix-blend-mode: multiply;
-
-        .areaTitle {
-            color: blue;
-        }
-
-        .property {
-            padding: 4px;
-
-            .title {
-                margin-right: 8px;
-                margin-left: 8px;
-                font-weight: 700;
-            }
-
-            .value {
-            }
-        }
-
-        .columns {
-            position: relative;
-            height: 100%;
-
-            .left {
-                position: absolute;
-                left: 5px;
-                top: 0px;
-            }
-
-            .right {
-                position: absolute;
-                right: 5px;
-                top: 0px;
-                text-align: right;
-            }
-
-            .progress {
-                position: absolute;
-                bottom: 5px;
-                left: 5px;
-                right: 5px;
-                display: flex;
-                width: 40%;
-
-                progress {
-                    height: 50px;
-                    width: 100%;
-                }
-
-                .overlay {
-                    position: absolute;
-                    top: 19px;
-                    display: flex;
-                    justify-content: center;
-                    width: 100%;
-
-                    .ptitle {
-                        //mix-blend-mode: difference;
-                    }
-                }
-            }
-        }
-    }
+  }
 }

@@ -27,7 +27,8 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Ical.Net" Version="4.2.0" />
-	  <PackageReference Include="Itamure.Core" Version="1.0.0-beta5" />
+	  <PackageReference Include="Itamure.Core" Version="1.0.0-beta6" />
+	  <PackageReference Include="RizeDb" Version="2.0.0-beta4" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -51,14 +52,36 @@
 
 	<ItemGroup>
 	  <Content Remove="wwwroot\src\app\calendarDisplay.component.ts" />
+	  <Content Remove="wwwroot\src\app\icon.component.html" />
+	  <Content Remove="wwwroot\src\app\icon.component.less" />
+	  <Content Remove="wwwroot\src\app\icon.component.ts" />
 	  <Content Remove="wwwroot\src\app\printDetails.component.html" />
 	  <Content Remove="wwwroot\src\app\printDetails.component.less" />
 	  <Content Remove="wwwroot\src\app\printerStatusWidget.component.html" />
 	  <Content Remove="wwwroot\src\app\printerStatusWidget.component.less" />
+	  <Content Remove="wwwroot\src\app\Services\calendarTools.service.tt" />
+	  <Content Remove="wwwroot\src\app\Services\octoprintMonitor.service.ts" />
 	  <Content Remove="wwwroot\src\app\settings.component.html" />
 	  <Content Remove="wwwroot\src\app\settings.component.less" />
 	  <Content Remove="wwwroot\src\app\settings.component.ts" />
 	  <Content Remove="wwwroot\src\app\todayWidget.component.ts" />
+	  <Content Remove="wwwroot\src\assets\Icons.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="wwwroot\src\app\Services\calendarTools.service.ts">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>calendarTools.service.tt</DependentUpon>
+	  </None>
+	  <None Update="wwwroot\src\app\Services\calendarTools.service.tt">
+	    <Generator>TextTemplatingFileGenerator</Generator>
+	    <LastGenOutput>calendarTools.service.ts</LastGenOutput>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 	</ItemGroup>
 
 	<PropertyGroup>

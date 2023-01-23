@@ -1,3 +1,51 @@
-<div class="body">
-    These are my settings
+<div class="settings">
+  <div class="row header">
+    <div class="cell">User</div>
+    <div class="cell">Name</div>
+    <div class="cell">Color</div>
+    <div class="cell">iCal Calendar Address</div>
+    <div class="cell icon">&nbsp;</div>
+  </div>
+  <div class="row">
+    <div class="cell">
+      <select [(ngModel)]="SelectedUserId">
+        <option [ngValue]="null">All</option>
+        <option *ngFor="let user of Users" [ngValue]="user.Id">{{user.Name}}</option>
+      </select>
+    </div>
+    <div class="cell">
+      <input class="name" type="text" [(ngModel)]="Name" />
+    </div>
+    <div class="cell">
+      <input class="color" type="color" [(ngModel)]="Color" />
+    </div>
+    <div class="cell icalContainer">
+      <input class="icalAddress" type="url" [(ngModel)]="ICalAddress" />
+    </div>
+    <div class="cell icon">
+      <icon name="Plus" class="addCalendar" [ngClass]="{disabled: !CanAdd()}" (click)="AddCalendar()"></icon>
+    </div>
+  </div>
+
+  <div class="row" *ngFor="let calendar of Calendars">
+    <div class="cell">{{GetUserName(calendar)}}</div>
+    <div class="cell">
+      <input class="name" type="text" [(ngModel)]="calendar.Name" (change)="UpdateCalendar(calendar)"/>
+    </div>
+    <div class="cell">
+      <input class="color" type="color" [(ngModel)]="calendar.Color" (change)="UpdateCalendar(calendar)"/>
+    </div>
+    <div class="cell icalContainer">
+      <input class="icalAddress" type="url" [(ngModel)]="calendar.ICalAddress" (change)="UpdateICal(calendar)"/>
+    </div>
+    <div class="cell icon">
+      <icon name="Trashcan" class="deleteCalendar" (click)="DeleteCalendar(calendar)"></icon>
+    </div>
+  </div>
+</div>
+
+<div class="validatingContainer" *ngIf="Validating">
+  <div class="validateNotice">
+    Validating ICal Calendar Address
+  </div>
 </div>

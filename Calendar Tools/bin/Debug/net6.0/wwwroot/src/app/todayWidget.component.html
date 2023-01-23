@@ -1,3 +1,17 @@
-<div>
-  Today Widget
+<div class="list">
+  <div class="day" *ngFor="let day of Days">
+    {{day.Date | date:'EEEE, MMMM d'}}
+
+    <div class="calItem allDay" *ngFor="let calItem of day.AllDay">
+      <div class="time"></div>
+      <div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
+      <div class="summary">{{calItem.Summary}}</div>
+    </div>
+
+    <div class="calItem event" *ngFor="let calItem of day.Events">
+      <div class="time">{{calItem.StartDate | date:'h:mm'}}</div>
+      <div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
+      <div class="summary">{{calItem.Summary}}</div>
+    </div>
+  </div>  
 </div>
