@@ -92,7 +92,7 @@ namespace OctoprintMonitor
         protected override void Start()
         {
             _stream = GetFileStream("Database.db", false);
-            ObjectStore = new RizeDb.ObjectStore(_stream, Environment.MachineName);
+            ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString());
 
             //TODO: Pull Frequency from Database
             PrinterConnectionManager = new PrinterConnectionManager(ObjectStore, 1);

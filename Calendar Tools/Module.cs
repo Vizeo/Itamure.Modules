@@ -88,7 +88,7 @@ namespace CalendarTools
         protected override void Start()
         {
             _stream = GetFileStream("Database.db", false);
-            ObjectStore = new RizeDb.ObjectStore(_stream, Environment.MachineName);
+            ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString() );
         }
 
         public override void Stop()

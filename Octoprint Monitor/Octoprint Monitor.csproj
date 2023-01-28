@@ -46,7 +46,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Itamure.Core" Version="1.0.0-beta6" />
+		<PackageReference Include="Itamure.Core" Version="1.0.0-beta7" />
 		<PackageReference Include="RizeDb" Version="2.0.0-beta4" />
 	</ItemGroup>
 
