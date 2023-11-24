@@ -1,0 +1,55 @@
+:host {
+    display: contents;
+}
+
+.movieMetadata {
+    display: contents;
+
+    .searchCriteriea {
+        input {
+            margin-right: 5px;
+        }
+    }
+
+    .result {
+    }
+
+    .list {
+        flex: 1 1 auto;
+        overflow: auto;
+        margin-top: 4px;
+        background-color: var(--backgroundColor);
+
+        .items {
+            .item {
+                display: flex;
+                flex-direction: row;
+                padding-top: 4px;
+                padding-bottom: 4px;
+
+                &.selected {
+                    background-color: var(--selectedBackgroundColor);
+                }
+
+                &:hover {
+                    background-color: var(--hoverBackgroundColor);
+                }
+
+                .poster {
+                    width: 64px;
+                    height: 64px;
+
+                    img {
+                        object-fit: contain;
+                        width: 64px;
+                        height: 64px;
+                    }
+                }
+
+                .info {
+                    flex: 1 1 auto;
+                }
+            }
+        }
+    }
+}

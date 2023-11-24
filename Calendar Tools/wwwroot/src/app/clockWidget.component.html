@@ -1,0 +1,15 @@
+<div class="frame">
+    <div class="clock" [ngClass]="{twentyFourHour: TwentyFourHour, showSeconds: ShowSeconds}">
+        <!--<span>&nbsp;</span>-->
+        <!--<span class="hours">{{Hours}}</span>
+        <span>:</span>
+        <span class="minutes">{{Minutes}}</span>
+        <ng-container *ngIf="ShowSeconds">
+            <span>:</span>
+            <span class="seconds">{{Seconds}}</span>
+        </ng-container>
+        <span *ngIf="TwentyFourHour != true" class="part">{{Part}}</span>
+        <span>&nbsp;</span>-->
+        <div>{{Time}}</div>
+    </div>
+</div>

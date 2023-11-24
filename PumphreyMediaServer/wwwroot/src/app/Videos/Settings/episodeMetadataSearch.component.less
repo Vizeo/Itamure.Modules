@@ -1,0 +1,55 @@
+:host {
+    display: contents;
+}
+
+.episodeMetadata {
+    display: contents;
+
+    .searchCriteriea {
+        input {
+            margin-right: 5px;
+        }
+    }
+
+    .result {
+    }
+
+    .list {
+        flex: 1 1 auto;
+        overflow: auto;
+        margin-top: 4px;
+        background-color: var(--backgroundColor);
+
+        .items {
+            .item {
+                display: flex;
+                flex-direction: row;
+                padding: 4px;
+                cursor: pointer;
+
+                &.selected {
+                    background-color: var(--selectedBackgroundColor);
+                }
+
+                &:hover {
+                    background-color: var(--hoverBackgroundColor);
+                }
+
+                .poster {
+                    margin-right: 5px;
+
+                    img {
+                        object-fit: cover;
+                        width: 64px;
+                        height: 64px;
+                        display: block;
+                    }
+                }
+
+                .info {
+                    flex: 1 1 auto;
+                }
+            }
+        }
+    }
+}

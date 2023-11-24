@@ -1,0 +1,34 @@
+:host {
+    display: contents;
+    width: 100%;
+}
+
+.video {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+
+    .image {
+        width: 38px;
+        height: 38px;
+        margin-right: 4px;
+        object-fit: contain;
+    }
+
+    .container {
+        flex: 1 1 auto;
+
+        .name {
+            text-overflow: inherit;
+            overflow: inherit;
+        }
+
+        .directory {
+            color: silver;
+            text-overflow: inherit;
+            overflow: inherit;
+        }
+    }
+}

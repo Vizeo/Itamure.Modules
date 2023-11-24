@@ -1,0 +1,65 @@
+<div class="movie">
+    <ng-container *ngIf="Movie != null">
+        <div class="poster">
+            <img [src]="Image" (error)="MovieImageError()" />
+        </div>
+
+        <div class="info">
+            <div class="title">
+                {{Movie.Name}}
+            </div>
+            <div class="plot">{{Movie.Description!}}</div>
+            <div class="metadata">
+                <ng-container *ngIf="Rating != null && Rating.length > 0">
+                    <div class="rating">
+                        {{Rating}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+                <ng-container *ngIf="Genres != null && Genres.length > 0">
+                    <div class="genres">
+                        {{Genres}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+                <ng-container *ngIf="Movie.Year != null">
+                    <div class="year">
+                        {{Movie.Year}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+                <ng-container *ngIf="Duration != null && Duration.length > 0">
+                    <div class="duration">
+                        {{Duration}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+            </div>
+            <div class="peopleList">
+                <div class="peoples" *ngIf="Actors != null && Actors.length > 0">
+                    <label>Starring:</label>
+                    <div class="actors">
+                        {{Actors}}
+                    </div>
+                </div>
+                <div class="peoples" *ngIf="Directors != null && Directors.length > 0">
+                    <label>Director(s):</label>
+                    <div class="directors">
+                        {{Directors}}
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <img class="unknown" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
+                <label>Watch Movie</label>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<div class="moviePlayer" *ngIf="MovieVisible" (mousemove)="MouseMove()" [ngClass]="{userActive: UserActive}">
+    <videoPlayer></videoPlayer>
+    <div class="toolbar">
+        <div class="command" (click)="CloseMovie()">X</div>
+    </div>
+</div>

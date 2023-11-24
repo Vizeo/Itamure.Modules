@@ -1,0 +1,60 @@
+<div class="episodeList">
+    <ng-container *ngIf="EpisodeVideoMediaItems == null || EpisodeVideoMediaItems.length == 0; else list">
+        <div class="emptyMessage">
+            <div class="message">There are no episodes assigned.</div>
+        </div>
+    </ng-container>
+
+    <ng-template #list>
+        <div class="episods" sortDragList (sortChange)="EpisodeSortChange($event)">
+            <div *ngFor="let episode of EpisodeVideoMediaItems"
+                 class="episode"
+                 [ngClass]="{selected: IsSelected(episode)}"
+                 (click)="Select($event, episode)"
+                 [sortDrag]="episode">
+
+                <div class="dragHandle" dragHandle>
+
+                </div>
+                <episodeVideo draggable="true"
+                              [video]="episode"
+                              class="episodeVideo"
+                              #episodeVideo
+                              (dragstart)="StartDrag($event, episode)"
+                              (dragend)="DragEnd($event)"></episodeVideo>
+                <div class="toolbarArea" (click)="ShowMetadataEditor(episode, episodeVideo)">
+                    <icon name="Three Dots"></icon>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</div>
+
+<seasonEditor #seasonEditor [season]="EditingSeason" (saved)="SaveSeason()" (canceled)="CancelEditSeason()"></seasonEditor>
+
+<dialog #metadataDialog>
+    <div class="title">
+        Episode Metadata
+    </div>
+    <div class="content">
+        <episodeMetadataEditor #editor [video]="EditingVideoMediaItem"></episodeMetadataEditor>
+    </div>
+    <div class="buttons">
+        <button (click)="MetadataSearch()">Search</button>
+        <button (click)="SaveMetadata()" [disabled]="!editor.CanSave()">Save</button>
+        <button (click)="CloseMetadataEditor()">Close</button>
+    </div>
+</dialog>
+
+<dialog #metadataSearch>
+    <div class="title">
+        Metadata Search
+    </div>
+    <div class="content">
+        <episodeMetadataSearch #search [series]="Series" [video]="EditingVideoMediaItem!" (selected)="MetadataSelected($event)"></episodeMetadataSearch>
+    </div>
+    <div class="buttons">
+        <button (click)="StoreSearchedMetadata(); metadataSearch.close()" [disabled]="SelectedSearchItem == null">Select</button>
+        <button (click)="metadataSearch.close()">Cancel</button>
+    </div>
+</dialog>

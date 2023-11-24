@@ -1,0 +1,58 @@
+:host {
+    width: 100%;
+}
+
+.episodeList {
+    height: 0;
+
+    .emptyMessage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .episods {
+        .episode {
+            padding: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            cursor: pointer;
+
+            .episodeVideo {
+            }
+
+            &.selected {
+                background-color: var(--selectedBackgroundColor);
+            }
+
+            &:hover {
+                background-color: var(--hoverBackgroundColor);
+            }
+
+            .dragHandle {
+                &:hover {
+                    cursor: grab;
+                }
+
+                width: 21px;
+                height: 25px;
+                background-image: url(/mediaserver/assets/GripLinesVertical.svg);
+                background-size: contain;
+                background-repeat: no-repeat;
+                color: red;
+            }
+        }
+    }
+
+    .toolbarArea {
+        align-self: center;
+
+        &:hover {
+            color: blue;
+        }
+    }
+}

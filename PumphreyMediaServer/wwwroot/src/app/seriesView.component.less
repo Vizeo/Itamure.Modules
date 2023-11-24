@@ -1,0 +1,20 @@
+:host {
+    display: contents;
+}
+
+.seriesList {
+    margin-left: 5px;
+    margin-right: 5px;
+    overflow: auto;
+    height: 0;
+    flex: 1 1 auto;
+
+    .seriesItem {
+        padding: 5px;
+
+        &:hover {
+            background-color: var(--hoverBackgroundColor);
+            cursor: pointer;
+        }
+    }
+}

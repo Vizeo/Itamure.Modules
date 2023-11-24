@@ -1,0 +1,10 @@
+<div class="series">
+    <div class="message">Please add or select a series</div>
+    <div class="addSeriesFolder" (click)="Add()">
+        <div class="mask">
+        </div>
+    </div>
+</div>
+
+<seriesEditor #seriesEditor [series]="NewSeries" (saved)="SaveSeries()" (canceled)="CancelSaveSeries()">
+</seriesEditor>

@@ -1,0 +1,28 @@
+<div class="movies" title="">
+    <div class="header">
+        {{Title}}
+    </div>
+    <div>
+        <div class="paddles">
+            <button class="left paddle" (click)="ScrollLeft()" [ngClass]="{hidden: AllTheWayLeft}">
+                <img src="/MediaServer/assets/Paddle.svg"/>
+            </button>
+            <button class="right paddle" (click)="ScrollRight()" [ngClass]="{hidden: AllTheWayRight}">
+                <img src="/MediaServer/assets/Paddle.svg"/>
+            </button>
+        </div>
+
+        <div class="moviesContainier" #moviesList (scroll)="UpdatePaddles()">
+            <ng-container *ngIf="Movies != null">
+                <div *ngFor="let movie of Movies" class="movie" (click)="SelectMovie(movie)">
+                    <div class="poster">
+                        <img [src]="movie.Image" (error)="MovieImageError(movie)" />
+                    </div>
+                    <div class="title">
+                        {{movie.Name}}
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
+</div>

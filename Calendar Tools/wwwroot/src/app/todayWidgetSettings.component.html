@@ -1,0 +1,13 @@
+<div class="settings" *ngIf="Settings != null">
+    <div class="property">
+        <label>Color</label>
+        <input type="color" [(ngModel)]="Settings.Color" />
+        <input type="text" [(ngModel)]="Settings.Color" />
+    </div>
+
+    <div class="property">
+        <label>Background</label>
+        <input type="color" [(ngModel)]="Settings.BackgroundColor" />
+        <input type="text" [(ngModel)]="Settings.BackgroundColor" />
+    </div>
+</div>

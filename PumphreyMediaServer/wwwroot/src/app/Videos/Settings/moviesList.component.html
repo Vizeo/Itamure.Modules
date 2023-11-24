@@ -1,0 +1,72 @@
+<div class="movieVideoMediaItemLists">
+    <div *ngFor="let movieVideoMediaItem of GetFilteredMovieMediaItems()"
+         [ngClass]="{selected: IsSelected(movieVideoMediaItem)}"
+         class="movieVideoMediaItem"
+         draggable="true"
+         (dragstart)="StartDrag($event, movieVideoMediaItem)"
+         (dragend)="DragEnd($event)"
+         (click)="Select($event, movieVideoMediaItem)">
+        <movieVideo [video]="movieVideoMediaItem" #movieVideo>
+        </movieVideo>
+        <div class="toolbarArea" (click)="ShowMetadataEditor(movieVideoMediaItem, movieVideo)">
+            <icon name="Three Dots"></icon>
+        </div>
+    </div>
+</div>
+
+<dialog #folderDialog class="folderDialog">
+    <div class="title">
+        Folder
+    </div>
+    <div class="content">
+        <div class="properties" *ngIf="EditingFolder != null">
+            <div class="property">
+                <label>Name</label>
+                <div>
+                    <input type="text" [(ngModel)]="EditingFolder.Name"
+                           #folderName
+                           groupValidator="folderValidation"
+                           #name="validator"
+                           [required]="true"
+                           [minLength]="3" />
+                    <div class="error" *ngIf="name.Touched && name.Errors.Required">Name is required</div>
+                    <div class="error" *ngIf="name.Touched && name.Errors.MinLength">Requires a minimum length of 3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="SaveFolder()" [disabled]="!CanSaveFolder()">OK</button>
+        <button (click)="CancelEditFolder()">Cancel</button>
+    </div>
+</dialog>
+
+<dialog #metadataDialog>
+    <div class="title">
+        Movie Metadata
+    </div>
+    <div class="content">
+        <ng-container *ngIf="EditingVideoMediaItem != null">
+            {{EditingVideoMediaItem.FilePath!}}
+        </ng-container>
+        <movieMetadataEditor #editor [video]="EditingVideoMediaItem"></movieMetadataEditor>
+    </div>
+    <div class="buttons">
+        <button (click)="MetadataSearch()">Search</button>
+        <button (click)="SaveMetadata()" [disabled]="!editor.CanSave()">Save</button>
+        <button (click)="CloseMetadataEditor()">Close</button>
+    </div>
+</dialog>
+
+<dialog #metadataSearch>
+    <div class="title">
+        Metadata Search
+    </div>
+    <div class="content">
+        <movieMetadataSearch #search [video]="EditingVideoMediaItem!" (selected)="MetadataSelected($event)"></movieMetadataSearch>
+    </div>
+    <div class="buttons">
+        <button (click)="StoreSearchedMetadata(); metadataSearch.close()" [disabled]="SelectedSearchItem == null">Select</button>
+        <button (click)="metadataSearch.close()">Cancel</button>
+    </div>
+</dialog>

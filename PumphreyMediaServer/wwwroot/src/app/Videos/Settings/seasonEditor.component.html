@@ -1,0 +1,26 @@
+<dialog #seasonDialog class="seasonDialog">
+    <div class="title">
+        Season
+    </div>
+    <div class="content">
+        <div class="properties" *ngIf="Season != null">
+            <div class="property">
+                <label>Name</label>
+                <div>
+                    <input type="text" [(ngModel)]="Season.Name"
+                           #seasonName
+                           groupValidator="seasonValidation"
+                           #name="validator"
+                           [required]="true"
+                           [minLength]="3" />
+                    <div class="error" *ngIf="name.Touched && name.Errors.Required">Name is required</div>
+                    <div class="error" *ngIf="name.Touched && name.Errors.MinLength">Requires a minimum length of 3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="Save()" [disabled]="!CanSave()">OK</button>
+        <button (click)="Cancel()">Cancel</button>
+    </div>
+</dialog>

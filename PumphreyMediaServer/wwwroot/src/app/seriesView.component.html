@@ -1,0 +1,5 @@
+<div class="seriesList">
+    <div class="seriesItem" *ngFor="let series of SeriesList" (click)="ShowDetails(series)">
+        <seriesPreview [series]="series" [ratings]="Ratings!"></seriesPreview>
+    </div>
+</div>

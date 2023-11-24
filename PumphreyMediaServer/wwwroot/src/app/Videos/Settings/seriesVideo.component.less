@@ -1,0 +1,38 @@
+.video {
+    display: flex;
+    flex-direction: row;
+
+    .image {
+        background-image: url(/mediaserver/assets/UnknownMedia.svg);
+        background-size: cover;
+        --size: 50px;
+        width: var(--size);
+        min-width: var(--size);
+        height: var(--size);
+    }
+
+    .details {
+        flex: 1 1 auto;
+        display: table;
+
+        .detail {
+            display: table-row;
+
+            label {
+                display: table-cell;
+                font-weight: 700;
+                width: 0;
+                padding-left: 10px;
+                padding-top: 10px;
+            }
+
+            & > *:nth-child(2) {
+                display: table-cell;
+                width: 100%;
+                box-sizing: border-box;
+                padding-left: 10px;
+                padding-top: 10px;
+            }
+        }
+    }
+}

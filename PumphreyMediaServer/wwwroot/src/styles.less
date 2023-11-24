@@ -1,0 +1,425 @@
+html {
+    height: 100%;
+    overflow: hidden;
+}
+
+:root {
+    --backgroundColor: #1f2126;
+    --color: #ffffff;
+    //Scroll
+    --scrollBackgroundColor: transparent;
+    --scrollThumbColor: #dddddd;
+    //Templates
+    --splitterColor: #676b77;
+    //Lists
+    --selectedBackgroundColor: #4d4d4d;
+    --hoverBackgroundColor: #a9a9a9;
+    //Tables
+    --tableHeaderBackgroundColor: #434343;
+    --tableHeaderColor: var(--color);
+    --tableBorderColor: var(--color);
+    //Controls
+    --controlBackgroundColor: #d9d9d9;
+    --controlBorderColor: #434346;
+    --controlColor: #000000;
+    --focusBorderColor: #007acc;
+    --checkColor: white;
+    //Buttons
+    --buttonBackgroundColor: #333337;
+    --buttonBorderColor: #434346;
+    --buttonColor: #fafafa;
+    --buttonDisabledBackgroundColor: #141416;
+    --buttonDisabledColor: #a09898;
+    --buttonHoverBackgroundColor: #4c4c4e;
+    --buttonHoverColor: var(--buttonColor);
+}
+
+body {
+    color: var(--color);
+    background-color: var(--backgroundColor);
+    height: 100%;
+    margin: 0;
+    letter-spacing: .01785714em;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    min-width: 600px;
+    min-height: 400px;
+}
+
+input {
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--scrollBackgroundColor); //color of the tracking area
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+::-webkit-scrollbar-corner {
+    background: var(--scrollBackgroundColor); //color of the tracking area
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--scrollThumbColor); //color of the scroll thumb
+    border-radius: 20px; // roundness of the scroll thumb
+    border: none; //  creates padding around scroll thumb
+}
+
+dialog {
+    background-color: #9f9f9f;
+    border-color: #6360af;
+    border-radius: 12px;
+    padding: 0;
+    --backgroundColor: #696969;
+
+    &::-webkit-scrollbar {
+        width: unset;
+        height: unset;
+    }
+
+    &:modal {
+        display: flex;
+        flex-direction: column;
+        height: min-content;
+        overflow: hidden;
+    }
+
+    .title {
+        font-size: 20px;
+        background-color: #5b5b5b;
+        padding: 3px;
+        color: white;
+        text-align: center;
+    }
+
+    .content {
+        padding: 10px;
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+        max-height: calc(100vmin - 140px);
+    }
+
+    .buttons {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+    }
+
+    &::backdrop {
+        background-color: #0000007d;
+    }
+}
+
+.properties {
+    display: table;
+
+    .property {
+        display: table-row;
+
+        label {
+            display: table-cell;
+            padding-right: 8px;
+            height: 28px;
+            padding-bottom: 4px;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        & > *:nth-child(2) {
+            display: table-cell;
+            width: 100px;
+            box-sizing: border-box;
+        }
+
+        &:has(input[required]) {
+            label {
+                position: relative;
+                padding-right: 13px;
+
+                &::after {
+                    content: "*";
+                    position: absolute;
+                    color: red;
+                    display: block;
+                    font-size: 24px;
+                    right: 1px;
+                    top: 0;
+                }
+            }
+        }
+
+        &:has(.error) {
+            input[required] {
+                border-color: red !important;
+            }
+        }
+
+        .error {
+            color: red;
+        }
+    }
+}
+
+input[type=text],
+input[type=email],
+input[type=password],
+input[type=tel],
+input[type=search],
+input[type=number],
+input[type=datetime-local],
+input[type=time],
+input[type=date],
+textarea {
+    background-color: var(--controlBackgroundColor);
+    border: solid 1px var(--controlBorderColor);
+    outline: none;
+    color: var(--controlColor);
+    padding: 5px;
+    caret-color: auto;
+
+    &:focus, &:active {
+        border-color: var(--focusBorderColor);
+    }
+
+    &:disabled {
+        color: #656565;
+    }
+
+    &[required] {
+    }
+}
+
+textarea {
+    resize: none;
+}
+
+input[type=number] {
+    text-align: right;
+}
+
+input[type=checkbox] {
+    --size: 15px;
+    --borderWidth: 1px;
+    --borderColor: silver;
+    width: var(--size);
+    height: var(--size);
+
+    &:focus, &:active, &:hover {
+        --borderColor: var(--focusBorderColor);
+    }
+
+    &:disabled {
+        --borderColor: #434346;
+        --checkColor: #434346;
+        --backgroundColor: black;
+    }
+
+    &::before {
+        background-color: var(--checkColor);
+        position: relative;
+        display: block;
+        width: var(--size);
+        height: var(--size);
+        border: var(--borderWidth) solid var(--borderColor);
+        content: "";
+    }
+
+    &::after {
+        content: "";
+        background-color: var(--backgroundColor);
+        position: relative;
+        display: block;
+        width: var(--size);
+        height: var(--size);
+        top: calc(calc(var(--size) + var(--borderWidth)) * -1);
+        border: var(--borderWidth) solid var(--borderColor);
+    }
+
+    &:checked:after {
+        background-color: var(--checkColor);
+        clip-path: polygon(22% 46%, 10% 57%, 41% 90%, 91% 13%, 73% 15%, 40% 64%);
+    }
+
+    &:checked:before {
+        background-color: var(--backgroundColor);
+    }
+}
+
+input[type=radio] {
+    --size: 15px;
+    --borderWidth: 1px;
+    --borderColor: silver;
+    width: var(--size);
+    height: var(--size);
+
+    &:focus, &:active, &:hover {
+        --borderColor: var(--focusBorderColor);
+    }
+
+    &:disabled {
+        --borderColor: #434346;
+        --checkColor: #434346;
+        --backgroundColor: black;
+    }
+
+    &::before {
+        background-color: var(--checkColor);
+        position: relative;
+        display: block;
+        width: var(--size);
+        height: var(--size);
+        border: var(--borderWidth) solid var(--borderColor);
+        content: "";
+        border-radius: 25px;
+    }
+
+    &::after {
+        content: "";
+        background-color: var(--backgroundColor);
+        position: relative;
+        display: block;
+        width: var(--size);
+        height: var(--size);
+        top: calc(calc(var(--size) + calc(var(--borderWidth))) * -1);
+        border: var(--borderWidth) solid var(--borderColor);
+        border-radius: 25px;
+    }
+
+    &:checked:after {
+        background-color: var(--checkColor);
+        clip-path: circle(20% at 51%);
+    }
+
+    &:checked:before {
+        background-color: var(--backgroundColor);
+    }
+}
+
+select {
+    background-color: var(--controlBackgroundColor);
+    border: solid 1px var(--controlBorderColor);
+    outline: none;
+    color: var(--controlColor);
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+
+    option {
+        background-color: var(--controlBackgroundColor);
+        padding: 5px;
+        color: var(--controlColor);
+    }
+}
+
+button {
+    background-color: var(--buttonBackgroundColor);
+    border: 1 solid var(--buttonBorderColor);
+    color: var(--buttonColor);
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+
+    &:hover {
+        background-color: var(--buttonHoverBackgroundColor);
+        color: var(--buttonHoverColor);
+        cursor: pointer;
+    }
+
+    &:disabled {
+        background-color: var(--buttonDisabledBackgroundColor);
+        color: var(--buttonDisabledColor);
+        cursor: not-allowed;
+    }
+
+    &:has(icon:only-child) {
+        padding: 5px;
+        display: flex;
+        height: 26px;
+        align-items: center;
+    }
+}
+
+
+//Shared controls styles
+mainMenu {
+    --color: #a8afbd;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .mainMenu {
+        display: flex;
+        flex-direction: row;
+        padding: 10px;
+        background-color: #16181d;
+
+        .menuItems {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 20px;
+
+            .menuItem {
+                color: var(--color);
+                font-size: 17px;
+                font-weight: 700;
+                padding: 10px;
+                background-color: transparent;
+                transition: background-color 1s;
+                border-radius: 10px;
+                position: relative;
+                white-space: nowrap;
+
+                &:hover {
+                    background-color: #5d5d5d;
+                    cursor: pointer;
+                    color: white;
+                }
+
+                &.selected {
+                    color: white;
+                }
+            }
+        }
+
+        .tools {
+            display: flex;
+            flex-direction: row;
+            color: #a8afbd;
+
+            .tool {
+                font-size: 17px;
+                padding: 10px;
+                background-color: transparent;
+                transition: background-color 1s;
+                border-radius: 10px;
+
+                &:hover {
+                    background-color: #5d5d5d;
+                    cursor: pointer;
+                    font-size: 17px;
+                    padding: 10px;
+                    color: white;
+                }
+            }
+        }
+    }
+}

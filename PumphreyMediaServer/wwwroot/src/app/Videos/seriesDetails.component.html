@@ -1,0 +1,59 @@
+<div class="seriesDetails">
+    <ng-container *ngIf="Series != null">
+        <div class="header">
+            <div class="title">
+                {{Series!.Name}}
+            </div>
+            <div class="metadata">
+                <div class="rating" *ngIf="Rating != null && Rating.length > 0">
+                    {{Rating}}
+                </div>
+            </div>
+        </div>
+        <div class="scrollArea">
+            <div class="details">
+                <div class="image">
+                    <img class="image" [src]="Image" (error)="ImageError()" [ngClass]="{error: HasImageError}" />
+                </div>
+                <div class="info">
+                    <div class="description">
+                        {{Series!.Description}}
+                    </div>
+                </div>
+            </div>
+            <div class="episodesDetail">
+                <div class="seasonsList">
+                    <button class="selectedSeason" popovertarget="seasonSelect">
+                        <div>{{SelectedSeason!.Name!}}</div><div class="pointer"></div>
+                    </button>
+                </div>
+                <div class="episodeList" *ngIf="Episodes != null">
+                    <div class="episode" *ngFor="let episode of Episodes; index as i" (click)="PlayEpisode(episode)">
+                        <img [src]="episode.Image" (error)="EpisodeImageError(episode)" />
+                        <div class="index">Episode {{i + 1}}</div>
+                        <div class="name">{{episode.Name!}}</div>
+                        <div class="plot">{{episode.Description!}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<div id="seasonSelect" popover>
+    <button *ngFor="let season of Series!.Seasons!" 
+         class="season" 
+         popovertarget="seasonSelect"
+         popovertargetaction="hide"
+         (click)="SetSeason(season)">
+        {{season.Name!}}
+    </button>
+</div>
+
+<dialog class="videoPlayer" #videoPlayerDialog>
+    <videoPlayer></videoPlayer>
+
+    <div class="buttons">
+        <button (click)="ClosePlayer()">Close</button>
+    </div>
+</dialog>

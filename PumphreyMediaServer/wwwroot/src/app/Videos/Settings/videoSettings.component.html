@@ -1,0 +1,154 @@
+<div class="videoSettings">
+    <splitView>
+        <ng-template #leftPaneTemplate>
+            <!--This is context specific based on the editor shown-->
+            <div class="toolbar">
+                <button (click)="Add()" [disabled]="!CanAdd">
+                    <icon name="Plus"></icon>
+                </button>
+                <button (click)="Edit()" [disabled]="!CanEdit">
+                    <icon name="Edit"></icon>
+                </button>
+                <button (click)="Delete()" [disabled]="!CanDelete">
+                    <icon name="Trashcan"></icon>
+                </button>
+            </div>
+            <div class="folderList">
+                <div class="folder" routerLink="/Settings/Videos/Unassigned" [ngClass]="{selected: Selected == ParentFolders.Unassigned, expanded: Selected == ParentFolders.Unassigned}" (click)="ShowUnassigned()">
+                    <div class="icon">
+                        <div class="overlay unassigned"></div>
+                    </div>
+                    <div>Unassigned</div>
+                </div>
+
+                <expander [auto]="false" #expander>
+                    <ng-template #header let-expanded>
+                        <div class="folder"
+                             [ngClass]="{selected: Selected == ParentFolders.Movies, draggingOver: DraggingOver == ParentFolders.Movies, expanded: expanded}"
+                             (click)="expander.Expanded = true; ShowMovies(null)"
+                             (dragover)="DragOver($event)"
+                             (dragenter)="DragEnter($event, ParentFolders.Movies)"
+                             (dragleave)="DragLeave($event, ParentFolders.Movies)"
+                             (drop)="MoviesDrop($event, null)">
+                            <div class="icon" (click)="SetExpanded($event, expander, !expander.Expanded)">
+                                <div class="overlay movies"></div>
+                            </div>
+                            <div>Movies</div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #content>
+                        <ng-container *ngIf="MovieFolders != null">
+                            <ng-container [ngTemplateOutlet]="movieFolderTemplate" [ngTemplateOutletContext]="{$implicit: (MovieFolders)}"></ng-container>
+                        </ng-container>
+                    </ng-template>
+                </expander>
+
+                <expander #sExpander [auto]="false">
+                    <ng-template #header let-expanded>
+                        <div class="folder"
+                             [ngClass]="{selected: Selected == ParentFolders.Series, draggingOver: DraggingOver == ParentFolders.Series, expanded: expanded}"
+                             (dragenter)="DragEnter($event, ParentFolders.Series)"
+                             (dragleave)="DragLeave($event, ParentFolders.Series)"
+                             (click)="sExpander.Expanded = true; ShowSeries()">
+                            <div class="icon" (click)="SetExpanded($event, sExpander, !sExpander.Expanded)">
+                                <div class="overlay series"></div>
+                            </div>
+                            <div>Series</div>
+                        </div>
+                    </ng-template>
+
+                    <ng-template #content>
+                        <div class="sub">
+                            <expander #ssExpander *ngFor="let ser of Serieses" [auto]="false">
+                                <ng-template #header let-expanded>
+                                    <div class="folder"
+                                         [ngClass]="{selected: Selected == ser, draggingOver: DraggingOver == ser, expanded: expanded}"
+                                         (click)="ssExpander.Expanded = true; ShowSeasons(ser)">
+                                        <div class="icon" (click)="SetExpanded($event, ssExpander, !ssExpander.Expanded)">
+                                            <div class="overlay">
+                                                <img #seriesImg [src]="ser.Image" (error)="ImageSeriesError(ser)" />
+                                            </div>                                            
+                                        </div>
+                                        <div>{{ser.Name}}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template #content>
+                                    <div class="sub">
+                                        <div class="folder"
+                                             [ngClass]="{selected: Selected == season, draggingOver: DraggingOver == season, expanded: Selected == season }"
+                                             *ngFor="let season of ser.Seasons"
+                                             (click)="ShowSeason(season)"
+                                             (dragover)="DragOver($event)"
+                                             (dragenter)="DragEnter($event, season)"
+                                             (dragleave)="DragLeave($event, season)"
+                                             (drop)="SeasonDrop($event, ser.Id!, season.Id!)">
+                                            <div class="icon">
+                                                <div class="overlay"></div>
+                                            </div>
+                                            <div>{{season.Name}}</div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </expander>
+                        </div>
+                    </ng-template>
+                </expander>
+            </div>
+        </ng-template>
+        <ng-template #rightPaneTemplate>
+            <ng-container [ngSwitch]="SelectedManagerViewType" class="editorContainer">
+                <unassignedVideoList #videoManager
+                                     *ngSwitchCase="ManagerViewType.Unassigned"
+                                     (dragStarted)="MediaDragStart($event)"></unassignedVideoList>
+                <moviesList #videoManager
+                            [folder]="Folder!"
+                            *ngSwitchCase="ManagerViewType.Movies"
+                            (folderAdded)="MovieFolderAdded($event)"
+                            (folderDeleted)="MovieFolderDeleted($event)"
+                            (dragStarted)="MediaDragStart($event)"></moviesList>
+                <seriesList #videoManager
+                            *ngSwitchCase="ManagerViewType.Series"
+                            (seriesAdded)="SeriesAdded($event)"></seriesList>
+                <seasonList #videoManager
+                            [series]="Series!"
+                            (seriesDeleted)="SeriesDeleted($event)"
+                            (seriesUpdated)="SeriesUpdated($event)"
+                            (seasonAdded)="SeasonAdded($event)"
+                            *ngSwitchCase="ManagerViewType.Seasons"></seasonList>
+                <episodeList #videoManager
+                             [series]="Series!"
+                             [season]="Season!"
+                             (seasonDeleted)="SeasonDeleted($event)"
+                             *ngSwitchCase="ManagerViewType.Season"
+                             (dragStarted)="MediaDragStart($event)">
+                </episodeList>
+            </ng-container>
+        </ng-template>
+    </splitView>
+</div>
+
+<ng-template #movieFolderTemplate let-folders>
+    <div class="sub">
+        <expander [auto]="false" *ngFor="let folder of folders" #expander>
+            <ng-template #header let-expanded>
+                <div class="folder"
+                     (click)="expander.Expanded = true; ShowMovies(folder)"
+                     (dragover)="DragOver($event)"
+                     (dragenter)="DragEnter($event, folder)"
+                     (dragleave)="DragLeave($event, folder)"
+                     (drop)="MoviesDrop($event, folder)"
+                     [ngClass]="{selected: Selected == folder, draggingOver: DraggingOver == folder, expanded: expanded}">
+                    <div class="icon" (click)="SetExpanded($event, expander, !expander.Expanded)">
+                        <div class="overlay"></div>
+                    </div>
+                    <div>{{folder.Name!}}</div>
+                </div>
+            </ng-template>
+            <ng-template #content>
+                <ng-container [ngTemplateOutlet]="movieFolderTemplate" [ngTemplateOutletContext]="{$implicit: (folder.Folders)}">
+                </ng-container>
+            </ng-template>
+        </expander>
+    </div>
+</ng-template>

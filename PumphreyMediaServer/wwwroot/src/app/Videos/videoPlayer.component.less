@@ -1,0 +1,17 @@
+:host {
+    display: contents;
+    width: 100%;
+}
+
+.videoPlayer {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    video {
+        max-width: 100vw;
+        max-height: calc(100vh - 100px);
+        flex: 1 1 auto;
+    }
+}

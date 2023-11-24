@@ -1,0 +1,20 @@
+<div class="seriesDetails">
+    <div class="image">
+        <img class="image" [src]="Image" (error)="ImageError()" [ngClass]="{error: HasImageError}"/>
+    </div>
+    <div class="info">
+        <div class="header">
+            <div class="title">
+                {{Series!.Name}}
+            </div>
+            <div class="metadata">
+                <div class="rating" *ngIf="Rating != null && Rating.length > 0">
+                    {{Rating}}
+                </div>
+            </div>
+        </div>
+        <div class="description">
+            {{Series!.Description}}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,35 @@
+<div class="episodeMetadata" *ngIf="VideoFileMediaItem != null">
+    <div class="image">
+        <imageUpload #imageUpload [src]="Image" (imageDropped)="ImageDropped($event)">
+            Image here
+        </imageUpload>
+    </div>
+    <div class="generalData">
+        <div class="properties">
+            <div class="property">
+                <label>Title</label>
+                <input type="text"
+                       [(ngModel)]="VideoFileMediaItem!.Name"
+                       groupValidator="episodeValidation"
+                       #name="validator"
+                       [required]="true"
+                       [minLength]="3" />
+                <div class="error" *ngIf="name.Touched && name.Errors.Required">Name is required</div>
+                <div class="error" *ngIf="name.Touched && name.Errors.MinLength">Requires a minimum length of 3</div>
+            </div>
+            <div class="property">
+                <label>Rating</label>
+                <select [(ngModel)]="VideoFileMediaItem!.RatingId">
+                    <option [ngValue]="null">None</option>
+                    <option *ngFor="let rating of Ratings" [ngValue]="rating.Id">
+                        {{rating.Name}}
+                    </option>
+                </select>
+            </div>
+            <div class="property">
+                <label>Desctription</label>
+                <textarea [(ngModel)]="VideoFileMediaItem!.Description"></textarea>
+            </div>
+        </div>
+    </div>
+</div>

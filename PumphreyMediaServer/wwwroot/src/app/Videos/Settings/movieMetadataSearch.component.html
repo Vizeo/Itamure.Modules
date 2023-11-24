@@ -1,0 +1,19 @@
+<div class="movieMetadata" *ngIf="VideoFileMediaItem != null">    
+    <div class="searchCriteriea">
+        <input type="search" [(ngModel)]="Search"/>
+        <button (click)="SearchDatabase()">Search</button>
+    </div>
+    <div class="list" *ngIf="SearchResult != null">
+        <div class="items">
+            <div class="item" *ngFor="let item of SearchResult.Search" [ngClass]="{selected: item == SelectedSearchItem}" (click)="SelectSearchItem(item)">
+                <div class="poster">
+                    <img [src]="item.Poster" />
+                </div>
+                <div class="info">
+                    <div>{{item.Title}}</div>
+                    <div>{{item.Year}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

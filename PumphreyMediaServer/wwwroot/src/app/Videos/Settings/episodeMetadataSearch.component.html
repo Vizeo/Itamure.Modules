@@ -1,0 +1,19 @@
+<div class="episodeMetadata" *ngIf="VideoFileMediaItem != null">    
+    <div class="searchCriteriea">
+        <input type="search" [(ngModel)]="Search"/>
+        <button (click)="SearchDatabase()">Search</button>
+    </div>
+    <div class="list" *ngIf="EpisodeResult != null">
+        <div class="items">
+            <div class="item" (click)="SelectSearchItem(EpisodeResult)">
+                <div class="poster">
+                    <img [src]="EpisodeResult.Poster" />
+                </div>
+                <div class="info">
+                    <div>{{EpisodeResult.Title}}</div>
+                    <div>{{EpisodeResult.Year}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

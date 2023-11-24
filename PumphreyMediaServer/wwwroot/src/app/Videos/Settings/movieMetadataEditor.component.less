@@ -1,0 +1,25 @@
+:host {
+    display: contents;
+}
+
+.movieMetadata {
+    display: flex;
+    flex-direction: row;
+
+    .image {
+        max-width: 64px;
+        width: 64px;
+        margin: 5px;
+    }
+
+    .generalData {
+        flex: 1 1 auto;
+        .properties {
+            .property {
+                input, select, textarea {
+                    width: 200px;
+                }
+            }
+        }
+    }
+}

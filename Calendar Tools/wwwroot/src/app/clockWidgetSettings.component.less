@@ -1,0 +1,36 @@
+.settings {
+    width: 230px;
+    display: table;
+
+    .property {
+        display: table-row;
+
+        label {
+            display: table-cell;
+            white-space: nowrap;
+            width: 104px;
+        }
+
+        :nth-child(2) {
+            display: table-cell;
+            white-space: nowrap;
+            outline: none;
+        }
+
+        :nth-child(3) {
+            display: table-cell;
+            white-space: nowrap;
+            outline: none;
+        }
+
+        input[type=color] {
+            height: 21px;
+            width: 51px;
+        }
+
+        input[type=text] {
+            height: 15px;
+            width: 62px;
+        }
+    }
+}

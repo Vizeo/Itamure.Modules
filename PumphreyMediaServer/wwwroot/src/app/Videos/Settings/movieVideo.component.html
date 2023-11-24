@@ -1,0 +1,7 @@
+<div class="video" *ngIf="VideoFileMediaItem != null" elementVisible (visible)="ShowImage()">
+    <img class="image" #image (error)="ImageError()" />
+    <div class="container">
+        <div class="name">{{Name}}</div>
+        <div class="directory">{{Directory}}</div>
+    </div>
+</div>

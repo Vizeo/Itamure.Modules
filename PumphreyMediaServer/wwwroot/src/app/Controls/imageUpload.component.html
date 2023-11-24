@@ -1,0 +1,14 @@
+<div class="fileDrop"
+	 (dragover)="DraggingOver($event)"
+	 (drop)="Drop($event)">
+	<!--<input type="file" class="fileFinder" accept="{{Accept}}" />
+	<div class="fileFinderIcon" (click)="FindFile()">-->
+	<!--<fa-icon [icon]="faPaperclip" [fixedWidth]="true" [styles]="{'width': '20px', 'height': '20px', 'color': '#495057'}"></fa-icon>-->
+	<!--find file
+	</div>-->
+	<!--<ng-content></ng-content>-->
+	<ng-container *ngIf="!SourceSet">
+		<img class="unknown" src="/MediaServer/assets/UnknownMedia.svg"/>
+	</ng-container>
+	<img class="image" #image [ngClass]="{visible: SourceSet}" (error)="ImageError()"/>
+</div>

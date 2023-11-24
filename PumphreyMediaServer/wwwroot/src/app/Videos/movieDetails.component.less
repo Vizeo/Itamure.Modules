@@ -1,0 +1,118 @@
+:host {
+    display: contents;
+}
+
+.movie {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    margin: 10px;
+
+    .poster {
+        img {
+            max-width: 260px;
+        }
+    }
+
+    .player {
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info {
+        overflow: auto;
+        flex: 1 1 auto;
+        margin-left: 10px;
+
+        .title {
+            font-size: 28px;
+        }
+
+        .metadata {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-top: 10px;
+            gap: 10px;
+
+            div:last-child {
+                display: none;
+            }
+        }
+
+        .peopleList {
+            .peoples {
+                display: flex;
+                flex-direction: row;
+                flex-flow: wrap;
+                margin-top: 10px;
+
+                label {
+                    font-weight: 700;
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .actions {
+            display: flex;
+            flex-direction: row;
+            margin-top: 50px;
+            align-items: center;
+            padding-left: 10px;
+
+            img {
+                width: 50px;
+                transition: transform .5s;
+
+                &:hover {
+                    cursor: pointer;
+                    transform: scale(1.10)
+                }
+            }
+
+            label {
+                margin-left: 10px;
+                text-transform: uppercase;
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+.moviePlayer {
+    background-color: black;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: none;
+
+    .toolbar {
+        padding: 5px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: opacity .25s;
+        opacity: 0;
+
+        .command {
+            font-size: 25px;
+
+            &:hover {
+                cursor: pointer;
+                color: blue;
+            }
+        }
+    }
+
+    &.userActive {
+        cursor: default;
+
+        .toolbar {
+            opacity: 1;
+        }
+    }
+}

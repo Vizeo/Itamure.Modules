@@ -1,0 +1,52 @@
+<div class="mediaFileTypeSettings">
+    <div class="mediaFileTypes">
+        <div class="header mediaFileType">
+            <div class="fileExtension" (click)="Sort('FileExtension')">
+                File Extension
+            </div>
+            <div class="contentType"  (click)="Sort('ContentType')">
+                Content Type
+            </div>
+            <div class="mediaType" (click)="Sort('MediaType')">
+                Media Type
+            </div>
+            <div class="control">&nbsp;</div>
+        </div>
+        <div class="addMediaFileType mediaFileType">
+            <div class="fileExtension">
+                <input type="text" [(ngModel)]="NewMediaFileType.FileExtension" pattern="^\.[a-zA-Z0-9]+$"/>
+            </div>
+            <div class="contentType">
+                <input type="text" [(ngModel)]="NewMediaFileType.ContentType" pattern="\w+/[-+.\w]+"/>
+            </div>
+            <div class="mediaType">
+                <select [(ngModel)]="NewMediaFileType.MediaType">
+                    <option [ngValue]="Audio">Audio</option>
+                    <option [ngValue]="Image">Image</option>
+                    <option [ngValue]="Video">Video</option>
+                </select>
+            </div>
+            <div class="control">
+                <button [disabled]="!CanAddMediaFileType()" (click)="AddMediaFileType()">
+                    <icon name="Plus"></icon>
+                </button>
+            </div>
+        </div>
+        <div *ngFor="let mediaFileType of MediaFileTypes" class="mediaFileType">
+            <div class="fileExtension">
+                {{mediaFileType.FileExtension}}
+            </div>
+            <div class="contentType">
+                {{mediaFileType.ContentType}}
+            </div>
+            <div class="mediaType">
+                {{GetName(mediaFileType.MediaType!)}}
+            </div>
+            <div class="control">
+                <button (click)="RemoveMediaFileType(mediaFileType)">
+                    <icon name="Trashcan"></icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

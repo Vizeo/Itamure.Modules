@@ -1,0 +1,25 @@
+.frame {
+    background-color: var(--backgroundColor);
+    color: var(--color);
+    height: 100%;
+    display: flex;
+    box-sizing: border-box;
+
+    .clock {
+        font-size: 23vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1 1 auto;
+
+        .part {
+            margin-left: 4vw;
+        }
+
+        &.showSeconds {
+            &:not(.twentyFourHour) {
+                font-size: 17vw;
+            }
+        }
+    }
+}

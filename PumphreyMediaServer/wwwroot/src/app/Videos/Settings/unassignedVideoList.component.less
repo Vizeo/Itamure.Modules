@@ -1,0 +1,37 @@
+:host {
+    width: 100%;
+}
+
+.unassignedVideoList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .tools {
+        padding: 5px;
+
+        input {
+            border-radius: 3px;
+        }
+    }
+
+    .unassignedVideoMediaItemLists {
+        flex: 1 1 auto;
+        overflow: auto;
+        height: 0;
+
+        .unassignedVideoMediaItem {
+            padding: 5px;
+            cursor: pointer;
+            width: 100%;
+
+            &:hover {
+                background-color: var(--hoverBackgroundColor);
+            }
+
+            &.selected {
+                background-color: var(--selectedBackgroundColor);
+            }
+        }
+    }
+}

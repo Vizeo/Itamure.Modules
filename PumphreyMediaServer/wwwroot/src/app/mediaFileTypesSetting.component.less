@@ -1,0 +1,44 @@
+:host {
+    flex: 1 1 auto;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.mediaFileTypeSettings {
+    display: flex;
+    justify-content: center;
+    overflow: auto;
+
+    .mediaFileTypes {
+        display: table;
+        padding: 10px;
+
+        .header {
+            top: 0;
+            position: sticky;
+            background-color: var(--tableHeaderBackgroundColor);
+            color: var(--tableHeaderColor);
+
+            & > div {
+                border-top: solid 1px var(--tableBorderColor);
+            }
+        }
+
+        .mediaFileType {
+            display: table-row;
+        }
+
+        .fileExtension, .contentType, .mediaType, .control {
+            display: table-cell;
+            border-bottom: solid 1px var(--tableBorderColor);
+            border-left: solid 1px var(--tableBorderColor);
+            padding: 5px;
+            vertical-align: bottom;
+
+            &:last-child {
+                border-right: solid 1px var(--tableBorderColor);
+            }
+        }
+    }
+}

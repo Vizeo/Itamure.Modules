@@ -1,0 +1,22 @@
+<div class="seasonList">
+    <ng-container *ngIf="Series!.Seasons!.length == 0; else list">
+        <div class="emptyMessage">
+            <div class="message">Please add or select a season</div>
+            <div class="addSeriesFolder" (click)="Add()">
+                <div class="mask">
+                </div>
+            </div>
+        </div>
+    </ng-container>
+    
+    <ng-template #list>
+        <div class="seasons" sortDragList (sortChange)="SeasonSortChange($event)">
+            <div *ngFor="let season of Series!.Seasons!" class="season" [sortDrag]="season">
+                <season [season]="season"></season>
+            </div>
+        </div>
+    </ng-template>   
+</div>
+
+<seriesEditor #seriesEditor [series]="EditingSeries" (saved)="SaveSeries()" (canceled)="CancelSaveSeries()"></seriesEditor>
+<seasonEditor #seasonEditor [season]="EditingSeason" (saved)="SaveSeason()" (canceled)="CancelEditSeason()"></seasonEditor>

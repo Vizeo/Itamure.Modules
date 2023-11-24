@@ -1,0 +1,22 @@
+<div class="mediaServerApp">
+    <mainMenu>
+        <a routerLink="/App">
+            <div class="logo">Logo</div>
+        </a>
+        <div class="menuItems">
+            <div class="menuItem" routerLink="/App/Movies" routerLinkActive="selected">Movies</div>
+            <div class="menuItem" routerLink="/App/Series" routerLinkActive="selected">Series</div>
+            <div class="menuItem" routerLink="/App/Music" routerLinkActive="selected">Music</div>
+            <div class="menuItem" routerLink="/App/Pictures" routerLinkActive="selected">Pictures</div>
+        </div>
+        <div class="tools">
+            <icon class="tool" name="Magnifying Glass" (click)="ComingSoon()"></icon>
+            <a routerLink="/Settings">
+                <icon class="tool" name="Gear"></icon>
+            </a>
+        </div>
+    </mainMenu>
+    <div class="outlet">
+        <router-outlet></router-outlet>
+    </div>
+</div>

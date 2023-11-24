@@ -1,0 +1,79 @@
+:host {
+    flex: 1 1 auto;
+    height: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sourceSettings {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: auto;
+
+    .omdb {
+        padding: 10px;
+    }
+
+    .sources {
+        padding: 10px;
+        display: table;
+        height: 0px;
+
+        .mediaSource {
+            display: table-row;
+            overflow: auto;
+
+            &.header {
+                top: 0;
+                position: sticky;
+                background-color: var(--tableHeaderBackgroundColor);
+                color: var(--tableHeaderColor);
+
+                & > div {
+                    border-top: solid 1px var(--tableBorderColor);
+                }
+            }
+
+            &.addDirectory {
+                /*                top: 0;
+                position: sticky;
+*/
+                input[type=text] {
+
+                    &.invalid {
+                        border: solid red 1px;
+                    }
+                }
+
+                .name {
+                    input {
+                        min-width: 150px;
+                    }
+                }
+
+                .path {
+                    input {
+                        min-width: 200px;
+                    }
+                }
+            }
+
+            .includeSubdirectories, .control {
+                text-align: center;
+            }
+
+            .name, .path, .includeSubdirectories, .control {
+                display: table-cell;
+                padding: 5px;
+                vertical-align: bottom;
+                border-bottom: solid 1px var(--tableBorderColor);
+                border-left: solid 1px var(--tableBorderColor);
+
+                &:last-child {
+                    border-right: solid 1px var(--tableBorderColor);
+                }
+            }
+        }
+    }
+}

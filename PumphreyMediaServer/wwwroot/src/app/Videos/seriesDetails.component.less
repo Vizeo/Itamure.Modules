@@ -1,0 +1,174 @@
+:host {
+    display: contents;
+}
+
+.seriesDetails {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex: 1 1 auto;
+
+    .header {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 16px;
+        margin-bottom: 10px;
+
+        .title {
+            font-size: 50px;
+        }
+
+        .metadata {
+            display: flex;
+            flex-direction: row;
+            margin-left: 20px;
+
+            .rating {
+                font-size: 8px;
+                border: 1px solid white;
+                padding-left: 5px;
+                padding-right: 5px;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    .scrollArea {
+        overflow: auto;
+        flex: 1 1 auto;
+        height: 0;
+
+        .details {
+            display: flex;
+            padding: 10px;
+            flex-direction: row;
+
+            .image {
+                img {
+                    object-fit: contain;
+                    object-position: top;
+                    display: block;
+                    width: 200px;
+
+                    &.error {
+                        object-fit: cover;
+                    }
+                }
+            }
+
+            .info {
+                padding-left: 10px;
+                flex: 1 1 auto;
+
+                .description {
+                    font-size: 20px;
+                    line-height: 40px;
+                }
+            }
+        }
+
+        .episodesDetail {
+            padding: 10px;
+
+            .seasonsList {
+                .selectedSeason {
+                    border-radius: 0;
+                    padding: 21px;
+                    font-size: 24px;
+                    width: 369px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .pointer {
+                        border: solid white;
+                        border-width: 0 3px 3px 0;
+                        display: inline-block;
+                        padding: 8px;
+                        transform: rotate(45deg);
+                        -webkit-transform: rotate(45deg);
+                        margin-top: -17px;
+                    }
+                }
+            }
+
+            .episodeList {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-evenly;
+
+                .episode {
+                    padding: 5px;
+                    width: 276px;
+
+                    img {
+                        width: 276px;
+                        object-fit: none;
+                        border-radius: 18px;
+                        height: 150px;
+                        object-position: top;
+                        border: solid 5px transparent;
+                        transition: transform .5s;
+
+                        &:hover {
+                            border: solid 5px white;
+                            cursor: pointer;
+                            transform: scale(1.05)
+                        }
+
+                        &:active {
+                            opacity: .5;
+                        }
+                    }
+
+                    .index {
+                        color: silver;
+                        text-transform: uppercase;
+                        font-weight: 700;
+                    }
+
+                    .name {
+                        color: #fff;
+                        margin-top: 5px;
+                        margin-bottom: 5px;
+                    }
+
+                    .plot {
+                        color: silver;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+#seasonSelect {
+    overflow: auto;
+    max-height: 100vh;
+
+    .season {
+        padding: 10px;
+        display: block;
+        background-color: white;
+        color: black;
+        border-radius: 0;
+
+        &:hover {
+            cursor: pointer;
+            background-color: var(--hoverBackgroundColor);
+        }
+    }
+
+    &::backdrop {
+        background: #0000ff4a;
+    }
+}
+
+.videoPlayer {
+    border-radius: 0px;
+}

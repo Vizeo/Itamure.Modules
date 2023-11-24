@@ -1,0 +1,26 @@
+.season {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+
+    .seasonPicture {
+        --imageSize: 50px;
+
+        img {
+            width: var(--imageSize);
+            height: var(--imageSize);
+            display: block;
+        }
+    }
+
+    .infos {
+        flex: 1 1 auto;
+        padding: 10px;
+
+        .name {
+            text-overflow: inherit;
+            overflow: inherit;
+        }
+    }
+}

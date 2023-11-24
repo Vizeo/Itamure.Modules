@@ -1,0 +1,48 @@
+<div class="sourceSettings">
+    <div class="omdb">
+        <label>
+            This application uses the OMDb API to get media data. You will need your own key to use media searching.
+            If you do not have your own key you can obtain one at <a href="https://www.omdbapi.com">https://www.omdbapi.com</a>.
+        </label>
+        <div class="apiKey">
+            <input type="text" placeholder="API Key" [(ngModel)]="ApiKey" (blur)="UpdateKey()"/>
+        </div>
+    </div>
+    <!--Only doing directory sources for now-->
+    <div class="sources">
+        <div class="header mediaSource">
+            <div class="name">Name</div>
+            <div class="path">Path</div>
+            <div class="includeSubdirectories">Include<br />Subdirectories</div>
+            <div class="control">&nbsp;</div>
+        </div>
+        <div class="addDirectory mediaSource">
+            <div class="name">
+                <input type="text" [ngClass]="{invalid: !NameValid() && NameTouched}" [(ngModel)]="NewDirectoryMediaSource.Name" placeholder="Source Name" (blur)="NameSourceBlur()" />
+            </div>
+            <div class="path">
+                <input type="text" [ngClass]="{invalid: PathTouched && (!DirectoryValidated || NewDirectoryMediaSource.Path == null || NewDirectoryMediaSource.Path.length == 0)}" [(ngModel)]="NewDirectoryMediaSource.Path" placeholder="Directory Path" (focus)="DirectorySourceFocus()" (blur)="DirectorySourceBlur()" />
+            </div>
+            <div class="includeSubdirectories">
+                <input type="checkbox" [(ngModel)]="NewDirectoryMediaSource.IncludeSubdirectories" />
+            </div>
+            <div class="control">
+                <button [disabled]="!CanAddDirectoryMediaSource()" (click)="AddDirectoryMediaSource()">
+                    <icon name="Plus"></icon>
+                </button>
+            </div>
+        </div>
+        <div *ngFor="let source of MediaSources" class="mediaSource">
+            <div class="name">{{$any(source).Name}}</div>
+            <div class="path">{{$any(source).Path}}</div>
+            <div class="includeSubdirectories">
+                <input type="checkbox" [ngModel]="$any(source).IncludeSubdirectories" disabled />
+            </div>
+            <div class="control">
+                <button (click)="RemoveMediaSource(source)">
+                    <icon name="Trashcan"></icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

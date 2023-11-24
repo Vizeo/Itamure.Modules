@@ -1,0 +1,17 @@
+<div class="unassignedVideoList">
+    <div class="tools">
+        <input type="search" placeholder="Filter" [(ngModel)]="Filter" (ngModelChange)="ResetFilter()" />
+    </div>
+    <div class="unassignedVideoMediaItemLists">
+        <div *ngFor="let unassignedVideoMediaItem of GetFilteredUnknownVideoMediaItems()"
+             [ngClass]="{selected: IsSelected(unassignedVideoMediaItem)}"
+             class="unassignedVideoMediaItem"
+             draggable="true"
+             (dragstart)="StartDrag($event, unassignedVideoMediaItem)"
+             (dragend)="DragEnd($event)"
+             (click)="Select($event, unassignedVideoMediaItem)">
+            <unassignedVideo [video]="unassignedVideoMediaItem">
+            </unassignedVideo>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<dialog #seriesDialog class="seriesDialog">
+    <div class="title">
+        Series
+    </div>
+    <div class="content">
+        <div class="image">
+            <imageUpload #imageUpload [src]="Image" (imageDropped)="ImageDropped($event)">
+                Image here
+            </imageUpload>
+        </div>
+        <div class="properties" *ngIf="Series != null">
+            <div class="property">
+                <label>Name</label>
+                <div>
+                    <input type="text" [(ngModel)]="Series.Name"
+                           #seriesName
+                           groupValidator="seriesValidation"
+                           #name="validator"
+                           [required]="true"
+                           [minLength]="3" />
+                    <div class="error" *ngIf="name.Touched && name.Errors.Required">Name is required</div>
+                    <div class="error" *ngIf="name.Touched && name.Errors.MinLength">Requires a minimum length of 3</div>
+                </div>
+            </div>
+            <div class="property">
+                <label>Rating</label>
+                <select [(ngModel)]="Series!.RatingId">
+                    <option [ngValue]="null">None</option>
+                    <option *ngFor="let rating of Ratings" [ngValue]="rating.Id">
+                        {{rating.Name}}
+                    </option>
+                </select>
+            </div>
+            <div class="property">
+                <label>Desctription</label>
+                <textarea [(ngModel)]="Series!.Description"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="seriesSearch.showModal()">Search</button>
+        <button (click)="Save()" [disabled]="!CanSave()">Save</button>
+        <button (click)="Cancel()">Cancel</button>
+    </div>
+</dialog>
+
+
+<dialog #seriesSearch class="seriesSearch">
+    <div class="title">
+        Metadata Search
+    </div>
+    <div class="content">
+        <div class="seriesMetadata" *ngIf="Series != null">
+            <div class="searchCriteriea">
+                <input type="search" [(ngModel)]="Search" />
+                <button (click)="SearchDatabase()">Search</button>
+            </div>
+            <div class="list" *ngIf="SearchResult != null">
+                <div class="items">
+                    <div class="item" *ngFor="let item of SearchResult.Search" [ngClass]="{selected: item == SelectedSearchItem}" (click)="SelectedSearchItem = item">
+                        <div class="poster">
+                            <img [src]="item.Poster" />
+                        </div>
+                        <div class="info">
+                            <div>{{item.Title}}</div>
+                            <div>{{item.Year}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="SelectSearchItem(); seriesSearch.close()" [disabled]="SelectedSearchItem == null">Select</button>
+        <button (click)="seriesSearch.close()">Cancel</button>
+    </div>
+</dialog>
