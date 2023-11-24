@@ -94,9 +94,14 @@ namespace CalendarTools.Api
 
             var userId = UserId;
 
+<<<<<<< HEAD
             var calendars = Module.ObjectStore?.Retrieve<Entities.Calendar>()
                 .Where(c => !c.UserId.HasValue ||
                     c.UserId == UserId);
+=======
+            var calendars = Module.ObjectStore?.Retrieve<Entities.Calendar>(c => !c.UserId.HasValue ||
+                c.UserId == UserId);
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 
             if (calendars != null)
             {

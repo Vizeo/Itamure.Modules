@@ -2,6 +2,7 @@
 @scrollThumb: #879aae;
 
 .list {
+<<<<<<< HEAD
     overflow: auto;
     height: 100%;
     padding-left: 10px;
@@ -71,4 +72,73 @@
             margin-bottom: 2px;
         }
     }
+=======
+  overflow: auto;
+  height: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: @scrollBackground; //color of the tracking area
+    margin-top: 5px;
+    margin-left: 5px;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background: @scrollBackground; //color of the tracking area
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: @scrollThumb; //color of the scroll thumb
+    border-radius: 20px; // roundness of the scroll thumb
+    border: none; //  creates padding around scroll thumb
+  }
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &:hover {
+    &::-webkit-scrollbar {
+      display: initial;
+      //background-color: red;
+    }
+  }
+
+  .date {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .dayLine {
+      flex: 1 1 auto;
+      background-color: silver;
+      height: 1px;
+      margin-left: 6px;
+    }
+  }
+
+  .calItem {
+    display: flex;
+    flex-direction: row;
+
+    .time {
+      width: 38px;
+      text-align: right;
+    }
+
+    .colorBox {
+      width: 5px;
+      height: 20px;
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-bottom: 2px;
+    }
+  }
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 }

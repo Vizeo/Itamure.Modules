@@ -48,8 +48,13 @@ namespace CalendarTools
             AddScheduledTasks(new CalendarToolsTask());
 
             RegisterEvent<CalendarsUpdated>("Calendars Updated", CalendarToolsPermissions.WidgetPermissions);
+<<<<<<< HEAD
             RegisterWidget<TodayWidget>("Today Widget", CalendarToolsPermissions.WidgetPermissions);
             RegisterWidget<ClockWidget>("Clock Widget", CalendarToolsPermissions.WidgetPermissions);
+=======
+            RegisterWidget<CalendarToolsWidget>("CalendarTools Widget", CalendarToolsPermissions.WidgetPermissions);
+            ShowWidget(new CalendarToolsWidget());
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
         }
 
         public override async Task RouteWebRequest(IRequest request, IResponse response, IntegratedWebServer.Core.ISession session)
@@ -89,9 +94,12 @@ namespace CalendarTools
         {
             _stream = GetFileStream("Database.db", false);
             ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString() );
+<<<<<<< HEAD
 
             ShowWidget(new TodayWidget());
             ShowWidget(new ClockWidget());
+=======
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
         }
 
         public override void Stop()
@@ -104,6 +112,7 @@ namespace CalendarTools
         {
             public bool InitSetup { get; set; }
         }
+<<<<<<< HEAD
 
         internal IEnumerable<IUser> AvaliableUsers
         {
@@ -112,5 +121,7 @@ namespace CalendarTools
                 return GetUsers();
             }
         }
+=======
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
     }
 }

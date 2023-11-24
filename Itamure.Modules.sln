@@ -7,14 +7,28 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Octoprint Monitor", "Octopr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4 Scripts", "T4 Scripts", "{006F3FDF-3353-4904-97DE-B4BE8F8B7339}"
 	ProjectSection(SolutionItems) = preProject
+<<<<<<< HEAD
 		..\..\..\..\..\Source Code\T4Scripts\GenerateAngularApi.t4 = ..\..\..\..\..\Source Code\T4Scripts\GenerateAngularApi.t4
 		..\..\..\..\..\Source Code\T4Scripts\GetApiStructure.t4 = ..\..\..\..\..\Source Code\T4Scripts\GetApiStructure.t4
 	EndProjectSection
 EndProject
+=======
+		..\T4Scripts\GenerateAngularApi.t4 = ..\T4Scripts\GenerateAngularApi.t4
+		..\T4Scripts\GetApiStructure.t4 = ..\T4Scripts\GetApiStructure.t4
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedWebServer.Server", "..\IntegratedWebServer\Server\IntegratedWebServer.Server\IntegratedWebServer.Server.csproj", "{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedWebServer.Core", "..\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj", "{3D54B608-FAF1-455A-9090-253F38809BEB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itamure.Core", "..\Itamure\Itamure.Core\Itamure.Core.csproj", "{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}"
+EndProject
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoprintApi", "OctoprintApi\OctoprintApi.csproj", "{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calendar Tools", "Calendar Tools\Calendar Tools.csproj", "{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}"
 EndProject
+<<<<<<< HEAD
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itamure.Core", "..\..\..\..\..\Source Code\Itamure\Itamure.Core\Itamure.Core.csproj", "{BF23AA98-2322-48A5-B7F0-48CB32D6F29B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedWebServer.Core", "..\..\..\..\..\Source Code\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj", "{88DC1FAD-D573-44BC-B2BA-72B9FEF31B4F}"
@@ -29,6 +43,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedAngular", "..\..\..\.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SvgToSprite", "..\..\..\..\..\Source Code\SvgToSprite\SvgToSprite.csproj", "{6847E897-EB42-413D-B1E3-1784B9A0DD9F}"
 EndProject
+=======
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +55,21 @@ Global
 		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
+=======
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D54B608-FAF1-455A-9090-253F38809BEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,6 +78,7 @@ Global
 		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< HEAD
 		{BF23AA98-2322-48A5-B7F0-48CB32D6F29B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF23AA98-2322-48A5-B7F0-48CB32D6F29B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF23AA98-2322-48A5-B7F0-48CB32D6F29B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -71,16 +103,21 @@ Global
 		{6847E897-EB42-413D-B1E3-1784B9A0DD9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6847E897-EB42-413D-B1E3-1784B9A0DD9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6847E897-EB42-413D-B1E3-1784B9A0DD9F}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+<<<<<<< HEAD
 	GlobalSection(NestedProjects) = preSolution
 		{BF23AA98-2322-48A5-B7F0-48CB32D6F29B} = {2A949635-6530-436F-821C-ED4BB3FBB532}
 		{88DC1FAD-D573-44BC-B2BA-72B9FEF31B4F} = {2A949635-6530-436F-821C-ED4BB3FBB532}
 		{44E6C1E3-AFE6-47EC-A1DE-AE092F03FAE5} = {2A949635-6530-436F-821C-ED4BB3FBB532}
 		{6847E897-EB42-413D-B1E3-1784B9A0DD9F} = {2A949635-6530-436F-821C-ED4BB3FBB532}
 	EndGlobalSection
+=======
+>>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5A0B5F65-5D96-46F5-BF8A-FE1FCAD641A6}
 	EndGlobalSection
