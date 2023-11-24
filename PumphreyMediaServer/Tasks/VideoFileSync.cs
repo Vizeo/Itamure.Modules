@@ -242,10 +242,7 @@ namespace PumphreyMediaServer.Tasks
             }
 
             if (!string.IsNullOrWhiteSpace(metaData.Tag.AmazonId) &&
-                (metaData.Tag.Genres == null || metaData.Tag.Genres.Count() == 0 ||
-                metaData.Tag.Performers == null || metaData.Tag.Performers.Count() == 0 ||
-                metaData.Tag.Composers == null || metaData.Tag.Composers.Count() == 0 ||
-                string.IsNullOrWhiteSpace(metaData.Tag.Conductor)))
+                (metaData.Tag.Performers == null || metaData.Tag.Performers.Count() == 0))
             {
                 try
                 {

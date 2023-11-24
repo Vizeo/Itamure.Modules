@@ -27,11 +27,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Ical.Net" Version="4.2.0" />
-<<<<<<< HEAD
-=======
-	  <PackageReference Include="Itamure.Core" Version="1.0.0-beta7" />
-	  <PackageReference Include="RizeDb" Version="2.0.0-beta4" />
->>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 	</ItemGroup>
 
 	<ItemGroup>
@@ -55,11 +50,8 @@
 
 	<ItemGroup>
 	  <Content Remove="wwwroot\src\app\calendarDisplay.component.ts" />
-<<<<<<< HEAD
 	  <Content Remove="wwwroot\src\app\clockWidget.component.ts" />
 	  <Content Remove="wwwroot\src\app\clockWidgetSettings.component.ts" />
-=======
->>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 	  <Content Remove="wwwroot\src\app\icon.component.html" />
 	  <Content Remove="wwwroot\src\app\icon.component.less" />
 	  <Content Remove="wwwroot\src\app\icon.component.ts" />
@@ -73,23 +65,17 @@
 	  <Content Remove="wwwroot\src\app\settings.component.less" />
 	  <Content Remove="wwwroot\src\app\settings.component.ts" />
 	  <Content Remove="wwwroot\src\app\todayWidget.component.ts" />
-<<<<<<< HEAD
 	  <Content Remove="wwwroot\src\app\todayWidgetSettings.component.ts" />
-=======
->>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 	  <Content Remove="wwwroot\src\assets\Icons.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-<<<<<<< HEAD
 	  <ProjectReference Include="..\..\..\..\..\..\Source Code\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj" />
 	  <ProjectReference Include="..\..\..\..\..\..\Source Code\Itamure\Itamure.Core\Itamure.Core.csproj" />
 	  <ProjectReference Include="..\..\..\..\..\..\Source Code\RizeDb\RizeDb\RizeDb.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-=======
->>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
 	  <None Update="wwwroot\src\app\Services\calendarTools.service.ts">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
