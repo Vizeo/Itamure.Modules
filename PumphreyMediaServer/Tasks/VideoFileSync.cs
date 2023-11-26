@@ -241,31 +241,31 @@ namespace PumphreyMediaServer.Tasks
                     break;
             }
 
-            if (!string.IsNullOrWhiteSpace(metaData.Tag.AmazonId) &&
-                (metaData.Tag.Performers == null || metaData.Tag.Performers.Count() == 0))
-            {
-                try
-                {
-                    var metadataResult = _omdbManager.GetMovieMetadataAsync(metaData.Tag.AmazonId).Result;
-                    if (metadataResult != null &&
-                        !string.IsNullOrWhiteSpace(metadataResult.ImdbID))
-                    {
-                        metaData.Tag.Genres = GetMetadataFromTags(metadataResult.Genre!);
-                        metaData.Tag.Performers = GetMetadataFromTags(metadataResult.Actors!);
-                        metaData.Tag.Composers = GetMetadataFromTags(metadataResult.Writer!);
-                        metaData.Tag.Conductor = metadataResult.Director!;
-                        metaData.Save();
-                    }
-                    else
-                    {
-                        throw new Exception("That's it");
-                    }
-                }
-                catch
-                {
-                    //Do nothing
-                }
-            }
+            //if (!string.IsNullOrWhiteSpace(metaData.Tag.AmazonId) &&
+            //    (metaData.Tag.Performers == null || metaData.Tag.Performers.Count() == 0))
+            //{
+            //    try
+            //    {
+            //        var metadataResult = _omdbManager.GetMovieMetadataAsync(metaData.Tag.AmazonId).Result;
+            //        if (metadataResult != null &&
+            //            !string.IsNullOrWhiteSpace(metadataResult.ImdbID))
+            //        {
+            //            metaData.Tag.Genres = GetMetadataFromTags(metadataResult.Genre!);
+            //            metaData.Tag.Performers = GetMetadataFromTags(metadataResult.Actors!);
+            //            metaData.Tag.Composers = GetMetadataFromTags(metadataResult.Writer!);
+            //            metaData.Tag.Conductor = metadataResult.Director!;
+            //            metaData.Save();
+            //        }
+            //        else
+            //        {
+            //            throw new Exception("That's it");
+            //        }
+            //    }
+            //    catch
+            //    {
+            //        //Do nothing
+            //    }
+            //}
 
             return true;
         }

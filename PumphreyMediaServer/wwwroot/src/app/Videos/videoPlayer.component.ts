@@ -19,7 +19,7 @@ export class VideoPlayerComponent {
         if (value != null) {
             const player = this.elRef.nativeElement.querySelector('video');
             player.load();
-            player.src = "http://localhost/mediaServer/streamingService?mediaItemId=" + this._videoFileMediaItem?.Id;
+            player.src = "/mediaServer/streamingService?mediaItemId=" + this._videoFileMediaItem?.Id;
             player.play();
         }
     }
