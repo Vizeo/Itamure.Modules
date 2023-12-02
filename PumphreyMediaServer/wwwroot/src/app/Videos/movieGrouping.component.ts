@@ -20,6 +20,9 @@ export class MovieGroupingComponent {
     @Input("count")
     public Count: number | undefined;
 
+    @Input("options")
+    public Options: any = new Object();
+
     @ViewChild("moviesList")
     public MoviesList: ElementRef<HTMLDivElement> | undefined;
     
@@ -96,7 +99,8 @@ export class MovieGroupingComponent {
         if (this.Count != null &&
             this.Grouping != null) {
 
-            this.Movies = await this.mediaService.GetMovieGrouping(this.Grouping, this.Count);
+            var json = JSON.stringify(this.Options);
+            this.Movies = await this.mediaService.GetMovieGrouping(this.Grouping, this.Count, json);
 
             for (let i = 0; i < this.Movies.length; i++) {
                 this.Movies[i].Image = "/mediaServer/api/mediaServerService/GetVideoFileMediaItemImage?mediaItemId=" + this.Movies[i].Id! + "&date=" + (new Date().getTime());

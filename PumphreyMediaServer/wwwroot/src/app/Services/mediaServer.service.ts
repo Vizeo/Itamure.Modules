@@ -56,11 +56,6 @@ export enum MediaItemType {
 	MusicFile = 5,
 	PictureFile = 6,
 }
-export class MetadataValue
-{
-	Key?: string | null; 
-	Value?: string | null; 
-}
 export enum MetadataTagType {
 	Actor = 1,
 	Director = 2,
@@ -80,7 +75,6 @@ export abstract class MediaItem
 	MediaType?: MediaType; 
 	MediaItemType?: MediaItemType; 
 	MetadataDate?: Date; 
-	MetadataValues?: MetadataValue[]; 
 	Error?: string | null; 
 	FolderId?: number; 
 	TagIds?: number[]; 
@@ -133,6 +127,10 @@ export class AddSeriesResponse
 }
 export enum MovieGroupingType {
 	Newest = 1,
+	Genres = 2,
+	Folder = 3,
+	Range = 4,
+	Rating = 5,
 }
 
 import { Injectable } from '@angular/core';
@@ -531,10 +529,11 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeriesImage', jsonObject);
 	}
 
-	GetMovieGrouping(movieGroupingType: MovieGroupingType, count: number): Promise<VideoFileMediaItem[]> {
+	GetMovieGrouping(movieGroupingType: MovieGroupingType, count: number, options: string | null): Promise<VideoFileMediaItem[]> {
 		var jsonObject = <any>new Object();
 		jsonObject.movieGroupingType = movieGroupingType
 		jsonObject.count = count
+		jsonObject.options = options
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMovieGrouping', jsonObject);
 	}
 

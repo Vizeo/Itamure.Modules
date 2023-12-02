@@ -5,7 +5,7 @@ namespace PumphreyMediaServer.Api.MovieGroupings
 {
     internal class NewestMovieGrouping : IMovieGrouping
     {
-        public IEnumerable<VideoFileMediaItem> GetMovies(int count)
+        public IEnumerable<VideoFileMediaItem> GetMovies(int count, string options)
         {
             if (Module.ObjectStore == null)
             {

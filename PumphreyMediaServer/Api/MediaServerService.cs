@@ -999,16 +999,20 @@ namespace MediaServer.Api
         }
 
         [Api]
-        public IEnumerable<VideoFileMediaItem> GetMovieGrouping(MovieGroupingType movieGroupingType, int count)
+        public IEnumerable<VideoFileMediaItem> GetMovieGrouping(MovieGroupingType movieGroupingType, int count, string options)
         {
             if (Module.ObjectStore == null)
             {
                 throw new NullReferenceException("ObjectStore is null");
-            }
+            }            
 
             var factory = new MovieGroupingFactory();
             var movieGrouping = factory.GetMovieGrouping(movieGroupingType);
-            return movieGrouping.GetMovies(count);
+            if (movieGrouping != null)
+            {
+                return movieGrouping.GetMovies(count, options);
+            }
+            throw new Exception("Unknown grouping");
         }
     }
 

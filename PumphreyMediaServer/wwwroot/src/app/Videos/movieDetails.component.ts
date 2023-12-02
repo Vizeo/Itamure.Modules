@@ -2,6 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import { MediaService, MediaSubType, MetadataTag, MetadataTagType, VideoFileMediaItem } from '../Services/mediaServer.service';
 import { VideoPlayerComponent } from './videoPlayer.component';
 import { ActivatedRoute } from '@angular/router';
+declare const cast: any;
+declare const chrome: any;
 
 @Component({
     selector: 'movieDetails',
@@ -23,8 +25,25 @@ export class MovieDetailsComponent {
     public Duration: string = "";
     public MovieVisible: boolean = false;
     public UserActive: boolean = false;
+    
 
     private _timout: number = 0;
+
+    private async SetupCast(movieId: number) {
+        //These are loaded by an api
+        var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+        var url = "http://itamure.vizeotech.com/mediaServer/streamingService?mediaItemId=" + movieId;
+        //var url = "https://www.w3schools.com/html/mov_bbb.mp4";
+        console.log(url);
+        var mediaInfo = new chrome.cast.media.MediaInfo(url, "video/mp4");
+        var request = new chrome.cast.media.LoadRequest(mediaInfo);
+
+        try {
+            await castSession.loadMedia(request);
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     ngAfterViewInit() {
         this.route.params.subscribe(async params => {
@@ -43,7 +62,8 @@ export class MovieDetailsComponent {
             this.Directors = this.CreateList(this.Movie.MetadataTags!, MetadataTagType.Director);
 
             this.CalcDuration();
-        });
+            this.SetupCast(movieId);
+        });        
     }
 
     private CreateList(metadataTags: MetadataTag[], metadataType: MetadataTagType) {

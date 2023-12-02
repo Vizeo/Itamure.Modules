@@ -25,6 +25,7 @@ export class SeriesPreviewComponent {
         this._series = series;
         this.Image = "/mediaServer/api/mediaServerService/GetSeriesImage?seriesId=" + this.Series!.Id! + "&date=" + (new Date().getTime());;
     }
+
     public get Series(): Series | null {
         return this._series;
     }
