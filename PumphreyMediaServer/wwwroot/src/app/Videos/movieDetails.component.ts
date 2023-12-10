@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { MediaService, MediaSubType, MetadataTag, MetadataTagType, VideoFileMediaItem } from '../Services/mediaServer.service';
+import { MediaService, MediaSubType, MetadataTag, MetadataTagType, UserMediaItem } from '../Services/mediaServer.service';
 import { VideoPlayerComponent } from './videoPlayer.component';
 import { ActivatedRoute } from '@angular/router';
+import { CastService } from '../Services/castService.service';
 declare const cast: any;
 declare const chrome: any;
 
@@ -12,12 +13,13 @@ declare const chrome: any;
 })
 export class MovieDetailsComponent {
     constructor(private mediaService: MediaService,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private _castService: CastService) {
     }
 
     public Rating: string = "";
     public Image: string = "";
-    public Movie: VideoFileMediaItem | null = null;
+    public Movie: UserMediaItem | null = null;
     public Genres: string = "";
     public Actors: string = "";
     public Writers: string = "";
@@ -26,31 +28,14 @@ export class MovieDetailsComponent {
     public MovieVisible: boolean = false;
     public UserActive: boolean = false;
     
-
     private _timout: number = 0;
-
-    private async SetupCast(movieId: number) {
-        //These are loaded by an api
-        var castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-        var url = "http://itamure.vizeotech.com/mediaServer/streamingService?mediaItemId=" + movieId;
-        //var url = "https://www.w3schools.com/html/mov_bbb.mp4";
-        console.log(url);
-        var mediaInfo = new chrome.cast.media.MediaInfo(url, "video/mp4");
-        var request = new chrome.cast.media.LoadRequest(mediaInfo);
-
-        try {
-            await castSession.loadMedia(request);
-        } catch (e) {
-            console.error(e);
-        }
-    }
 
     ngAfterViewInit() {
         this.route.params.subscribe(async params => {
-            let movieId = +params['id'];
+            let movieId = params['id'];
 
-            this.Image = "/mediaServer/api/mediaServerService/GetVideoFileMediaItemImage?mediaItemId=" + movieId + "&date=" + (new Date().getTime());
             this.Movie = await this.mediaService.GetVideoMediaItem(movieId);
+            this.Image = "/mediaServer/api/mediaServerService/GetUserMediaItemImage?uniqueKey=" + movieId + "&date=" + this.Movie.MetadataDate!.getTime();
             let ratings = await this.mediaService.GetRatings(MediaSubType.Movies);
             let rating = ratings.find(r => r.Id == this.Movie!.RatingId!);
             if (rating != null) {
@@ -62,8 +47,11 @@ export class MovieDetailsComponent {
             this.Directors = this.CreateList(this.Movie.MetadataTags!, MetadataTagType.Director);
 
             this.CalcDuration();
-            this.SetupCast(movieId);
         });        
+    }
+
+    public get CanCast(): boolean {
+        return this._castService.IsConnected;
     }
 
     private CreateList(metadataTags: MetadataTag[], metadataType: MetadataTagType) {

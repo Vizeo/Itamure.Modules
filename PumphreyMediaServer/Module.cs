@@ -14,7 +14,7 @@ using System.Reflection;
 
 namespace MediaServer
 {
-    [Name("Pumphrey Media Server")]
+    [Name("Media Server")]
     public class Module : ItamureModule
     {
         public const string WEB_ROUTE_BASE = "mediaServer";
@@ -50,7 +50,7 @@ namespace MediaServer
             }
             _mappedRequestProcessors = Assembly.GetExecutingAssembly().GetMappedRequestProcessors();
 
-            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("PumphreyMediaServer.Itamure.svg");
+            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaServer.Itamure.svg");
             var appIcon = new AppIcon(iconStream, "Image/svg+xml");
 
             _syncTask = new SyncTask();
@@ -58,7 +58,7 @@ namespace MediaServer
 
             //RegisterWidget<PumphreyMediaServerWidget>("PumphreyMediaServer Widget", PumphreyMediaServerPermissions.WidgetPermissions);
 
-            RegisterApp(new Itamure.Core.App("Pumphrey Media Server", $"/{WEB_ROUTE_BASE}/App", appIcon, MediaServerPermissions.AppPermissions));
+            RegisterApp(new Itamure.Core.App("Media Server", $"/{WEB_ROUTE_BASE}/App", appIcon, MediaServerPermissions.AppPermissions));
             //RegisterEvent<IterationChangedEvent>("Iteration Changed", PumphreyMediaServerPermissions.WidgetPermissions);
             //RegisterEvent<ClickChangedEvent>("Click Changed", PumphreyMediaServerPermissions.WidgetPermissions);
 
@@ -80,7 +80,13 @@ namespace MediaServer
                     var resultProcessor = (IRequestProcessor?)Activator.CreateInstance(keyValuePair.Value);
                     if (resultProcessor != null)
                     {
-                        await resultProcessor.ProcessRequest(request, response, session);
+                        try
+                        {
+                            await resultProcessor.ProcessRequest(request, response, session);
+                        }
+                        catch (Exception ex) {
+                            
+                        }
                     }
                     return;
                 }

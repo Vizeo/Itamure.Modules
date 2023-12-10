@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="256"
+   height="256"
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="CastPauseButton.svg"
+   inkscape:version="1.2.2 (732a01da63, 2022-12-09)"
+   xml:space="preserve"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"><sodipodi:namedview
+     id="namedview147"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     showgrid="false"
+     inkscape:zoom="2.0566407"
+     inkscape:cx="161.42829"
+     inkscape:cy="196.67995"
+     inkscape:window-width="1908"
+     inkscape:window-height="1230"
+     inkscape:window-x="1551"
+     inkscape:window-y="812"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5"
+     showguides="true"><sodipodi:guide
+       position="475.84188,-151.76623"
+       orientation="0,-1"
+       id="guide134"
+       inkscape:locked="false" /></sodipodi:namedview><defs
+     id="defs2" /><path
+     id="rect3734"
+     style="fill:#ffffff;stroke:none;stroke-width:4.05282;stroke-linecap:round;stroke-linejoin:round"
+     d="M 28.525391 0 C 12.722471 0 0 12.722471 0 28.525391 L 0 227.47461 C 0 243.27752 12.722471 256 28.525391 256 L 227.47461 256 C 243.27752 256 256 243.27752 256 227.47461 L 256 28.525391 C 256 12.722471 243.27752 0 227.47461 0 L 28.525391 0 z M 79.011719 63.332031 L 119.36914 63.332031 L 119.36914 192.66797 L 79.011719 192.66797 L 79.011719 63.332031 z M 136.63086 63.332031 L 176.98828 63.332031 L 176.98828 192.66797 L 136.63086 192.66797 L 136.63086 63.332031 z " /></svg>

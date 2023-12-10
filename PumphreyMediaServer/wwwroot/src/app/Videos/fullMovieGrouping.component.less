@@ -1,0 +1,71 @@
+:host {
+    display: contents;
+}
+
+.fullMovieGrouping {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+
+    .title {
+        margin-bottom: 5px;
+        color: white;
+        font-weight: 700;
+        font-size: 20px;
+    }
+
+    .moviesContainier {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        height: 0;
+
+        .movie {
+            padding: 4px;
+            margin-left: 5px;
+            margin-right: 5px;
+            display: flex;
+            flex-direction: column;
+            transition: transform .5s;
+            border: solid 5px transparent;
+
+            &:first-child {
+                margin-left: var(--margin);
+            }
+
+            &:last-child {
+                margin-right: var(--margin);
+            }
+
+            &:hover {
+                border: solid 5px white;
+                cursor: pointer;
+                transform: scale(1.05)
+            }
+
+            .poster {
+                flex: 1 1 auto;
+
+                img {
+                    object-fit: contain;
+                    object-position: top;
+                    display: block;
+                    width: 150px;
+
+                    &.error {
+                        object-fit: cover;
+                    }
+                }
+            }
+
+            .title {
+                white-space: nowrap;
+                width: 150px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+}

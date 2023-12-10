@@ -2,20 +2,15 @@
 using MediaServer.Entities;
 using TagLib;
 
-namespace PumphreyMediaServer.Api.MovieGroupings
+namespace MediaServer.Api.MovieGroupings
 {
-	internal class FolderMovieGrouping : IMovieGrouping
+	internal class FolderMovieGrouping : MovieGroupingBase
 	{
-		public IEnumerable<VideoFileMediaItem> GetMovies(int count, string options)
+		public override IEnumerable<UserMediaItem> GetMovies(Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
 		{
 			var optionValues = System.Text.Json.JsonSerializer.Deserialize<Options>(options, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 			var folderPaths = optionValues!.Path!.Split("/");
-
-			if (Module.ObjectStore == null)
-			{
-				throw new NullReferenceException("ObjectStore is null");
-			}
-
+			
 			var folders = Module.ObjectStore!.Retrieve<Folder>()
 				.ToList();
 			long parentId = -1;
@@ -39,19 +34,17 @@ namespace PumphreyMediaServer.Api.MovieGroupings
 
 			if(foundFolder != null)
 			{
-				return Module.ObjectStore!.Retrieve<MediaItem, VideoFileMediaItem>()
-					.Where(i => i.MediaItemType == MediaItemType.MovieFile)
-					.ToList()
-					.Where(i => i.FolderId == foundFolder.Id)
-					.Cast<VideoFileMediaItem>()
-					.OrderByDescending(a => a.AddedDate)
-					.ThenBy(a => a.Name)
-					.Take(count)
+				var list = userMediaItems.Values
+					.Where(i => i.MediaItemType == MediaItemType.MovieFile &&
+						i.FolderId == foundFolder.Id)
 					.ToList();
+
+				return base.RandomizeList(list)
+					.Take(count);
 			}
 			else 
 			{
-				return new VideoFileMediaItem[0];
+				return new UserMediaItem[0];
 			}
 		}
 

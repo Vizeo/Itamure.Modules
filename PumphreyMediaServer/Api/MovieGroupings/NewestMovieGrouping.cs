@@ -1,21 +1,19 @@
 ﻿using MediaServer;
 using MediaServer.Entities;
 
-namespace PumphreyMediaServer.Api.MovieGroupings
+namespace MediaServer.Api.MovieGroupings
 {
-    internal class NewestMovieGrouping : IMovieGrouping
+    internal class NewestMovieGrouping : MovieGroupingBase
     {
-        public IEnumerable<VideoFileMediaItem> GetMovies(int count, string options)
+        public override IEnumerable<UserMediaItem> GetMovies(Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
         {
             if (Module.ObjectStore == null)
             {
                 throw new NullReferenceException("ObjectStore is null");
             }
 
-            return Module.ObjectStore!.Retrieve<MediaItem, VideoFileMediaItem>()
-                .Where(i => i.MediaItemType == MediaItemType.MovieFile)
-                .ToList()
-                .Cast<VideoFileMediaItem>()
+            return userMediaItems.Values
+				.Where(i => i.MediaItemType == MediaItemType.MovieFile)
                 .OrderByDescending(a => a.AddedDate)
                 .ThenBy(a => a.Name)
                 .Take(count)

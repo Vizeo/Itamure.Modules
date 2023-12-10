@@ -18,12 +18,15 @@
 
         .title {
             font-size: 50px;
+            line-height: normal;
+            align-items: center;
         }
 
         .metadata {
             display: flex;
             flex-direction: row;
             margin-left: 20px;
+            align-items: baseline;
 
             .rating {
                 font-size: 8px;
@@ -170,5 +173,38 @@
 }
 
 .videoPlayer {
-    border-radius: 0px;
+    background-color: black;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    cursor: none;
+
+    .toolbar {
+        padding: 5px;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: opacity .25s;
+        opacity: 0;
+
+        .command {
+            font-size: 25px;
+            color: white;
+
+            &:hover {
+                cursor: pointer;
+                color: blue;
+            }
+        }
+    }
+
+    &.userActive {
+        cursor: default;
+
+        .toolbar {
+            opacity: 1;
+        }
+    }
 }

@@ -24,7 +24,7 @@
             <div class="episodesDetail">
                 <div class="seasonsList">
                     <button class="selectedSeason" popovertarget="seasonSelect">
-                        <div>{{SelectedSeason!.Name!}}</div><div class="pointer"></div>
+                        <div *ngIf="SelectedSeason != null">{{SelectedSeason!.Name!}}</div><div class="pointer"></div>
                     </button>
                 </div>
                 <div class="episodeList" *ngIf="Episodes != null">
@@ -50,10 +50,10 @@
     </button>
 </div>
 
-<dialog class="videoPlayer" #videoPlayerDialog>
+<dialog class="videoPlayer" #videoPlayerDialog (mousemove)="MouseMove()" [ngClass]="{userActive: UserActive}">
     <videoPlayer></videoPlayer>
 
-    <div class="buttons">
-        <button (click)="ClosePlayer()">Close</button>
+    <div class="toolbar">
+        <div class="command" (click)="ClosePlayer()">X</div>
     </div>
 </dialog>

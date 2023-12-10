@@ -1,6 +1,10 @@
 <div class="movies" title="">
     <div class="header">
-        {{Title}}
+        {{Title}} 
+        <ng-container *ngIf="CanShowAll">
+            <div class="viewAll" (click)="OnShowAll()">View All</div>
+            <img src="/MediaServer/assets/Paddle.svg" (click)="OnShowAll()"/>
+        </ng-container>
     </div>
     <div>
         <div class="paddles">

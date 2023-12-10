@@ -47,6 +47,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Remove="wwwroot\src\app\Services\castService.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\mediaItem.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\metadata.service.tt" />
 	</ItemGroup>
@@ -56,6 +57,8 @@
 	  <None Remove="wwwroot\src\app\Controls\icon - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\Controls\icon - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\Controls\imageUpload.component.ts" />
+	  <None Remove="wwwroot\src\app\imagesSettings - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\imagesSettings - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\imagesView - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\imagesView - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\mainMenu - Copy.component.html" />
@@ -63,11 +66,13 @@
 	  <None Remove="wwwroot\src\app\movieSettings - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\movieSettings - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\movieVideo.component.ts" />
+	  <None Remove="wwwroot\src\app\search.component.ts" />
 	  <None Remove="wwwroot\src\app\seriesSettings - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\seriesSettings - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\seriesVideo - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\seriesVideo - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\seriesVideo.component.ts" />
+	  <None Remove="wwwroot\src\app\Services\castService.service.ts" />
 	  <None Remove="wwwroot\src\app\Services\mediaItem.service.ts" />
 	  <None Remove="wwwroot\src\app\subMenu.component.ts" />
 	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.html" />
@@ -77,10 +82,17 @@
 	  <None Remove="wwwroot\src\app\unknownVideo.component.ts" />
 	  <None Remove="wwwroot\src\app\videoAssigner - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\videoAssigner - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\castPlayer.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\episodeDetails - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\episodeDetails - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\episodeDetails.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\episodeList.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\episodeMetadataEditor.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\episodeMetadataSearch.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\episodeVideo.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\fullMovieGrouping.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\movieDetails - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\movieDetails - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\Videos\movieDetails.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\movieGrouping - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\Videos\movieGrouping - Copy.component.less" />
@@ -169,6 +181,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <TypeScriptCompile Include="wwwroot\src\app\Services\castService.service.ts">
+	    <SubType>Code</SubType>
+	  </TypeScriptCompile>
 	  <TypeScriptCompile Include="wwwroot\src\app\Services\mediaItem.service.ts" />
 	</ItemGroup>
 
@@ -188,14 +203,14 @@
 	<PropertyGroup>
 		<DefineConstants>STD</DefineConstants>
 		<PlatformTarget>AnyCPU</PlatformTarget>
-		<AssemblyName>PumphreyMediaServer</AssemblyName>
-		<RootNamespace>PumphreyMediaServer</RootNamespace>
+		<AssemblyName>MediaServer</AssemblyName>
+		<RootNamespace>MediaServer</RootNamespace>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<Deterministic>False</Deterministic>
 		<Company>MyCompany</Company>
 		<Authors>Me</Authors>
 		<Copyright></Copyright>
-		<Product>PumphreyMediaServer</Product>
+		<Product>Media Server</Product>
 		<RunAnalyzersDuringBuild>False</RunAnalyzersDuringBuild>
 		<RunAnalyzersDuringLiveAnalysis>False</RunAnalyzersDuringLiveAnalysis>
 		<OutputType>Exe</OutputType>

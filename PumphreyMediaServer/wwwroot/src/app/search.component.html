@@ -1,0 +1,47 @@
+<div class="search">
+	<div class="searchInput">
+		<input type="search" (keyup.enter)="DoSearch()" [(ngModel)]="Search" />
+	</div>
+	<div class="results">
+		<ng-container *ngIf="VideoFileMediaItemSearchResults != null">
+			<div class="resultList">
+				<div class="result" *ngFor="let result of VideoFileMediaItemSearchResults">
+					<ng-container [ngSwitch]="result.MediaItemType">
+						<ng-container *ngSwitchCase="MediaItemType.MovieFile" [ngTemplateOutlet]="movie" [ngTemplateOutletContext]="{ $implicit: result}"></ng-container>
+						<ng-container *ngSwitchCase="MediaItemType.SeriesFile" [ngTemplateOutlet]="series" [ngTemplateOutletContext]="{ $implicit: result}"></ng-container>
+					</ng-container>
+				</div>
+			</div>
+		</ng-container>
+	</div>
+</div>
+
+<ng-template #movie let-result>
+	<div class="movie" (click)="ShowMovieDetail(result)">
+		<div class="content">
+			<img class="image" #image [src]="result.Image" (error)="ImageError(image)" />
+			{{result.Name}}
+		</div>
+		Movie
+	</div>
+</ng-template>
+
+<ng-template #series let-result>
+	<div class="series" (click)="ShowEpisodeDetail(result)">
+		<div class="content">
+			<img class="image" #image [src]="result.Image" (error)="ImageError(image)" />
+			<div class="info">
+				<div class="name">
+					{{result.Name}}
+				</div>
+				<div class="seriesName">
+					{{result.SeriesName}}
+				</div>
+				<div class="seasonName">
+					{{result.Season}}
+				</div>
+			</div>
+		</div>
+		Series
+	</div>
+</ng-template>

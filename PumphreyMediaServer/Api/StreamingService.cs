@@ -11,7 +11,7 @@ using System.Net.Mime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace PumphreyMediaServer.Api
+namespace MediaServer.Api
 {
     [RequestProcessorMap($"/{Module.WEB_ROUTE_BASE}/streamingService")]
     public class StreamingService : IRequestProcessor
@@ -20,14 +20,26 @@ namespace PumphreyMediaServer.Api
 
         public async Task<bool> ProcessRequest(IRequest request, IResponse response, IntegratedWebServer.Core.ISession session)
         {
-            //There will need to be some security here at some point
-
-            var mediaItemId = request.QueryStringVariables["mediaItemId"];
-            if(mediaItemId != null &&
-                long.TryParse(mediaItemId, out var id))
+            if (Module.ObjectStore == null)
             {
-                var mediaItem = Module.ObjectStore?.Retrieve<MediaItem>(id);
-                if(mediaItem != null &&
+                throw new NullReferenceException("ObjectStore is null");
+            }
+            var headerOnly = request.Method.ToUpper() == "HEAD";
+
+            var uniqueKey = request.QueryStringVariables["UniqueKey"];
+            if (uniqueKey != null &&
+                Guid.TryParse(uniqueKey, out var userUniqueKey))
+            {
+                var userMediaReference = Module.ObjectStore.Retrieve<UserMediaReference>()
+                    .FirstOrDefault(r => r.UniqueLink == userUniqueKey); //TODO: Cache this?
+
+                MediaItem? mediaItem = null;
+                if (userMediaReference != null)
+                {
+                    mediaItem = Module.ObjectStore.Retrieve<MediaItem>(userMediaReference.MediaItemId);
+                }
+
+                if (mediaItem != null &&
                     mediaItem is FileMediaItem &&
                     System.IO.File.Exists(((FileMediaItem)mediaItem).FilePath))
                 {
@@ -37,9 +49,9 @@ namespace PumphreyMediaServer.Api
                     //Setup Content Type
                     var extension = Path.GetExtension(mediaPath);
                     string contentType;
-                    var mediaFileType = Module.ObjectStore?.Retrieve<MediaFileType>()
+                    var mediaFileType = Module.ObjectStore.Retrieve<MediaFileType>()
                         .FirstOrDefault(m => m.FileExtension!.ToUpper() == extension!.ToUpper());
-                    if(mediaFileType != null)
+                    if (mediaFileType != null)
                     {
                         contentType = mediaFileType.ContentType!;
                     }
@@ -48,6 +60,13 @@ namespace PumphreyMediaServer.Api
                         contentType = $"{mediaItem.MediaType}/{extension}".ToLower();
                     }
                     response.Headers.Add("Content-Type", contentType);
+
+                    //DLNA Headers
+                    //response.Headers.Add("transferMode.dlna.org", "Streaming");
+                    //response.Headers.Add("getcontentFeatures.dlna.org", "1");
+                    response.Headers.Add("USER-AGENT", "DLNADOC");
+                    response.Headers.Add("transferMode.dlna.org", "Streaming");
+                    response.Headers.Add("contentFeatures.dlna.org", "DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000");
 
                     //Load stream
                     var filestream = new FileStream(mediaPath, FileMode.Open, FileAccess.Read, FileShare.Read);
@@ -81,7 +100,7 @@ namespace PumphreyMediaServer.Api
                                     end = long.Parse(arrSplit[1]);
                                     start = filestream.Length - end;
                                 }
-                                else if(arrSplit.Length == 1 ||
+                                else if (arrSplit.Length == 1 ||
                                     arrSplit[1].Length == 0)
                                 {
                                     start = long.Parse(arrSplit[0]);
@@ -96,7 +115,15 @@ namespace PumphreyMediaServer.Api
 
                             response.SetResponseHeader("HTTP/1.1 206 Partial Content");
                             response.Headers.Add("Content-Range", $"bytes {start}-{end - 1}/{filestream.Length}");
-                            response.AddContent(new MediaStream(filestream, start, end), end - start);
+                            if (!headerOnly)
+                            {
+                                response.AddContent(new MediaStream(filestream, start, end), end - start);
+                            }
+                            else
+                            {
+                                //Create an empty stream
+                                response.AddContent(new System.IO.MemoryStream(new byte[0]), end - start);
+                            }
                         }
                         else
                         {
@@ -106,7 +133,15 @@ namespace PumphreyMediaServer.Api
                     else
                     {
                         response.SetResponseHeader("HTTP/1.1 200 OK");
-                        response.AddContent(new MediaStream(filestream, 0, filestream.Length), filestream.Length);
+                        if (!headerOnly)
+                        {
+                            response.AddContent(new MediaStream(filestream, 0, filestream.Length), filestream.Length);
+                        }
+                        else
+                        {
+                            //Create an empty stream
+                            response.AddContent(new System.IO.MemoryStream(new byte[0]), filestream.Length);
+                        }
                     }
                 }
                 else

@@ -51,8 +51,11 @@
             </div>
             <div class="actions">
                 <img class="unknown" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
-                <google-cast-launcher></google-cast-launcher>
                 <label>Watch Movie</label>
+            </div>
+            
+            <div class="casting" *ngIf="CanCast">
+                <castPlayer [videoFileMediaItem]="Movie"></castPlayer>
             </div>
         </div>
     </ng-container>
@@ -60,6 +63,7 @@
 
 <div class="moviePlayer" *ngIf="MovieVisible" (mousemove)="MouseMove()" [ngClass]="{userActive: UserActive}">
     <videoPlayer></videoPlayer>
+
     <div class="toolbar">
         <div class="command" (click)="CloseMovie()">X</div>
     </div>

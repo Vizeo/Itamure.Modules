@@ -1,8 +1,8 @@
-﻿namespace PumphreyMediaServer.Api.MovieGroupings
+﻿namespace MediaServer.Api.MovieGroupings
 {
     internal class MovieGroupingFactory
     {
-        public IMovieGrouping? GetMovieGrouping(MovieGroupingType movieGroupingType)
+        public MovieGroupingBase? GetMovieGrouping(MovieGroupingType movieGroupingType)
         {
             switch(movieGroupingType)
             {

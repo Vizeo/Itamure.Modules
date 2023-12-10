@@ -1,5 +1,6 @@
 ﻿import { Injectable } from "@angular/core";
-import { FileMediaItem } from "./mediaServer.service";
+import { FileMediaItem, MediaItem } from "./mediaServer.service";
+import { ViewAllEvent } from "../Videos/movieGrouping.component";
 
 
 @Injectable({ providedIn: 'root' })
@@ -28,6 +29,9 @@ export class MediaItemService {
         let filePath = fileMediaItem.FilePath!;
         return filePath.substring(0, this.GetEndIndexOfPath(filePath));
     }
+
+    public MediaItem: MediaItem | null = null;
+    public ViewAll: ViewAllEvent | null = null;
 }
 
 export enum SpecialFolders {

@@ -1,0 +1,29 @@
+<div class="castPlayer">
+	<ng-container *ngIf="IsConnected; else notConnected">
+		<div class="title">
+			<label>
+				<span>Connected To:</span>{{ReceiverName}}
+			</label>
+			<label>
+				<span>Currently Playing:</span>{{MediaName}}
+			</label>
+		</div>
+
+		<div class="buttons">
+			<button (click)="Play()" *ngIf="CurrentPlayerState != PlayerState.Playing">
+				<img class="castControls" src="/MediaServer/assets/CastPlayButton.svg" />
+			</button>
+			<button (click)="Play()" *ngIf="CurrentPlayerState == PlayerState.Playing">
+				<img class="castControls" src="/MediaServer/assets/CastPauseButton.svg" />
+			</button>
+			<button (click)="Stop()">
+				<img class="castControls" src="/MediaServer/assets/CastStopButton.svg" />
+			</button>
+		</div>
+	</ng-container>
+	<ng-template #notConnected>
+		<div>
+			Not Connected
+		</div>
+	</ng-template>
+</div>

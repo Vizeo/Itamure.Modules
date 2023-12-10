@@ -5,9 +5,9 @@ namespace MediaServer
     [Permissions]
     public enum MediaServerPermissions
     {
-        [PermissionDescription("Pumphrey Media Server App")]
+        [PermissionDescription("Media Server App")]
         AppPermissions,
-        [PermissionDescription("Pumphrey Media Server Settings")]
+        [PermissionDescription("Media Server Settings")]
         SettingsPermissions,
         [PermissionDescription("Modify Sources")]
         ModifySourcesPermissions,

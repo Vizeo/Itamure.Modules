@@ -1,6 +1,5 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { VideoFileMediaItem } from '../Services/mediaServer.service';
-import { MediaItemService } from '../Services/mediaItem.service';
+import { Component, ElementRef, Input } from '@angular/core';
+import { UserMediaItem } from '../Services/mediaServer.service';
 
 @Component({
     selector: 'videoPlayer',
@@ -11,15 +10,15 @@ export class VideoPlayerComponent {
     constructor(private elRef: ElementRef) {
     }
 
-    private _videoFileMediaItem: VideoFileMediaItem | undefined;
+    private _videoFileMediaItem: UserMediaItem | undefined;
 
     @Input("videoFileMediaItem")
-    public set VideoFileMediaItem(value: VideoFileMediaItem | undefined) {
+    public set VideoFileMediaItem(value: UserMediaItem | undefined) {
         this._videoFileMediaItem = value;
         if (value != null) {
             const player = this.elRef.nativeElement.querySelector('video');
             player.load();
-            player.src = "/mediaServer/streamingService?mediaItemId=" + this._videoFileMediaItem?.Id;
+            player.src = "/mediaServer/streamingService?UniqueKey=" + this._videoFileMediaItem?.UniqueKey;
             player.play();
         }
     }

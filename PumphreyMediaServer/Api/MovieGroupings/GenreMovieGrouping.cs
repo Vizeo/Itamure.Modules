@@ -1,11 +1,11 @@
 ﻿using MediaServer;
 using MediaServer.Entities;
 
-namespace PumphreyMediaServer.Api.MovieGroupings
+namespace MediaServer.Api.MovieGroupings
 {
-    internal class RatingsMovieGrouping : IMovieGrouping
+    internal class RatingsMovieGrouping : MovieGroupingBase
     {
-        public IEnumerable<VideoFileMediaItem> GetMovies(int count, string options)
+        public override IEnumerable<UserMediaItem> GetMovies(Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
         {
 			var optionValues = System.Text.Json.JsonSerializer.Deserialize<Options>(options, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 			var ratings = optionValues!.Ratings!.Select(g => g.ToUpper().Trim());
@@ -21,16 +21,14 @@ namespace PumphreyMediaServer.Api.MovieGroupings
 				.Select(r => r.Id)
 				.ToList();
 
-			return Module.ObjectStore!.Retrieve<MediaItem, VideoFileMediaItem>()
-				.Where(i => i.MediaItemType == MediaItemType.MovieFile)
-				.ToList()
-				.Where(i => i.RatingId.HasValue &&
+			var list = userMediaItems.Values
+				.Where(i => i.MediaItemType == MediaItemType.MovieFile &&
+					i.RatingId.HasValue &&
 					ratingLists.Contains(i.RatingId!.Value))
-				.Cast<VideoFileMediaItem>()
-				.OrderByDescending(a => a.AddedDate)
-				.ThenBy(a => a.Name)
-				.Take(count)
 				.ToList();
+
+			return base.RandomizeList(list)
+				.Take(count);
 		}
 
 		public class Options {

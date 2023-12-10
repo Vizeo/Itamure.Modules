@@ -9,8 +9,9 @@
       "CalendarTools/1.0.0": {
         "dependencies": {
           "Ical.Net": "4.2.0",
-          "Itamure.Core": "1.0.0-beta6",
-          "RizeDb": "2.0.0-beta4"
+          "IntegratedWebServer.Core": "1.0.0",
+          "Itamure.Core": "1.0.0-beta8",
+          "RizeDb": "2.0.0-beta5"
         },
         "runtime": {
           "CalendarTools.dll": {}
@@ -38,30 +39,6 @@
           }
         }
       },
-      "Itamure.Core/1.0.0-beta6": {
-        "dependencies": {
-          "Castle.Core": "5.1.1",
-          "System.Text.Json": "7.0.1"
-        },
-        "runtime": {
-          "lib/net6.0/IntegratedWebServer.Core.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          },
-          "lib/net6.0/IntegratedWebServer.Server.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          },
-          "lib/net6.0/InterprocessCommunication.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          },
-          "lib/net6.0/Itamure.Core.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
       "NodaTime/3.0.0": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
@@ -73,48 +50,75 @@
           }
         }
       },
-      "RizeDb/2.0.0-beta4": {
-        "dependencies": {
-          "System.Memory": "4.5.5"
-        },
-        "runtime": {
-          "lib/net6.0/RizeDb.dll": {
-            "assemblyVersion": "2.0.0.0",
-            "fileVersion": "2.0.0.0"
-          }
-        }
-      },
       "System.Diagnostics.EventLog/6.0.0": {},
       "System.Memory/4.5.5": {},
       "System.Runtime.CompilerServices.Unsafe/6.0.0": {},
-      "System.Text.Encodings.Web/7.0.0": {
+      "System.Text.Encodings.Web/8.0.0": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         },
         "runtime": {
           "lib/net6.0/System.Text.Encodings.Web.dll": {
-            "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.0.22.51805"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
           }
         },
         "runtimeTargets": {
           "runtimes/browser/lib/net6.0/System.Text.Encodings.Web.dll": {
             "rid": "browser",
             "assetType": "runtime",
-            "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.0.22.51805"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
           }
         }
       },
-      "System.Text.Json/7.0.1": {
+      "System.Text.Json/8.0.0": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0",
-          "System.Text.Encodings.Web": "7.0.0"
+          "System.Text.Encodings.Web": "8.0.0"
         },
         "runtime": {
           "lib/net6.0/System.Text.Json.dll": {
-            "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.0.122.56804"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
+      "IntegratedWebServer.Core/1.0.0": {
+        "runtime": {
+          "IntegratedWebServer.Core.dll": {}
+        }
+      },
+      "Itamure.Core/1.0.0-beta8": {
+        "dependencies": {
+          "Castle.Core": "5.1.1",
+          "System.Text.Json": "8.0.0"
+        },
+        "runtime": {
+          "Itamure.Core.dll": {}
+        }
+      },
+      "RizeDb/2.0.0-beta5": {
+        "dependencies": {
+          "System.Memory": "4.5.5"
+        },
+        "runtime": {
+          "RizeDb.dll": {}
+        }
+      },
+      "IntegratedWebServer.Server/1.0.0.0": {
+        "runtime": {
+          "IntegratedWebServer.Server.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "InterprocessCommunication/1.0.0.0": {
+        "runtime": {
+          "InterprocessCommunication.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -140,26 +144,12 @@
       "path": "ical.net/4.2.0",
       "hashPath": "ical.net.4.2.0.nupkg.sha512"
     },
-    "Itamure.Core/1.0.0-beta6": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-eugPQKkF2daZpcQN8trkXEFW72JHCbg4IJlM0GKK2o4vT8KvaiSbLX7D8yRTdtWtV2HFGBJULnpIdGrUw26/sQ==",
-      "path": "itamure.core/1.0.0-beta6",
-      "hashPath": "itamure.core.1.0.0-beta6.nupkg.sha512"
-    },
     "NodaTime/3.0.0": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-ZauY6Ihs+abkPCpgIafCj92sl+cDqFbvwrJj9Ga0dteWIYg+A5FeoteBzgzez/cyBeukl2kbDTt4qtpTbHvqOw==",
       "path": "nodatime/3.0.0",
       "hashPath": "nodatime.3.0.0.nupkg.sha512"
-    },
-    "RizeDb/2.0.0-beta4": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-7UAlSD9Bdm5TOua2nkWHEHMw06jELFUD8nopSeUBKApsb603f7j4XUevLNDPuqWMzNkG5oKBKcfgEwKWBEuCDA==",
-      "path": "rizedb/2.0.0-beta4",
-      "hashPath": "rizedb.2.0.0-beta4.nupkg.sha512"
     },
     "System.Diagnostics.EventLog/6.0.0": {
       "type": "package",
@@ -182,19 +172,44 @@
       "path": "system.runtime.compilerservices.unsafe/6.0.0",
       "hashPath": "system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
     },
-    "System.Text.Encodings.Web/7.0.0": {
+    "System.Text.Encodings.Web/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OP6umVGxc0Z0MvZQBVigj4/U31Pw72ITihDWP9WiWDm+q5aoe0GaJivsfYGq53o6dxH7DcXWiCTl7+0o2CGdmg==",
-      "path": "system.text.encodings.web/7.0.0",
-      "hashPath": "system.text.encodings.web.7.0.0.nupkg.sha512"
+      "sha512": "sha512-yev/k9GHAEGx2Rg3/tU6MQh4HGBXJs70y7j1LaM1i/ER9po+6nnQ6RRqTJn1E7Xu0fbIFK80Nh5EoODxrbxwBQ==",
+      "path": "system.text.encodings.web/8.0.0",
+      "hashPath": "system.text.encodings.web.8.0.0.nupkg.sha512"
     },
-    "System.Text.Json/7.0.1": {
+    "System.Text.Json/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OtDEmCCiNl8JAduFKZ/r0Sw6XZNHwIicUYy/mXgMDGeOsZLshH37qi3oPRzFYiryVktiMoQLByMGPtRCEMYbeQ==",
-      "path": "system.text.json/7.0.1",
-      "hashPath": "system.text.json.7.0.1.nupkg.sha512"
+      "sha512": "sha512-OdrZO2WjkiEG6ajEFRABTRCi/wuXQPxeV6g8xvUJqdxMvvuCCEk86zPla8UiIQJz3durtUEbNyY/3lIhS0yZvQ==",
+      "path": "system.text.json/8.0.0",
+      "hashPath": "system.text.json.8.0.0.nupkg.sha512"
+    },
+    "IntegratedWebServer.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Itamure.Core/1.0.0-beta8": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RizeDb/2.0.0-beta5": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "IntegratedWebServer.Server/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "InterprocessCommunication/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

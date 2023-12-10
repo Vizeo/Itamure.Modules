@@ -43,7 +43,7 @@
 
 <dialog #metadataDialog>
     <div class="title">
-        Movie Metadata
+        Movie
     </div>
     <div class="content">
         <ng-container *ngIf="EditingVideoMediaItem != null">
@@ -52,6 +52,7 @@
         <movieMetadataEditor #editor [video]="EditingVideoMediaItem"></movieMetadataEditor>
     </div>
     <div class="buttons">
+        <button (click)="DeleteMediaItem()">Delete</button>
         <button (click)="MetadataSearch()">Search</button>
         <button (click)="SaveMetadata()" [disabled]="!editor.CanSave()">Save</button>
         <button (click)="CloseMetadataEditor()">Close</button>

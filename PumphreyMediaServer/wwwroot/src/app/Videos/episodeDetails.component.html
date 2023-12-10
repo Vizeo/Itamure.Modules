@@ -1,0 +1,70 @@
+<div class="Episode">
+    <ng-container *ngIf="Episode != null">
+        <div class="poster">
+            <img [src]="Image" (error)="EpisodeImageError()" />
+        </div>
+
+        <div class="info">
+            <div class="title">
+                {{Episode.Name}}
+            </div>
+            <div class="plot">{{Episode.Description!}}</div>
+            <div class="metadata">
+                <ng-container *ngIf="Rating != null && Rating.length > 0">
+                    <div class="rating">
+                        {{Rating}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+                <ng-container *ngIf="Genres != null && Genres.length > 0">
+                    <div class="genres">
+                        {{Genres}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+                <ng-container *ngIf="Episode.Year != null">
+                    <div class="year">
+                        {{Episode.Year}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+                <ng-container *ngIf="Duration != null && Duration.length > 0">
+                    <div class="duration">
+                        {{Duration}}
+                    </div>
+                    <div>&#x2022;</div>
+                </ng-container>
+            </div>
+            <div class="peopleList">
+                <div class="peoples" *ngIf="Actors != null && Actors.length > 0">
+                    <label>Starring:</label>
+                    <div class="actors">
+                        {{Actors}}
+                    </div>
+                </div>
+                <div class="peoples" *ngIf="Directors != null && Directors.length > 0">
+                    <label>Director(s):</label>
+                    <div class="directors">
+                        {{Directors}}
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <img class="unknown" src="/MediaServer/assets/PlayButton.svg" (click)="PlayEpisode()" />
+                <label>Watch Episode</label>
+            </div>
+            
+            <div class="casting" *ngIf="CanCast">
+                <castPlayer [videoFileMediaItem]="Episode"></castPlayer>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<div class="EpisodePlayer" *ngIf="EpisodeVisible" (mousemove)="MouseMove()" [ngClass]="{userActive: UserActive}">
+    <videoPlayer></videoPlayer>
+
+    <div class="toolbar">
+        <div class="command" (click)="CloseEpisode()">X</div>
+    </div>
+</div>

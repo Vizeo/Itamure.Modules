@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { MediaService, MediaSubType, Season, Series, VideoFileMediaItem } from '../Services/mediaServer.service';
+import { MediaService, MediaSubType, Season, Series, UserMediaItem } from '../Services/mediaServer.service';
 import { ActivatedRoute } from '@angular/router';
 import { VideoPlayerComponent } from './videoPlayer.component';
 
@@ -18,7 +18,11 @@ export class SeriesDetailsComponent {
     public Image: string = "";
     public SelectedSeason: Season | null = null;
     public HasImageError: boolean = false;
-    public Episodes: (VideoFileMediaItem & IEpisodeEx)[] | null = null;
+    public Episodes: (UserMediaItem & IEpisodeEx)[] | null = null;
+    public UserActive: boolean = false;
+    public MovieVisible: boolean = false;
+
+    private _timout: number = 0;
 
     ngOnInit() {
         this.route.params.subscribe(async params => {
@@ -65,15 +69,15 @@ export class SeriesDetailsComponent {
     private async GetEpisodes() {
         if (this.Series != null &&
             this.SelectedSeason != null) {
-            this.Episodes = await this.mediaService.GetSeasonMediaItems(this.Series.Id!, this.SelectedSeason.Id!);
+            this.Episodes = await this.mediaService.GetSeasonUserMediaItems(this.Series.Id!, this.SelectedSeason.Id!);
 
             for (let i = 0; i < this.Episodes.length; i++) {
-                this.Episodes[i].Image = "/mediaServer/api/mediaServerService/GetVideoFileMediaItemImage?mediaItemId=" + this.Episodes[i].Id! + "&date=" + (new Date().getTime());
+                this.Episodes[i].Image = "/mediaServer/api/mediaServerService/GetUserMediaItemImage?uniqueKey=" + this.Episodes[i].UniqueKey! + "&date=" + this.Episodes[i].MetadataDate!.getTime();
             }
         }
     }
 
-    public PlayEpisode(episode: VideoFileMediaItem) {
+    public PlayEpisode(episode: UserMediaItem) {
         this._videoPlayerDialog!.nativeElement.showModal();
         this._videoPlayer!.VideoFileMediaItem = episode;
     }
@@ -81,6 +85,24 @@ export class SeriesDetailsComponent {
     public ClosePlayer() {
         this._videoPlayer!.Stop();
         this._videoPlayerDialog!.nativeElement.close();
+    }
+
+    private CountDown() {
+        this._timout--;
+        if (this._timout > 0) {
+            setTimeout(() => this.CountDown(), 1000);
+        }
+        else {
+            this.UserActive = false;
+        }
+    }
+
+    public MouseMove() {
+        if (this._timout == 0) {
+            this.UserActive = true;
+            setTimeout(() => this.CountDown(), 1000);
+        }
+        this._timout = 5;
     }
 }
 

@@ -98,6 +98,25 @@ export class VideoFileMediaItem extends FileMediaItem
 	Order?: number; 
 	Description?: string | null; 
 }
+export class UserMediaItem
+{
+	UniqueKey?: string; 
+	SeriesId?: number; 
+	SeasonId?: number; 
+	Width?: number; 
+	Height?: number; 
+	Year?: number; 
+	Duration?: number; 
+	Order?: number; 
+	Description?: string | null; 
+	RatingId?: number; 
+	Name?: string | null; 
+	MediaType?: MediaType; 
+	MediaItemType?: MediaItemType; 
+	MetadataDate?: Date; 
+	MimeType?: string | null; 
+	MetadataTags?: MetadataTag[]; 
+}
 export class Folder
 {
 	Id?: number; 
@@ -131,6 +150,13 @@ export enum MovieGroupingType {
 	Folder = 3,
 	Range = 4,
 	Rating = 5,
+}
+export class UserMediaItemSearchResult extends UserMediaItem 
+{
+	Weight?: number; 
+	SeriesName?: string | null; 
+	Season?: string | null; 
+	Episode?: number; 
 }
 
 import { Injectable } from '@angular/core';
@@ -310,6 +336,12 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/RemoveSource', jsonObject);
 	}
 
+	RemoveMediaFileItem(mediaItemId: number): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.mediaItemId = mediaItemId
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/RemoveMediaFileItem', jsonObject);
+	}
+
 	GetRatings(mediaSubType: MediaSubType): Promise<Rating[]> {
 		var jsonObject = <any>new Object();
 		jsonObject.mediaSubType = mediaSubType
@@ -390,9 +422,9 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetVideoMediaItems', jsonObject);
 	}
 
-	GetVideoMediaItem(videoMediaItemId: number): Promise<VideoFileMediaItem> {
+	GetVideoMediaItem(UniqueKey: string): Promise<UserMediaItem> {
 		var jsonObject = <any>new Object();
-		jsonObject.videoMediaItemId = videoMediaItemId
+		jsonObject.UniqueKey = UniqueKey
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetVideoMediaItem', jsonObject);
 	}
 
@@ -529,12 +561,32 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeriesImage', jsonObject);
 	}
 
-	GetMovieGrouping(movieGroupingType: MovieGroupingType, count: number, options: string | null): Promise<VideoFileMediaItem[]> {
+	GetMovieGrouping(movieGroupingType: MovieGroupingType, count: number, options: string | null): Promise<UserMediaItem[]> {
 		var jsonObject = <any>new Object();
 		jsonObject.movieGroupingType = movieGroupingType
 		jsonObject.count = count
 		jsonObject.options = options
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMovieGrouping', jsonObject);
+	}
+
+	Search(search: string | null, count: number): Promise<UserMediaItemSearchResult[]> {
+		var jsonObject = <any>new Object();
+		jsonObject.search = search
+		jsonObject.count = count
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/Search', jsonObject);
+	}
+
+	GetUserMediaItemImage(uniqueKey: string): Promise<any> {
+		var jsonObject = <any>new Object();
+		jsonObject.uniqueKey = uniqueKey
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetUserMediaItemImage', jsonObject);
+	}
+
+	GetSeasonUserMediaItems(seriesId: number, seasonId: number): Promise<UserMediaItem[]> {
+		var jsonObject = <any>new Object();
+		jsonObject.seriesId = seriesId
+		jsonObject.seasonId = seasonId
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeasonUserMediaItems', jsonObject);
 	}
 
 }

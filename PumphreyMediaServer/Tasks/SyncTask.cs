@@ -5,8 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PumphreyMediaServer.Tasks;
+using MediaServer.Tasks;
 using System.Reflection.Metadata.Ecma335;
+using MediaServer.Api;
 
 namespace MediaServer.Tasks
 {
@@ -39,6 +40,7 @@ namespace MediaServer.Tasks
         {
             ImportMedia(scheduledTaskInterface);
             ImportFileMetadata(scheduledTaskInterface);
+            MediaServerService.LastItemChange = DateTime.Now;
         }
 
         private void ImportMedia(IScheduledTaskInterface scheduledTaskInterface)
@@ -71,19 +73,44 @@ namespace MediaServer.Tasks
                         
                         ImportFromDirectories(scheduledTaskInterface, directorySources, title, sources.Count, count);
 
-                        //Run any other syncs
-
                         //Check for changes
                         sources = Module.ObjectStore.Retrieve<MediaSource>()
                             .ToList();
                     };
-                }
+
+                    RemoveMissingFiles(scheduledTaskInterface);
+				}
             }
             finally
             {
                 scheduledTaskInterface.EndProgress(title);
             }
         }
+
+        private void RemoveMissingFiles(IScheduledTaskInterface scheduledTaskInterface)
+        {
+			var mediaItems = Module.ObjectStore!.Retrieve<MediaItem>()
+		        .Cast<FileMediaItem>()
+		        .Where(i => FileMediaItemTypes.Contains(i.MediaItemType))
+		        .Select(i => new
+		        {
+			        i.Id,
+			        i.FilePath
+		        })
+		        .ToList();
+
+            foreach(var file in mediaItems)
+            {
+                try
+                {
+                    if (!File.Exists(file.FilePath))
+                    {
+                        Module.ObjectStore!.Remove<MediaItem>(file.Id);
+                    }
+                }
+                catch { }
+            }
+		}
 
         private void ImportFromDirectories(IScheduledTaskInterface scheduledTaskInterface, IEnumerable<DirectoryMediaSource> directoryMediaSources, string title, int maxCount, int count)
         {
@@ -178,9 +205,7 @@ namespace MediaServer.Tasks
             finally
             {
                 scheduledTaskInterface.EndProgress(subTitle);
-            }
-
-            //TODO: Remove or flag and media files that were not found
+            }            
         }
       
         private void ImportFromDirectory(IScheduledTaskInterface scheduledTaskInterface, DirectoryMediaSource directoryMediaSource, List<string> files)

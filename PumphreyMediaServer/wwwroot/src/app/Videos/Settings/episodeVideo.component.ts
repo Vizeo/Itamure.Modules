@@ -34,7 +34,7 @@ export class EpisodeVideoComponent {
 
     private GetImage() {
         if (this._image != null) {
-            this._image!.nativeElement.src = "/mediaServer/api/mediaServerService/GetVideoFileMediaItemImage?mediaItemId=" + this._videoFileMediaItem!.Id! + "&date=" + (new Date().getTime());
+            this._image!.nativeElement.src = "/mediaServer/api/mediaServerService/GetVideoFileMediaItemImage?mediaItemId=" + this._videoFileMediaItem!.Id! + "&date=" + this._videoFileMediaItem!.MetadataDate!.getTime();
         }
     }
 

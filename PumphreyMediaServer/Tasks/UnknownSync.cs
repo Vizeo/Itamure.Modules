@@ -1,6 +1,6 @@
 ﻿using MediaServer.Entities;
 
-namespace PumphreyMediaServer.Tasks
+namespace MediaServer.Tasks
 {
     public class UnknownSync : ISync
     {

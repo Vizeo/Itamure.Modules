@@ -23,7 +23,7 @@ export class SeriesPreviewComponent {
     @Input('series')
     public set Series(series: Series | null) {
         this._series = series;
-        this.Image = "/mediaServer/api/mediaServerService/GetSeriesImage?seriesId=" + this.Series!.Id! + "&date=" + (new Date().getTime());;
+        this.Image = "/mediaServer/api/mediaServerService/GetSeriesImage?seriesId=" + this.Series!.Id! + "&date=" + (new Date().getTime());
     }
 
     public get Series(): Series | null {

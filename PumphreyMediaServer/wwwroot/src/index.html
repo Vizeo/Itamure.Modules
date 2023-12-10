@@ -1,35 +1,16 @@
 <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1"></script>
 <script>
+	var castAvailable = false;
 	window['__onGCastApiAvailable'] =
 		function (isAvailable) {
 			if (isAvailable) {
+				castAvailable = true;
 				var castContext = cast.framework.CastContext.getInstance();
 
 				castContext.setOptions({
 					autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
 					receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
 				});
-
-				//var stateChanged = cast.framework.CastContextEventType.CAST_STATE_CHANGED;
-				//castContext.addEventListener(stateChanged, function (event) {
-				//	console.log("umm", new Date(), stateChanged, event);
-				//	//var castSession = castContext.getCurrentSession();
-				//	//var media = new chrome.cast.media.MediaInfo(
-				//	//	'https://www.w3schools.com/html/mov_bbb.mp4',
-				//	//	'video/mp4'
-				//	//);
-				//	//var request = new chrome.cast.media.LoadRequest(media);
-
-				//	//castSession &&
-				//	//	castSession
-				//	//		.loadMedia(request)
-				//	//		.then(function () {
-				//	//			console.log('Success');
-				//	//		})
-				//	//		.catch(function (error) {
-				//	//			console.log('Error: ' + error);
-				//	//		});
-				//});
 			}
 		}
 </script>
@@ -37,7 +18,7 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Pumphrey Media Server</title>
+	<title>Media Server</title>
 	<base href="/mediaServer/">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/x-icon" href="favicon.ico">

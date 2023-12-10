@@ -14,6 +14,9 @@ import { ImagesSettingComponent } from './imagesSettings.component';
 import { UnassignedVideoListComponent } from './Videos/Settings/unassignedVideoList.component';
 import { SeriesDetailsComponent } from './Videos/seriesDetails.component';
 import { MovieDetailsComponent } from './Videos/movieDetails.component';
+import { SearchComponent } from './search.component';
+import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
+import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
 
 const routes: Routes = [
     {
@@ -24,8 +27,11 @@ const routes: Routes = [
             { path: 'Movie/:id', component: MovieDetailsComponent },
             { path: 'Series', component: SeriesViewComponent },
             { path: 'Series/:id', component: SeriesDetailsComponent },
+            { path: 'Episode/:id', component: EpisodeDetailsComponent },
             { path: 'Music', component: MusicViewComponent },
             { path: 'Pictures', component: ImagesViewComponent },
+            { path: 'Search', component: SearchComponent },
+            { path: 'FullGroupView', component: FullMovieGroupingComponent }
         ]
     },
     {

@@ -1,4 +1,4 @@
-﻿namespace PumphreyMediaServer.Api.MovieGroupings
+﻿namespace MediaServer.Api.MovieGroupings
 {
     public enum MovieGroupingType
     {

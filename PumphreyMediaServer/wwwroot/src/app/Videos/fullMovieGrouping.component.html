@@ -1,0 +1,18 @@
+<div class="fullMovieGrouping">
+    <ng-container *ngIf="ViewAll != null">
+        <div class="title">{{ViewAll.Title}}</div>
+
+        <ng-container *ngIf="Movies != null">
+            <div class="moviesContainier">
+                <div *ngFor="let movie of Movies" class="movie" (click)="ShowDetail(movie)">
+                    <div class="poster">
+                        <img [src]="movie.Image" (error)="MovieImageError(movie)" />
+                    </div>
+                    <div class="title">
+                        {{movie.Name}}
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </ng-container>
+</div>
