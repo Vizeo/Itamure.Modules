@@ -158,6 +158,16 @@ export class UserMediaItemSearchResult extends UserMediaItem
 	Season?: string | null; 
 	Episode?: number; 
 }
+export class MediaReceiver
+{
+	Id?: string | null; 
+	Name?: string | null; 
+}
+export class MediaCastResult
+{
+	Success?: boolean; 
+	Message?: string | null; 
+}
 
 import { Injectable } from '@angular/core';
 declare var hasSession: boolean;
@@ -587,6 +597,18 @@ export class MediaService {
 		jsonObject.seriesId = seriesId
 		jsonObject.seasonId = seasonId
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeasonUserMediaItems', jsonObject);
+	}
+
+	GetUpnpMediaReceivers(): Promise<MediaReceiver[]> {
+		var jsonObject = <any>new Object();
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetUpnpMediaReceivers', jsonObject);
+	}
+
+	CastToUpnpReceivers(receiverId: string | null, userMediaId: string): Promise<MediaCastResult> {
+		var jsonObject = <any>new Object();
+		jsonObject.receiverId = receiverId
+		jsonObject.userMediaId = userMediaId
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/CastToUpnpReceivers', jsonObject);
 	}
 
 }

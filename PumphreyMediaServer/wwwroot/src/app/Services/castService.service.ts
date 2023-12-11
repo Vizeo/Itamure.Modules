@@ -1,7 +1,7 @@
 ﻿//https://developers.google.com/cast/docs/web_sender/integrate
 //https://developers.google.com/cast
 import { ApplicationRef, EventEmitter, Injectable } from "@angular/core";
-import { UserMediaItem } from "./mediaServer.service";
+import { MediaService, UserMediaItem } from "./mediaServer.service";
 
 declare const castAvailable: boolean;
 declare const cast: any;
@@ -9,7 +9,8 @@ declare const chrome: any;
 
 @Injectable({ providedIn: 'root' })
 export class CastService {
-	constructor(private appRef: ApplicationRef) {
+	constructor(private appRef: ApplicationRef,
+		private mediaService: MediaService) {
 		if (this.CastSupported) {
 			this._context = cast.framework.CastContext.getInstance();
 
@@ -130,8 +131,33 @@ export class CastService {
 	//	cast.framework.CastContext.getInstance().getCurrentSession().getSessionObj().setReceiverVolumeLevel(level);
 	//}
 
+	public async GetReceivers(): Promise<IReceiver[]> {
+		let result = new Array<IReceiver>();
+
+		//Get from server
+		let serverReceivers = await this.mediaService.GetUpnpMediaReceivers();
+		serverReceivers.forEach(r => {
+			let receiver = new UpnpReceiver(this.mediaService);
+			receiver.Id = r.Id!;
+			receiver.Name = r.Name!;
+
+			//Add player 
+
+			result.push(receiver);
+		});
+
+		//Get from google cast
+
+		return result;
+	}
+
 	public get IsConnected(): boolean {
 		return cast.framework.CastContext.getInstance().getCastState() == "CONNECTED";
+	}
+
+	public PlayOnReceiver(receiver: IReceiver, userMediaItem: UserMediaItem) {
+		let upnpReceiver = <UpnpReceiver>receiver;
+		this.mediaService.CastToUpnpReceivers(upnpReceiver.Id!, userMediaItem.UniqueKey!);
 	}
 }
 
@@ -140,4 +166,28 @@ export enum PlayerState {
 	Playing = "PLAYING",
 	Paused = "PAUSED",
 	Buffering = "BUFFERING",
+}
+
+export interface IPlayer {
+	PlayAndPause(): void;
+	Stop(): void;
+	get ReceiverName(): string;
+	get MediaName(): string;
+
+	//Add seak
+	//Add Event For Updating Time
+}
+
+export interface IReceiver {
+	get Name(): string;
+	get Player(): IPlayer | null;
+}
+
+class UpnpReceiver implements IReceiver {
+	constructor(private mediaService: MediaService) {
+	}
+
+	public Id?: string;
+	public Name!: string;
+	public Player!: IPlayer;
 }

@@ -11,6 +11,9 @@ using MediaServer.Omdb;
 using MediaServer.Tasks;
 using System.IO;
 using System.Reflection;
+using UpnpLib;
+using UpnpLib.Ssdp;
+using UpnpLib.Devices.Services.Media;
 
 namespace MediaServer
 {
@@ -23,11 +26,12 @@ namespace MediaServer
         private IEnumerable<KeyValuePair<string, Type>> _mappedRequestProcessors;
         private Stream? _stream;
         private SyncTask _syncTask;
-
+        
         //private Notification _notification;
 
         internal static Module? CurrentModule { get; private set; }
         internal static RizeDb.ObjectStore? ObjectStore { get; private set; }
+        internal static SsdpServer? SsdpServer { get; private set; }
 
         public Module()
         {
@@ -126,13 +130,23 @@ namespace MediaServer
             }
             OmdbManager.ApiKey = settings.OmdbApiKey;
 
+            SsdpServer = new SsdpServer();
+            SsdpServer.Start();
+            SsdpServer.Search(KnownDevices.MediaRenderer1); 
+
             //ShowWidget(new PumphreyMediaServerWidget());
         }
 
         public override void Stop()
         {
+            SsdpServer?.Stop();
+            SsdpServer = null;
+
             ObjectStore?.Dispose();
+            ObjectStore = null;
+
             _stream!.Close();
+            _stream = null;
         }
 
         public void RunSync()

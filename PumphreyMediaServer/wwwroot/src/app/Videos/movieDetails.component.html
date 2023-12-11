@@ -57,6 +57,9 @@
             <div class="casting" *ngIf="CanCast">
                 <castPlayer [videoFileMediaItem]="Movie"></castPlayer>
             </div>
+            <div>
+                <button (click)="ShowCastDevices()">Cast</button>
+            </div>
         </div>
     </ng-container>
 </div>
@@ -68,3 +71,22 @@
         <div class="command" (click)="CloseMovie()">X</div>
     </div>
 </div>
+
+<dialog #castDevicesDialog>
+    <div class="title">
+        Cast Device(s)
+    </div>
+    <div class="content">
+        <div *ngIf="Receivers != null && Receivers.length > 0">
+            <div *ngFor="let receiver of Receivers" class="receiver" (click)="PlayVideoOnDevice(receiver)">
+                {{receiver.Name}}
+            </div>
+        </div>
+        <div *ngIf="Receivers == null || Receivers.length == 0">
+            <div class="noReceiversd">No receivers found.</div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="CloseCastDevices()">Close</button>
+    </div>
+</dialog>

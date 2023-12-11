@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { VideoFileMediaItem } from '../Services/mediaServer.service';
+import { Component, Input } from '@angular/core';
+import { UserMediaItem } from '../Services/mediaServer.service';
 import { CastService, PlayerState } from '../Services/castService.service';
 
 @Component({
@@ -11,11 +11,11 @@ export class CastPlayerComponent {
     constructor(private _castService: CastService) {
     }
 
-    private _videoFileMediaItem: VideoFileMediaItem | undefined;
+    private _videoFileMediaItem: UserMediaItem | undefined;
     public PlayerState = PlayerState;
 
     @Input("videoFileMediaItem")
-    public set VideoFileMediaItem(value: VideoFileMediaItem | undefined) {
+    public set VideoFileMediaItem(value: UserMediaItem | undefined) {
         this._videoFileMediaItem = value;
     }
 
@@ -33,7 +33,7 @@ export class CastPlayerComponent {
     }
 
     public get IsConnected(): boolean {
-        return this._castService.IsConnected;
+        return this._castService.IsConnected; //This will need to go
     }
 
     public Stop() {

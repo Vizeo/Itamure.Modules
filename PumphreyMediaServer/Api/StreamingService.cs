@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Net.Mime;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using UpnpLib.Devices.Services.Media.Dlna;
 
 namespace MediaServer.Api
 {
@@ -62,11 +63,9 @@ namespace MediaServer.Api
                     response.Headers.Add("Content-Type", contentType);
 
                     //DLNA Headers
-                    //response.Headers.Add("transferMode.dlna.org", "Streaming");
-                    //response.Headers.Add("getcontentFeatures.dlna.org", "1");
                     response.Headers.Add("USER-AGENT", "DLNADOC");
                     response.Headers.Add("transferMode.dlna.org", "Streaming");
-                    response.Headers.Add("contentFeatures.dlna.org", "DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000");
+                    response.Headers.Add("contentFeatures.dlna.org", $"DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS={DefaultDlnaFlags.DefaultStreaming}");
 
                     //Load stream
                     var filestream = new FileStream(mediaPath, FileMode.Open, FileAccess.Read, FileShare.Read);
