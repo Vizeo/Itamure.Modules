@@ -1,5 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
 import { CalendarToolsService, CalendarItemData } from './Services/calendarTools.service';
 
 @Component({

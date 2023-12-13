@@ -14,6 +14,7 @@ using MediaServer.Omdb;
 using MediaServer.Api.MovieGroupings;
 using RizeDb;
 using System.Xml;
+using MediaServer.SubServices;
 
 namespace MediaServer.Api
 {
@@ -1290,10 +1291,10 @@ namespace MediaServer.Api
 
         [Api]
         [Authorize()]
-        public IEnumerable<MediaReceiver> GetUpnpMediaReceivers()
+        public IEnumerable<MediaReceiver> GetMediaReceivers()
         {
             var result = new List<MediaReceiver>();
-            foreach (var device in Module.SsdpServer!.Devices)
+            foreach (var device in UpnpSubService.SsdpServer!.Devices)
             {
                 if (device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
                 {
@@ -1303,7 +1304,8 @@ namespace MediaServer.Api
                     result.Add(new MediaReceiver()
                     {
                         Id = device.UniqueServiceName.Substring(5, indexOfIdEnd - 5),
-                        Name = device.FriendlyName
+                        Name = device.FriendlyName,
+                        ReceiverType = "Upnp"
                     });
                 }
             }
@@ -1323,7 +1325,7 @@ namespace MediaServer.Api
                 throw new NullReferenceException("ObjectStore is null");
             }
 
-            foreach (var device in Module.SsdpServer!.Devices)
+            foreach (var device in UpnpSubService.SsdpServer!.Devices)
             {
                 if (device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
                 {
@@ -1471,15 +1473,16 @@ namespace MediaServer.Api
         public int Episode { get; set; }
     }
 
-    public class MediaReceiver //UPNP
+    public class MediaReceiver 
     {
         public string? Id { get; set; }
         public string? Name { get; set; }
-    }
+        public string? ReceiverType { get; set; }
+	}
 
     public class MediaCastResult
     {
         public bool Success { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
     }
 }

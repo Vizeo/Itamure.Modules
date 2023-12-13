@@ -162,6 +162,7 @@ export class MediaReceiver
 {
 	Id?: string | null; 
 	Name?: string | null; 
+	ReceiverType?: string | null; 
 }
 export class MediaCastResult
 {
@@ -599,9 +600,9 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeasonUserMediaItems', jsonObject);
 	}
 
-	GetUpnpMediaReceivers(): Promise<MediaReceiver[]> {
+	GetMediaReceivers(): Promise<MediaReceiver[]> {
 		var jsonObject = <any>new Object();
-		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetUpnpMediaReceivers', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMediaReceivers', jsonObject);
 	}
 
 	CastToUpnpReceivers(receiverId: string | null, userMediaId: string): Promise<MediaCastResult> {

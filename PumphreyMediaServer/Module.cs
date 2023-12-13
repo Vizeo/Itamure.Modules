@@ -8,12 +8,11 @@ using MediaServer.Api;
 using MediaServer.Entities;
 using MediaServer.Events;
 using MediaServer.Omdb;
+using MediaServer.SubServices;
 using MediaServer.Tasks;
 using System.IO;
 using System.Reflection;
-using UpnpLib;
-using UpnpLib.Ssdp;
-using UpnpLib.Devices.Services.Media;
+
 
 namespace MediaServer
 {
@@ -26,12 +25,11 @@ namespace MediaServer
         private IEnumerable<KeyValuePair<string, Type>> _mappedRequestProcessors;
         private Stream? _stream;
         private SyncTask _syncTask;
-        
+
         //private Notification _notification;
 
         internal static Module? CurrentModule { get; private set; }
         internal static RizeDb.ObjectStore? ObjectStore { get; private set; }
-        internal static SsdpServer? SsdpServer { get; private set; }
 
         public Module()
         {
@@ -46,7 +44,7 @@ namespace MediaServer
 #else
             path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 #endif
-            
+
             if (path != null)
             {
                 var wwwPath = Path.Combine(path, "wwwroot/dist");
@@ -63,14 +61,15 @@ namespace MediaServer
             //RegisterWidget<PumphreyMediaServerWidget>("PumphreyMediaServer Widget", PumphreyMediaServerPermissions.WidgetPermissions);
 
             RegisterApp(new Itamure.Core.App("Media Server", $"/{WEB_ROUTE_BASE}/App", appIcon, MediaServerPermissions.AppPermissions));
-            //RegisterEvent<IterationChangedEvent>("Iteration Changed", PumphreyMediaServerPermissions.WidgetPermissions);
-            //RegisterEvent<ClickChangedEvent>("Click Changed", PumphreyMediaServerPermissions.WidgetPermissions);
+			RegisterEvent<ReceiverEvent>("Receiver Update", MediaServerPermissions.AppPermissions);
+			RegisterEvent<ReceiverAddedEvent>("Receiver Added", MediaServerPermissions.AppPermissions);
+			RegisterEvent<ReceiverRemovedEvent>("Receiver Removed", MediaServerPermissions.AppPermissions);
 
-            //Notifications can be subscribed to by users. Here is an example of using one in a module
-            //AddNotification(_notification);
-        }
+			//Notifications can be subscribed to by users. Here is an example of using one in a module
+			//AddNotification(_notification);
+		}
 
-        public override async Task RouteWebRequest(IRequest request, IResponse response, IntegratedWebServer.Core.ISession session)
+		public override async Task RouteWebRequest(IRequest request, IResponse response, IntegratedWebServer.Core.ISession session)
         {
             //Try to find any mapped request processors such as APIs
             var address = request.Address.ToUpper();
@@ -88,8 +87,8 @@ namespace MediaServer
                         {
                             await resultProcessor.ProcessRequest(request, response, session);
                         }
-                        catch (Exception ex) {
-                            
+                        catch 
+                        {
                         }
                     }
                     return;
@@ -111,6 +110,8 @@ namespace MediaServer
 
         //internal Notification Notification { get; } = new Notification("PumphreyMediaServer Notification");
 
+        
+
         protected override void Start()
         {
             _stream = GetFileStream("Database.db", false);
@@ -130,19 +131,21 @@ namespace MediaServer
             }
             OmdbManager.ApiKey = settings.OmdbApiKey;
 
-            SsdpServer = new SsdpServer();
-            SsdpServer.Start();
-            SsdpServer.Search(KnownDevices.MediaRenderer1); 
+            UpnpSubService.Start();
 
-            //ShowWidget(new PumphreyMediaServerWidget());
+			//ShowWidget(new PumphreyMediaServerWidget());
+		}
+
+        internal new IEnumerable<IUser> GetUsers()
+        {
+            return base.GetUsers();
         }
 
         public override void Stop()
         {
-            SsdpServer?.Stop();
-            SsdpServer = null;
+            UpnpSubService.Stop();
 
-            ObjectStore?.Dispose();
+			ObjectStore?.Dispose();
             ObjectStore = null;
 
             _stream!.Close();

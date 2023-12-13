@@ -1,7 +1,7 @@
 ﻿//https://developers.google.com/cast/docs/web_sender/integrate
 //https://developers.google.com/cast
 import { ApplicationRef, EventEmitter, Injectable } from "@angular/core";
-import { MediaService, UserMediaItem } from "./mediaServer.service";
+import { MediaReceiver, MediaService, UserMediaItem } from "./mediaServer.service";
 
 declare const castAvailable: boolean;
 declare const cast: any;
@@ -27,6 +27,34 @@ export class CastService {
 				this.SetupPlayer();
 			}
 		}
+
+		this._receivers = new Array<IReceiver>();
+		this.GetReceivers();
+
+		window.addEventListener("MediaServer.ReceiverUpdate", (u) => {
+			let receiverId = (<CustomEvent>u).detail.ReceiverId;
+			let existing = this._receivers.find(n => n.Id == receiverId);
+
+			console.log("Received event", (<CustomEvent>u).detail, existing);
+		});
+
+		window.addEventListener("MediaServer.ReceiverAdded", (u) => {
+			let receiver: MediaReceiver = (<CustomEvent>u).detail.Receiver;
+			let existing = this._receivers.find(n => n.Id == receiver.Id);
+			if (existing == null) {
+				this.AddReceiver(receiver);
+				console.log("Added", receiver.Name);
+			}
+		});
+
+		window.addEventListener("MediaServer.ReceiverRemoved", (u) => {
+			let receiverId = (<CustomEvent>u).detail.ReceiverId;
+			let existingIndex = this._receivers.findIndex(n => n.Id == receiverId);
+			if (existingIndex != -1) {
+				this._receivers.splice(existingIndex, 1);
+				console.log("Removed");
+			}
+		});
 	}
 
 	private SetupPlayer() {
@@ -43,10 +71,11 @@ export class CastService {
 	private _context: any;
 	private _player: any;
 	private _playerController: any;
+	private _receivers: IReceiver[];
 
+	//Old events to be moved
 	public ConnectionChanged: EventEmitter<boolean> = new EventEmitter();
 	public PlayStatusChanged: EventEmitter<PlayerState> = new EventEmitter();
-	//public TimeChanged: EventEmitter<number> = new EventEmitter(); //TODO: Implement this with a timer
 
 	private GetPlayerState(val: string): PlayerState {
 		switch (val) {
@@ -131,24 +160,33 @@ export class CastService {
 	//	cast.framework.CastContext.getInstance().getCurrentSession().getSessionObj().setReceiverVolumeLevel(level);
 	//}
 
-	public async GetReceivers(): Promise<IReceiver[]> {
-		let result = new Array<IReceiver>();
+	public get Receivers(): IReceiver[] {
+		return this._receivers;
+	}
 
+	private async GetReceivers() {
 		//Get from server
-		let serverReceivers = await this.mediaService.GetUpnpMediaReceivers();
+		let serverReceivers = await this.mediaService.GetMediaReceivers();
 		serverReceivers.forEach(r => {
-			let receiver = new UpnpReceiver(this.mediaService);
-			receiver.Id = r.Id!;
-			receiver.Name = r.Name!;
-
-			//Add player 
-
-			result.push(receiver);
+			this.AddReceiver(r);
 		});
 
 		//Get from google cast
+	}
 
-		return result;
+	private AddReceiver(mediaReceiver: MediaReceiver) {
+		switch (mediaReceiver.ReceiverType) {
+			case "Upnp":
+				this.AddUpnpReceiver(mediaReceiver);
+				break;
+		}	
+	}
+
+	private AddUpnpReceiver(mediaReceiver: MediaReceiver) {
+		var upnpReceiver = new UpnpReceiver(this.mediaService);
+		upnpReceiver.Id = mediaReceiver.Id!;
+		upnpReceiver.Name = mediaReceiver.Name!;
+		this._receivers.push(upnpReceiver);
 	}
 
 	public get IsConnected(): boolean {
@@ -179,6 +217,7 @@ export interface IPlayer {
 }
 
 export interface IReceiver {
+	get Id(): string;
 	get Name(): string;
 	get Player(): IPlayer | null;
 }
@@ -187,7 +226,7 @@ class UpnpReceiver implements IReceiver {
 	constructor(private mediaService: MediaService) {
 	}
 
-	public Id?: string;
+	public Id!: string;
 	public Name!: string;
 	public Player!: IPlayer;
 }

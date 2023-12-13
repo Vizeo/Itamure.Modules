@@ -112,7 +112,7 @@ export class MovieDetailsComponent {
     }
 
     public async ShowCastDevices() {
-        this.Receivers = await this.castService.GetReceivers();
+        this.Receivers = this.castService.Receivers;
         this._castDevicesDialog.nativeElement.showModal();
     }
 
