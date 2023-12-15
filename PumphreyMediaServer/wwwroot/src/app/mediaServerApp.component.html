@@ -11,6 +11,7 @@
         </div>
         <div class="tools">
             <google-cast-launcher></google-cast-launcher>
+            <button (click)="ShowCastDevices()">Receivers</button>
             <icon class="tool" name="Magnifying Glass" routerLink="/App/Search" routerLinkActive="selected"></icon>
             <a routerLink="/Settings">
                 <icon class="tool" name="Gear"></icon>
@@ -21,3 +22,23 @@
         <router-outlet></router-outlet>
     </div>
 </div>
+
+
+<dialog #castDevicesDialog>
+    <div class="title">
+        Cast Device(s)
+    </div>
+    <div class="content">
+        <ng-container *ngIf="Receivers != null && Receivers.length > 0">
+            <div *ngFor="let receiver of Receivers" class="receiver">
+                <remotePlayer [receiver]="receiver"></remotePlayer>
+            </div>
+        </ng-container>
+        <div *ngIf="Receivers == null || Receivers.length == 0">
+            <div class="noReceiversd">No receivers found.</div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="CloseCastDevices()">Close</button>
+    </div>
+</dialog>

@@ -106,6 +106,10 @@ namespace MediaServer.SubServices
 										break;
 									default:
 										receiverEvent.Status = "Stopped";
+										receiverEvent.Length = 0;
+										receiverEvent.Position = 0;
+										receiverEvent.MediaName = string.Empty;
+										receiverEvent.UserName = string.Empty;
 										break;
 								}
 
@@ -132,16 +136,16 @@ namespace MediaServer.SubServices
 						}
 					}
 				}
-			}
 
-			await Task.Delay(TimeSpan.FromSeconds(1));
+				await Task.Delay(TimeSpan.FromSeconds(1));
+			}
 		}
 
 		private static async Task GetMediaInfo(UpnpLib.Devices.Services.Media.AVTransport_1.AVTransport1 service, ReceiverEvent receiverEvent)
 		{
 			var positionInfo = await service.GetPositionInfo();
 			receiverEvent.Length = positionInfo.TrackDuration.TotalSeconds;
-			receiverEvent.Position = positionInfo.TrackDuration.TotalSeconds / positionInfo.RelTime.TotalSeconds;
+			receiverEvent.Position = positionInfo.RelTime.TotalSeconds;
 			if(positionInfo.Item != null)
 			{
 				var mediaId = positionInfo.Item.Id;
@@ -158,7 +162,8 @@ namespace MediaServer.SubServices
 							receiverEvent.MediaName = mediaItem.Name;
 						}
 
-						var user = Module.CurrentModule!.GetUsers().FirstOrDefault(u => u.Id == userMediaReferences.UserUniqueId);
+						var users = Module.CurrentModule!.GetUsers();
+						var user = users.FirstOrDefault(u => u.Id == userMediaReferences.UserUniqueId);
 						if(user != null) 
 						{
 							receiverEvent.UserName = user.Name;

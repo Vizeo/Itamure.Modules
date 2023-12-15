@@ -2,7 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MediaService, MediaSubType, MetadataTag, MetadataTagType, UserMediaItem } from '../Services/mediaServer.service';
 import { VideoPlayerComponent } from './videoPlayer.component';
 import { ActivatedRoute } from '@angular/router';
-import { CastService, IReceiver } from '../Services/castService.service';
+import { CastService, Receiver } from '../Services/castService.service';
 declare const cast: any;
 declare const chrome: any;
 
@@ -27,7 +27,7 @@ export class MovieDetailsComponent {
     public Duration: string = "";
     public MovieVisible: boolean = false;
     public UserActive: boolean = false;
-    public Receivers: IReceiver[] | null = null;
+    public Receivers: Receiver[] | null = null;
     
     private _timout: number = 0;
 
@@ -120,7 +120,7 @@ export class MovieDetailsComponent {
         this._castDevicesDialog.nativeElement.close();
     }
 
-    public PlayVideoOnDevice(receiver: IReceiver) {
+    public PlayVideoOnDevice(receiver: Receiver) {
         this.castService.PlayOnReceiver(receiver, this.Movie!);
     }
 

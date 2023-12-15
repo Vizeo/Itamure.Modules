@@ -15,6 +15,7 @@ using MediaServer.Api.MovieGroupings;
 using RizeDb;
 using System.Xml;
 using MediaServer.SubServices;
+using MediaServer.Api.RemoteControllers;
 
 namespace MediaServer.Api
 {
@@ -1313,10 +1314,9 @@ namespace MediaServer.Api
             return result;
         }
 
-
         [Api]
         [Authorize()]
-        public MediaCastResult? CastToUpnpReceivers(string receiverId, Guid userMediaId)
+        public MediaCastResult? CastToReceiver(string recieverType, string receiverId, Guid userMediaId)
         {
             MediaCastResult? result = null;
 
@@ -1325,88 +1325,63 @@ namespace MediaServer.Api
                 throw new NullReferenceException("ObjectStore is null");
             }
 
-            foreach (var device in UpnpSubService.SsdpServer!.Devices)
+			var userMediaItem = GetUserMediaItems()[userMediaId];
+			var videoMediaItem = (VideoFileMediaItem)Module.ObjectStore.Retrieve<MediaItem>(userMediaItem.MediaItemId);
+            if (videoMediaItem != null)
             {
-                if (device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
+                if (File.Exists(videoMediaItem.FilePath!))
                 {
-                    var indexOfIdEnd = device.UniqueServiceName.IndexOf("::");
-                    var deviceId = device.UniqueServiceName.Substring(5, indexOfIdEnd - 5);
+                    var file = new FileInfo(videoMediaItem.FilePath!);
 
-                    if (deviceId == receiverId)
-                    {
-                        var task = Task.Run(async () =>
-                        {
-                            device.Load().Wait();
-
-                            var userMediaItem = GetUserMediaItems()[userMediaId];
-                            var videoMediaItem = (VideoFileMediaItem)Module.ObjectStore.Retrieve<MediaItem>(userMediaItem.MediaItemId);
-                            var extension = Path.GetExtension(videoMediaItem.FilePath);
-
-                            if (File.Exists(videoMediaItem.FilePath!))
-                            {
-                                var file = new FileInfo(videoMediaItem.FilePath!);
-
-                                var port = string.Empty;
-                                if((Request.LocalEndPoint.Port == 80 && !Request.IsSecure) ||
-                                    (Request.LocalEndPoint.Port == 443 && Request.IsSecure))
-                                {
-                                    port = $":{Request.LocalEndPoint.Port}";
-                                }
-                                var url = $"http://{device.ClientIpAddress}{port}/mediaServer/streamingService?UniqueKey={userMediaId}";
-
-                                var videoItem = new UpnpLib.Devices.Services.Media.VideoItem(userMediaId.ToString(), $"Streamer{extension}");
-                                videoItem.Resources = new List<UpnpLib.Devices.Services.Media.Resource>();
-                                videoItem.Resources.Add(new UpnpLib.Devices.Services.Media.Resource()
-                                {
-                                    MimeType = userMediaItem.MimeType,
-                                    Value = url,
-                                    //AudioChannels = "2",
-                                    //Bitrate = "78639",
-                                    //SampleFrequency = "48000",
-                                    Duration = TimeSpan.FromSeconds(Convert.ToDouble(videoMediaItem.Duration!)).ToString(@"h\:mm\:ss\.ffff"),
-                                    Resolution = $"{videoMediaItem.Width}x{videoMediaItem.Height}",
-                                    Size = file.Length
-                                });
-
-                                var service = device.Services.FirstOrDefault() as UpnpLib.Devices.Services.Media.AVTransport_1.AVTransport1;
-                                if (service != null)
-                                {
-                                    var setResponse = await service!.SetAVTransportURI(url, videoItem);
-                                    if(setResponse.HasError)
-                                    {
-                                        result = new MediaCastResult() { Success = false, Message = setResponse.ErrorMessage };
-                                        return;
-                                    }
-
-                                    var playResponse = await service!.Play();
-                                    if (playResponse.HasError)
-                                    {
-                                        result = new MediaCastResult() { Success = false, Message = playResponse.ErrorMessage };
-                                        return;
-                                    }
-
-                                    result = new MediaCastResult() { Success = true, Message = string.Empty };
-                                }
-                                else
-                                {
-                                    result = new MediaCastResult() { Success = false, Message = "Device service not found" };
-                                }
-                            }
-                            else
-                            {
-                                result = new MediaCastResult() { Success = false, Message = "File not found" };
-                            }
-                        });
-                        task.Wait();
-                        break;
-                    }
+                    var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
+                    result = remotePlayer.Cast(Request, file, receiverId, videoMediaItem, userMediaItem);
+                }
+                else
+                {
+                    result = new MediaCastResult() { Success = false, Message = "File not found" };
                 }
             }
+			else
+			{
+				result = new MediaCastResult() { Success = false, Message = "Video not found" };
+			}
 
-            return result;
+			return result;
         }
 
-        private static void CopyProperties(object source, object target, params string[] ignoreProperties)
+		[Api]
+		[Authorize()]
+		public void PauseMediaReceiver(string receiverId, string recieverType)
+		{
+			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
+			remotePlayer.Pause(receiverId);			
+		}
+
+		[Api]
+		[Authorize()]
+		public void PlayMediaReceiver(string receiverId, string recieverType)
+		{
+			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
+			remotePlayer.Play(receiverId);
+		}
+
+		[Api]
+		[Authorize()]
+		public void StopMediaReceiver(string receiverId, string recieverType)
+		{
+			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
+			remotePlayer.Stop(receiverId);
+		}
+
+		[Api]
+		[Authorize()]
+		public void SeekMediaReceiver(string receiverId, string recieverType, double second)
+		{
+			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
+			remotePlayer.Seak(receiverId, second);
+		}
+
+		private static void CopyProperties(object source, object target, params string[] ignoreProperties)
         {
             var sourceType = source.GetType();
 

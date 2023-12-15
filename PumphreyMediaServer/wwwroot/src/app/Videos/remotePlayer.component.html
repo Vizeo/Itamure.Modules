@@ -1,0 +1,45 @@
+<div class="remotePlayer">
+	<ng-container *ngIf="Receiver != null">
+		<div class="remotePlayerTitle">
+			<label class="receiver">
+				{{Receiver.Name}}
+			</label>
+
+			<ng-container *ngIf="Receiver.MediaName != null && Receiver.MediaName.length > 0; else noMedia">
+				<label>
+					<span>Playing:</span>{{Receiver.MediaName}}
+				</label>
+				<label>
+					<span>User Name:</span>{{Receiver.UserName}}
+				</label>
+
+				<div class="progressArea">
+					<div class="timer">
+						{{Played}}
+					</div>
+					<div class="progress" #progress (mousedown)="Seek($event)">
+						<div class="currentPosition" #currentPosition></div>
+					</div>
+					<div class="timer">
+						{{Remaining}}
+					</div>
+				</div>
+			</ng-container>
+			<ng-template #noMedia>
+				No Media
+			</ng-template>
+		</div>
+
+		<div class="buttons" *ngIf="Receiver.MediaName != null && Receiver.MediaName.length > 0">
+			<button (click)="PauseOrPlay()" *ngIf="Receiver.Status != 'Playing'">
+				<img class="castControls" src="/MediaServer/assets/CastPlayButton.svg" />
+			</button>
+			<button (click)="PauseOrPlay()" *ngIf="Receiver.Status == 'Playing'">
+				<img class="castControls" src="/MediaServer/assets/CastPauseButton.svg" />
+			</button>
+			<button (click)="Stop()">
+				<img class="castControls" src="/MediaServer/assets/CastStopButton.svg" />
+			</button>
+		</div>
+	</ng-container>
+</div>

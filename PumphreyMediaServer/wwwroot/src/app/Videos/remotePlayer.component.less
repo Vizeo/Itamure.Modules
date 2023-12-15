@@ -1,0 +1,82 @@
+:host {
+	display: contents;
+}
+
+.remotePlayer {
+	display: flex;
+	flex-direction: column;
+	padding: 5px;
+	background-color: #d1d1d1;
+	border-radius: 9px;
+
+
+	.remotePlayerTitle {
+		display: flex;
+		flex-direction: column;
+		margin-bottom: 10px;
+
+		.receiver {
+			text-align: center;
+			font-weight: 700;
+			font-size: 17px;
+		}
+
+		span {
+			font-weight: 700;
+			margin-right: 10px;
+		}
+
+		.progressArea {
+			height: 8px;
+			width: 100%;
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin-top: 5px;
+
+			.progress {
+				background-color: #7888ff;
+				border-radius: 20px;
+				position: relative;
+				flex: 1 1 auto;
+				height: 6px;
+
+				.currentPosition {
+					--curPosWidth: 16px;
+					position: absolute;
+					height: var(--curPosWidth);
+					width: var(--curPosWidth);
+					background-color: #5555e3;
+					border-radius: 25px;
+					top: calc(50% - 8px);
+					transform: translateX(-8px);
+					cursor: grab;
+				}
+			}
+
+			.timer {
+				font-size: 11px;
+			}
+		}
+	}
+
+	.buttons {
+		display: flex;
+		flex-direction: row;
+		gap: 10px;
+		justify-content: flex-start;
+
+		button {
+			padding: 0;
+			background-color: transparent;
+
+			&:active {
+				background-color: greenyellow;
+			}
+
+			img {
+				width: 30px;
+			}
+		}
+	}
+}

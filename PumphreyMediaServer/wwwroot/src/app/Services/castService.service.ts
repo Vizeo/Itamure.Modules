@@ -28,14 +28,21 @@ export class CastService {
 			}
 		}
 
-		this._receivers = new Array<IReceiver>();
+		this._receivers = new Array<Receiver>();
 		this.GetReceivers();
 
 		window.addEventListener("MediaServer.ReceiverUpdate", (u) => {
-			let receiverId = (<CustomEvent>u).detail.ReceiverId;
+			let update = (<CustomEvent>u).detail;
+			let receiverId = update.ReceiverId;
 			let existing = this._receivers.find(n => n.Id == receiverId);
-
-			console.log("Received event", (<CustomEvent>u).detail, existing);
+			if (existing != null) {
+				existing.UserName = update.UserName;
+				existing.MediaName = update.MediaName;
+				existing.Status = update.Status;
+				existing.Length = update.Length;
+				existing.Position = update.Position;
+				existing.Updated.emit();
+			}			
 		});
 
 		window.addEventListener("MediaServer.ReceiverAdded", (u) => {
@@ -43,7 +50,6 @@ export class CastService {
 			let existing = this._receivers.find(n => n.Id == receiver.Id);
 			if (existing == null) {
 				this.AddReceiver(receiver);
-				console.log("Added", receiver.Name);
 			}
 		});
 
@@ -52,10 +58,18 @@ export class CastService {
 			let existingIndex = this._receivers.findIndex(n => n.Id == receiverId);
 			if (existingIndex != -1) {
 				this._receivers.splice(existingIndex, 1);
-				console.log("Removed");
 			}
 		});
 	}
+
+	private _context: any;
+	private _player: any;
+	private _playerController: any;
+	private _receivers: Receiver[];
+
+	//Old events to be moved
+	public ConnectionChanged: EventEmitter<boolean> = new EventEmitter();
+	public PlayStatusChanged: EventEmitter<PlayerState> = new EventEmitter();
 
 	private SetupPlayer() {
 		this._player = new cast.framework.RemotePlayer();
@@ -67,15 +81,6 @@ export class CastService {
 				this.appRef.tick();
 			});
 	}
-
-	private _context: any;
-	private _player: any;
-	private _playerController: any;
-	private _receivers: IReceiver[];
-
-	//Old events to be moved
-	public ConnectionChanged: EventEmitter<boolean> = new EventEmitter();
-	public PlayStatusChanged: EventEmitter<PlayerState> = new EventEmitter();
 
 	private GetPlayerState(val: string): PlayerState {
 		switch (val) {
@@ -160,7 +165,7 @@ export class CastService {
 	//	cast.framework.CastContext.getInstance().getCurrentSession().getSessionObj().setReceiverVolumeLevel(level);
 	//}
 
-	public get Receivers(): IReceiver[] {
+	public get Receivers(): Receiver[] {
 		return this._receivers;
 	}
 
@@ -193,9 +198,9 @@ export class CastService {
 		return cast.framework.CastContext.getInstance().getCastState() == "CONNECTED";
 	}
 
-	public PlayOnReceiver(receiver: IReceiver, userMediaItem: UserMediaItem) {
+	public PlayOnReceiver(receiver: Receiver, userMediaItem: UserMediaItem) {
 		let upnpReceiver = <UpnpReceiver>receiver;
-		this.mediaService.CastToUpnpReceivers(upnpReceiver.Id!, userMediaItem.UniqueKey!);
+		this.mediaService.CastToReceiver("Upnp", upnpReceiver.Id!, userMediaItem.UniqueKey!);
 	}
 }
 
@@ -206,27 +211,43 @@ export enum PlayerState {
 	Buffering = "BUFFERING",
 }
 
-export interface IPlayer {
-	PlayAndPause(): void;
-	Stop(): void;
-	get ReceiverName(): string;
-	get MediaName(): string;
+export abstract class Receiver {
+	public abstract PlayOrPause(): void;
+	public abstract Stop(): void;
+	public abstract Seek(seconds: number): void;
+	public Updated: EventEmitter<any> = new EventEmitter();
 
-	//Add seak
-	//Add Event For Updating Time
+	public Id?: string;
+	public Name?: string;
+	public UserName?: string;
+	public MediaName?: string;
+	public Status?: string;
+	public Length?: number;
+	public Position?: number;
 }
 
-export interface IReceiver {
-	get Id(): string;
-	get Name(): string;
-	get Player(): IPlayer | null;
-}
-
-class UpnpReceiver implements IReceiver {
+class UpnpReceiver extends Receiver {
 	constructor(private mediaService: MediaService) {
+		super();
 	}
 
-	public Id!: string;
-	public Name!: string;
-	public Player!: IPlayer;
+	public override PlayOrPause(): void {
+		if (this.Status == "Playing") {
+			this.mediaService.PauseMediaReceiver(this.Id!, "Upnp");
+		}
+		else if (this.Status == "Paused") {
+			this.mediaService.PlayMediaReceiver(this.Id!, "Upnp");
+		}
+	}
+
+	public override Stop(): void {
+		if (this.Status == "Playing" ||
+			this.Status == "Paused") {
+			this.mediaService.StopMediaReceiver(this.Id!, "Upnp");
+		}
+	}
+
+	public override Seek(seconds: number): void {
+		this.mediaService.SeekMediaReceiver(this.Id!, "Upnp", seconds);
+	}
 }

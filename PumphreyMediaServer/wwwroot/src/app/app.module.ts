@@ -47,6 +47,7 @@ import { CastPlayerComponent } from './Videos/castPlayer.component';
 import { SearchComponent } from './search.component';
 import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
+import { RemotePlayerComponent } from './Videos/remotePlayer.component';
 
 @NgModule({
     declarations: [
@@ -93,7 +94,8 @@ import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component
         CastPlayerComponent,
         SearchComponent,
         EpisodeDetailsComponent,
-        FullMovieGroupingComponent
+        FullMovieGroupingComponent,
+        RemotePlayerComponent
     ],
     imports: [
         BrowserModule,

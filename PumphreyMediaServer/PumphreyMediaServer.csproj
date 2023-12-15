@@ -82,6 +82,8 @@
 	  <None Remove="wwwroot\src\app\unknownVideo.component.ts" />
 	  <None Remove="wwwroot\src\app\videoAssigner - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\videoAssigner - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\castPlayer - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\castPlayer - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\Videos\castPlayer.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\episodeDetails - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\Videos\episodeDetails - Copy.component.less" />
@@ -110,6 +112,7 @@
 	  <None Remove="wwwroot\src\app\Videos\moviesView - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\Videos\movieVideo - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\Videos\movieVideo - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\remotePlayer.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\season.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\seasonEditor.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\seasonList - Copy.component.html" />

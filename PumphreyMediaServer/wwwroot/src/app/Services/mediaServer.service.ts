@@ -605,11 +605,41 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMediaReceivers', jsonObject);
 	}
 
-	CastToUpnpReceivers(receiverId: string | null, userMediaId: string): Promise<MediaCastResult> {
+	CastToReceiver(recieverType: string | null, receiverId: string | null, userMediaId: string): Promise<MediaCastResult> {
 		var jsonObject = <any>new Object();
+		jsonObject.recieverType = recieverType
 		jsonObject.receiverId = receiverId
 		jsonObject.userMediaId = userMediaId
-		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/CastToUpnpReceivers', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/CastToReceiver', jsonObject);
+	}
+
+	PauseMediaReceiver(receiverId: string | null, recieverType: string | null): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.receiverId = receiverId
+		jsonObject.recieverType = recieverType
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/PauseMediaReceiver', jsonObject);
+	}
+
+	PlayMediaReceiver(receiverId: string | null, recieverType: string | null): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.receiverId = receiverId
+		jsonObject.recieverType = recieverType
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/PlayMediaReceiver', jsonObject);
+	}
+
+	StopMediaReceiver(receiverId: string | null, recieverType: string | null): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.receiverId = receiverId
+		jsonObject.recieverType = recieverType
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/StopMediaReceiver', jsonObject);
+	}
+
+	SeekMediaReceiver(receiverId: string | null, recieverType: string | null, second: number): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.receiverId = receiverId
+		jsonObject.recieverType = recieverType
+		jsonObject.second = second
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/SeekMediaReceiver', jsonObject);
 	}
 
 }
