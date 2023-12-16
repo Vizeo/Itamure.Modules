@@ -116,6 +116,7 @@ export class EpisodeDetailsComponent {
 
     public PlayVideoOnDevice(receiver: Receiver) {
         this.castService.PlayOnReceiver(receiver, this.Episode!);
+        this.CloseCastDevices();
     }
 
     @ViewChild(VideoPlayerComponent)

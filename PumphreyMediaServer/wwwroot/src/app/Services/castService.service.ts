@@ -164,12 +164,17 @@ class ChromeCastReceiver extends Receiver {
 		let mimeType = userMediaItem.MimeType;
 		var mediaInfo = new chrome.cast.media.MediaInfo(url, mimeType);
 		mediaInfo.metadata = new chrome.cast.media.MovieMediaMetadata();
+		console.log("A");
 		mediaInfo.metadata.title = userMediaItem.Name;
 		var request = new chrome.cast.media.LoadRequest(mediaInfo);
+		console.log("b", request);
 		try {
 			let session = await this.CastSession();
+			console.log("c", session);
 			if (session != null) {
+				console.log("D");
 				await session.loadMedia(request);
+				console.log("e");
 				this.MediaName = userMediaItem.Name!;
 			}
 		} catch (e) {
@@ -179,10 +184,14 @@ class ChromeCastReceiver extends Receiver {
 
 	private async CastSession(): Promise<any> {
 		let castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+		console.log("1", castSession);
 		if (!castSession) {
 			let requestSession = await cast.framework.CastContext.getInstance().requestSession();
-			if (requestSession != null) {
+			console.log("2", requestSession);
+
+			if (requestSession == null) {
 				castSession = cast.framework.CastContext.getInstance().getCurrentSession();
+				console.log("3", castSession);
 			}
 		}
 		return castSession;
