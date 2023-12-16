@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CastService, Receiver } from './Services/castService.service';
+declare const cast: any;
 
 @Component({
     selector: 'mediaServerApp',

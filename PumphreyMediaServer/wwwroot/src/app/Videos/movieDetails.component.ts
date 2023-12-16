@@ -3,8 +3,6 @@ import { MediaService, MediaSubType, MetadataTag, MetadataTagType, UserMediaItem
 import { VideoPlayerComponent } from './videoPlayer.component';
 import { ActivatedRoute } from '@angular/router';
 import { CastService, Receiver } from '../Services/castService.service';
-declare const cast: any;
-declare const chrome: any;
 
 @Component({
     selector: 'movieDetails',
@@ -49,10 +47,6 @@ export class MovieDetailsComponent {
 
             this.CalcDuration();
         });        
-    }
-
-    public get CanCast(): boolean {
-        return this.castService.IsConnected;
     }
 
     private CreateList(metadataTags: MetadataTag[], metadataType: MetadataTagType) {

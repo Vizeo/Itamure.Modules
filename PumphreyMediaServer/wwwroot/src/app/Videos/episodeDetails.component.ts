@@ -1,10 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MediaService, MediaSubType, MetadataTag, MetadataTagType, UserMediaItem } from '../Services/mediaServer.service';
 import { VideoPlayerComponent } from './videoPlayer.component';
 import { ActivatedRoute } from '@angular/router';
-import { CastService } from '../Services/castService.service';
-declare const cast: any;
-declare const chrome: any;
+import { CastService, Receiver } from '../Services/castService.service';
 
 @Component({
     selector: 'episodeDetails',
@@ -14,7 +12,7 @@ declare const chrome: any;
 export class EpisodeDetailsComponent {
     constructor(private mediaService: MediaService,
         private route: ActivatedRoute,
-        private _castService: CastService) {
+        private castService: CastService) {
     }
 
     public Rating: string = "";
@@ -27,7 +25,8 @@ export class EpisodeDetailsComponent {
     public Duration: string = "";
     public EpisodeVisible: boolean = false;
     public UserActive: boolean = false;
-    
+    public Receivers: Receiver[] | null = null;
+   
     private _timout: number = 0;
 
     ngAfterViewInit() {
@@ -48,10 +47,6 @@ export class EpisodeDetailsComponent {
 
             this.CalcDuration();
         });        
-    }
-
-    public get CanCast(): boolean {
-        return this._castService.IsConnected;
     }
 
     private CreateList(metadataTags: MetadataTag[], metadataType: MetadataTagType) {
@@ -110,6 +105,22 @@ export class EpisodeDetailsComponent {
         this._timout = 5;
     }
 
+    public CloseCastDevices() {
+        this._castDevicesDialog.nativeElement.close();
+    }
+
+    public async ShowCastDevices() {
+        this.Receivers = this.castService.Receivers;
+        this._castDevicesDialog.nativeElement.showModal();
+    }
+
+    public PlayVideoOnDevice(receiver: Receiver) {
+        this.castService.PlayOnReceiver(receiver, this.Episode!);
+    }
+
     @ViewChild(VideoPlayerComponent)
     private _videoPlayer: VideoPlayerComponent | undefined;
+
+    @ViewChild("castDevicesDialog")
+    private _castDevicesDialog!: ElementRef<HTMLDialogElement>;
 }

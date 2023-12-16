@@ -51,11 +51,8 @@
             </div>
             <div class="actions">
                 <img class="unknown" src="/MediaServer/assets/PlayButton.svg" (click)="PlayEpisode()" />
+                <img class="unknown" src="/MediaServer/assets/CastToButton.svg" (click)="ShowCastDevices()" />
                 <label>Watch Episode</label>
-            </div>
-            
-            <div class="casting" *ngIf="CanCast">
-                <castPlayer [videoFileMediaItem]="Episode"></castPlayer>
             </div>
         </div>
     </ng-container>
@@ -68,3 +65,24 @@
         <div class="command" (click)="CloseEpisode()">X</div>
     </div>
 </div>
+
+<dialog #castDevicesDialog id="castDevicesDialog">
+    <div class="title">
+        Cast Device(s)
+    </div>
+    <div class="content">
+        <div *ngIf="Receivers != null && Receivers.length > 0">
+            <div *ngFor="let receiver of Receivers" class="receiver" (click)="PlayVideoOnDevice(receiver)">
+                <div class="name">{{receiver.Name}}</div>
+                <div class="state">{{receiver.Status}}</div>
+                <div class="mediaName">{{receiver.MediaName}}</div>
+            </div>
+        </div>
+        <div *ngIf="Receivers == null || Receivers.length == 0">
+            <div class="noReceiversd">No devices found.</div>
+        </div>
+    </div>
+    <div class="buttons">
+        <button (click)="CloseCastDevices()">Close</button>
+    </div>
+</dialog>

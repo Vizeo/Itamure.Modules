@@ -16,7 +16,7 @@
             </button>
         </div>
 
-        <div class="moviesContainier" #moviesList (scroll)="UpdatePaddles()">
+        <div class="moviesContainier" #moviesList (scroll)="UpdatePaddles()" (touchstart)="Touchstart($event)" (touchmove)="Touchmove($event)">
             <ng-container *ngIf="Movies != null">
                 <div *ngFor="let movie of Movies" class="movie" (click)="SelectMovie(movie)">
                     <div class="poster">

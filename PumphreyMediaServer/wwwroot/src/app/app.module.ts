@@ -43,7 +43,6 @@ import { SeriesPreviewComponent } from './Videos/seriesPreview.component';
 import { SeriesDetailsComponent } from './Videos/seriesDetails.component';
 import { MovieGroupingComponent } from './Videos/movieGrouping.component';
 import { MovieDetailsComponent } from './Videos/movieDetails.component';
-import { CastPlayerComponent } from './Videos/castPlayer.component';
 import { SearchComponent } from './search.component';
 import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
@@ -91,7 +90,6 @@ import { RemotePlayerComponent } from './Videos/remotePlayer.component';
         SeriesDetailsComponent,
         MovieGroupingComponent,
         MovieDetailsComponent,
-        CastPlayerComponent,
         SearchComponent,
         EpisodeDetailsComponent,
         FullMovieGroupingComponent,

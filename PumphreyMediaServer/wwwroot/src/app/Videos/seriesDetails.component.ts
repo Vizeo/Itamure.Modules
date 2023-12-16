@@ -1,6 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MediaService, MediaSubType, Season, Series, UserMediaItem } from '../Services/mediaServer.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { VideoPlayerComponent } from './videoPlayer.component';
 
 @Component({
@@ -10,7 +10,8 @@ import { VideoPlayerComponent } from './videoPlayer.component';
 })
 export class SeriesDetailsComponent {
     constructor(private mediaService: MediaService,
-        private route: ActivatedRoute) {
+        private route: ActivatedRoute,
+        private router: Router) {
     }
 
     public Series: Series | null = null;
@@ -78,8 +79,10 @@ export class SeriesDetailsComponent {
     }
 
     public PlayEpisode(episode: UserMediaItem) {
-        this._videoPlayerDialog!.nativeElement.showModal();
-        this._videoPlayer!.VideoFileMediaItem = episode;
+        //this._videoPlayerDialog!.nativeElement.showModal();
+        //this._videoPlayer!.VideoFileMediaItem = episode;
+        this.router.navigate(['/', 'App', 'Movie', episode.UniqueKey]);
+
     }
 
     public ClosePlayer() {

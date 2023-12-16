@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { CastService, PlayerState, Receiver } from '../Services/castService.service';
+import { Receiver } from '../Services/castService.service';
 
 @Component({
     selector: 'remotePlayer',
