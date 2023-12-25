@@ -59,7 +59,7 @@ export class CastService {
 
 	private async GetReceivers() {
 		//Get from server
-		let serverReceivers = await this.mediaService.GetMediaReceivers();
+		let serverReceivers = await this.mediaService.GetMediaReceivers();	
 		serverReceivers.forEach(r => {
 			this.AddReceiver(r);
 		});
@@ -70,11 +70,21 @@ export class CastService {
 			case "Upnp":
 				this.AddUpnpReceiver(mediaReceiver);
 				break;
+			case "Web":
+				this.AddWebReceiver(mediaReceiver);
+				break;
 		}
 	}
 
 	private AddUpnpReceiver(mediaReceiver: MediaReceiver) {
 		var upnpReceiver = new UpnpReceiver(this.mediaService);
+		upnpReceiver.Id = mediaReceiver.Id!;
+		upnpReceiver.Name = mediaReceiver.Name!;
+		this._receivers.push(upnpReceiver);
+	}
+
+	private AddWebReceiver(mediaReceiver: MediaReceiver) {
+		var upnpReceiver = new WebReceiver(this.mediaService);
 		upnpReceiver.Id = mediaReceiver.Id!;
 		upnpReceiver.Name = mediaReceiver.Name!;
 		this._receivers.push(upnpReceiver);
@@ -128,6 +138,36 @@ class UpnpReceiver extends Receiver {
 
 	public override Seek(seconds: number): void {
 		this.mediaService.SeekMediaReceiver(this.Id!, "Upnp", seconds);
+	}
+}
+
+class WebReceiver extends Receiver {
+	constructor(private mediaService: MediaService) {
+		super();
+	}
+
+	public override async Cast(userMediaItem: UserMediaItem): Promise<void> {
+		await this.mediaService.CastToReceiver("Web", this.Id!, userMediaItem.UniqueKey!);
+	}
+
+	public override PlayOrPause(): void {
+		if (this.Status == "Playing") {
+			this.mediaService.PauseMediaReceiver(this.Id!, "Web");
+		}
+		else if (this.Status == "Paused") {
+			this.mediaService.PlayMediaReceiver(this.Id!, "Web");
+		}
+	}
+
+	public override Stop(): void {
+		if (this.Status == "Playing" ||
+			this.Status == "Paused") {
+			this.mediaService.StopMediaReceiver(this.Id!, "Web");
+		}
+	}
+
+	public override Seek(seconds: number): void {
+		this.mediaService.SeekMediaReceiver(this.Id!, "Web", seconds);
 	}
 }
 

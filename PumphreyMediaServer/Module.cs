@@ -110,7 +110,10 @@ namespace MediaServer
 
         //internal Notification Notification { get; } = new Notification("PumphreyMediaServer Notification");
 
-        
+        internal new IEnumerable<IScreen> GetScreens()
+        {
+            return base.GetScreens();
+        }
 
         protected override void Start()
         {
@@ -133,12 +136,17 @@ namespace MediaServer
 
             UpnpSubService.Start();
 
-			//ShowWidget(new PumphreyMediaServerWidget());
-		}
+            //ShowWidget(new PumphreyMediaServerWidget());
+        }
 
         internal new IEnumerable<IUser> GetUsers()
         {
             return base.GetUsers();
+        }
+
+        public void LaunchScreenWindow(string popupName, string webAddress, IScreen screen)
+        {
+            base.LaunchPopupWindow(popupName, webAddress, screen);
         }
 
         public override void Stop()

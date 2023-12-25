@@ -8,6 +8,8 @@
 			{
 				case "Upnp":
 					return new UpnpController();
+				case "Web":
+					return new WebScreenController();
 			}
 
 			throw new Exception("Undefined Controller");

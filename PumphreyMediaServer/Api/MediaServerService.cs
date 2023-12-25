@@ -16,6 +16,7 @@ using RizeDb;
 using System.Xml;
 using MediaServer.SubServices;
 using MediaServer.Api.RemoteControllers;
+using IntegratedWebServer.Core;
 
 namespace MediaServer.Api
 {
@@ -1311,6 +1312,16 @@ namespace MediaServer.Api
                 }
             }
 
+            foreach(var screen in WebScreenController.Screens)
+            {
+                result.Add(new MediaReceiver()
+                {
+                    Id = screen.Id.ToString(),
+                    Name = screen.Name,
+                    ReceiverType = "Web"
+                });
+            }
+
             return result;
         }
 
@@ -1325,17 +1336,32 @@ namespace MediaServer.Api
                 throw new NullReferenceException("ObjectStore is null");
             }
 
-			var userMediaItem = GetUserMediaItems()[userMediaId];
+            var userMediaItem = Module.ObjectStore.Retrieve<UserMediaReference>()
+                .FirstOrDefault(u => u.UniqueLink == userMediaId);
+            var user = Module.CurrentModule!.GetUsers().FirstOrDefault(c => c.Id == userMediaItem.UserUniqueId);
 			var videoMediaItem = (VideoFileMediaItem)Module.ObjectStore.Retrieve<MediaItem>(userMediaItem.MediaItemId);
             if (videoMediaItem != null)
             {
                 if (File.Exists(videoMediaItem.FilePath!))
                 {
                     var file = new FileInfo(videoMediaItem.FilePath!);
-
-                    var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
-                    result = remotePlayer.Cast(Request, file, receiverId, videoMediaItem, userMediaItem);
-                }
+					var extension = Path.GetExtension(videoMediaItem.FilePath)!.ToLower();
+					var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
+					var mediaFileTypes = Module.ObjectStore.Retrieve<MediaFileType>()
+						.ToList();
+                    var mediaInfo = new CastMediaInfo()
+                    {
+                        UserName = user?.Name,
+                        Title = videoMediaItem.Name,
+                        Duration = videoMediaItem.Duration,
+                        Width = videoMediaItem.Width,
+                        Height = videoMediaItem.Height,
+                        StartPosition = 0, //TODO: Impement this to resume or switch
+                        UniqueLink = userMediaId,
+                        MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == videoMediaItem.MediaType)?.ContentType
+                    };
+					result = remotePlayer.Cast(Request, file, receiverId, mediaInfo);
+				}
                 else
                 {
                     result = new MediaCastResult() { Success = false, Message = "File not found" };
@@ -1378,8 +1404,16 @@ namespace MediaServer.Api
 		public void SeekMediaReceiver(string receiverId, string recieverType, double second)
 		{
 			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
-			remotePlayer.Seak(receiverId, second);
+			remotePlayer.Seek(receiverId, second);
 		}
+
+		[Authorize()]
+		public void WebScreenRemote(WebSocket webSocket, string screen)
+		{
+            //Validate that a screen was requested
+            var webSCreenController = new WebScreenController();
+            webSCreenController.AddWebSocket(screen, webSocket);
+        }
 
 		private static void CopyProperties(object source, object target, params string[] ignoreProperties)
         {
@@ -1402,7 +1436,7 @@ namespace MediaServer.Api
                 }
             }
         }
-    }
+	}
 
     public class AddSeriesResponse
     {

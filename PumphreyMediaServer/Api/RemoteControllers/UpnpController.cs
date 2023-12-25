@@ -6,9 +6,9 @@ using UpnpLib.Devices.Services.Media.AVTransport_1;
 
 namespace MediaServer.Api.RemoteControllers
 {
-	public class UpnpController : IRemoteController
+	internal class UpnpController : IRemoteController
 	{
-		public MediaCastResult Cast(IRequest request, FileInfo fileInfo, string receiverId, VideoFileMediaItem videoFileMediaItem, UserMediaItem userMediaItem)
+		public MediaCastResult Cast(IRequest request, FileInfo fileInfo, string receiverId, CastMediaInfo castMediaInfo)
 		{
 			MediaCastResult? result = null;
 			foreach (var device in UpnpSubService.SsdpServer!.Devices)
@@ -32,19 +32,19 @@ namespace MediaServer.Api.RemoteControllers
 								{
 									port = $":{request.LocalEndPoint.Port}";
 								}
-								var url = $"http://{device.ClientIpAddress}{port}/mediaServer/streamingService?UniqueKey={userMediaItem.UniqueKey}";
+								var url = $"http://{device.ClientIpAddress}{port}/mediaServer/streamingService?UniqueKey={castMediaInfo.UniqueLink}";
 
-								var videoItem = new UpnpLib.Devices.Services.Media.VideoItem(userMediaItem.UniqueKey.ToString(), $"Streamer{fileInfo.Extension}");
+								var videoItem = new UpnpLib.Devices.Services.Media.VideoItem(castMediaInfo.UniqueLink.ToString(), $"Streamer{fileInfo.Extension}");
 								videoItem.Resources = new List<UpnpLib.Devices.Services.Media.Resource>();
 								videoItem.Resources.Add(new UpnpLib.Devices.Services.Media.Resource()
 								{
-									MimeType = userMediaItem.MimeType,
+									MimeType = castMediaInfo.MimeType,
 									Value = url,
 									//AudioChannels = "2",
 									//Bitrate = "78639",
 									//SampleFrequency = "48000",
-									Duration = TimeSpan.FromSeconds(Convert.ToDouble(videoFileMediaItem.Duration!)).ToString(@"h\:mm\:ss\.ffff"),
-									Resolution = $"{videoFileMediaItem.Width}x{videoFileMediaItem.Height}",
+									Duration = TimeSpan.FromSeconds(Convert.ToDouble(castMediaInfo.Duration!)).ToString(@"h\:mm\:ss\.ffff"),
+									Resolution = $"{castMediaInfo.Width}x{castMediaInfo.Height}",
 									Size = fileInfo.Length,
 								});
 
@@ -108,7 +108,7 @@ namespace MediaServer.Api.RemoteControllers
 			service?.Play().Wait();
 		}
 
-		public void Seak(string receiverId, double second)
+		public void Seek(string receiverId, double second)
 		{
 			var service = GetTransportService(receiverId);
 			service?.SeekRealTime(TimeSpan.FromSeconds(second)).Wait();

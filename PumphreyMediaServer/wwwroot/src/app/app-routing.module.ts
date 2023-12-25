@@ -17,6 +17,7 @@ import { MovieDetailsComponent } from './Videos/movieDetails.component';
 import { SearchComponent } from './search.component';
 import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
+import { RemoteWebScreenComponent } from './remoteWebScreen.component';
 
 const routes: Routes = [
     {
@@ -50,7 +51,8 @@ const routes: Routes = [
             { path: 'Images', component: ImagesSettingComponent },
         ]
     },
-    { path: '', component: MediaServerAppComponent }
+    { path: '', component: MediaServerAppComponent },
+    { path: 'RemoteWebScreen', component: RemoteWebScreenComponent }
 ];
 
 @NgModule({

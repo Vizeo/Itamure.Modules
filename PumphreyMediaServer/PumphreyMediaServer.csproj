@@ -53,6 +53,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="wwwroot\src\app\remoteWebScreen.component.ts" />
+	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.less" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<EmbeddedResource Include="Itamure.svg" />
 	</ItemGroup>
 	
