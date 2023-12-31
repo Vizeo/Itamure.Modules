@@ -5,6 +5,7 @@ using MediaServer.Events;
 using System.Collections.Concurrent;
 using MediaServer.Entities;
 using MediaServer.Api;
+using static MediaServer.Api.RemoteControllers.WebScreenController;
 
 namespace MediaServer.SubServices
 {
@@ -98,7 +99,8 @@ namespace MediaServer.SubServices
 								{
 									case TransportState.Playing:
 										receiverEvent.Status = "Playing";
-										await GetMediaInfo(service, receiverEvent);
+										var userMediaReferenceId = await GetMediaInfo(service, receiverEvent);
+										MediaServerService.UpdatePosition(userMediaReferenceId, Convert.ToInt64(receiverEvent.Position));
 										break;
 									case TransportState.PausedPlayback:
 										receiverEvent.Status = "Paused";
@@ -141,8 +143,10 @@ namespace MediaServer.SubServices
 			}
 		}
 
-		private static async Task GetMediaInfo(UpnpLib.Devices.Services.Media.AVTransport_1.AVTransport1 service, ReceiverEvent receiverEvent)
+		private static async Task<long> GetMediaInfo(UpnpLib.Devices.Services.Media.AVTransport_1.AVTransport1 service, ReceiverEvent receiverEvent)
 		{
+			long result = 0;
+
 			var positionInfo = await service.GetPositionInfo();
 			receiverEvent.Length = positionInfo.TrackDuration.TotalSeconds;
 			receiverEvent.Position = positionInfo.RelTime.TotalSeconds;
@@ -153,24 +157,25 @@ namespace MediaServer.SubServices
 					Module.ObjectStore != null)
 				{
 					var userMediaReferences = Module.ObjectStore.Retrieve<UserMediaReference>()
-						.FirstOrDefault(u => u.UniqueLink == mediaLinkId);
-					if(userMediaReferences != null) 
+						.First(u => u.UniqueLink == mediaLinkId);
+					var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(userMediaReferences.MediaItemId);
+					if(mediaItem != null) 
 					{
-						var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(userMediaReferences.MediaItemId);
-						if(mediaItem != null) 
-						{
-							receiverEvent.MediaName = mediaItem.Name;
-						}
-
-						var users = Module.CurrentModule!.GetUsers();
-						var user = users.FirstOrDefault(u => u.Id == userMediaReferences.UserUniqueId);
-						if(user != null) 
-						{
-							receiverEvent.UserName = user.Name;
-						}						
+						receiverEvent.MediaName = mediaItem.Name;
 					}
+
+					var users = Module.CurrentModule!.GetUsers();
+					var user = users.FirstOrDefault(u => u.Id == userMediaReferences.UserUniqueId);
+					if(user != null) 
+					{
+						receiverEvent.UserName = user.Name;
+					}
+
+					result = userMediaReferences.Id;
 				}
 			}
+
+			return result;
 		}
 
 		private static bool Compare(ReceiverEvent a, ReceiverEvent b)

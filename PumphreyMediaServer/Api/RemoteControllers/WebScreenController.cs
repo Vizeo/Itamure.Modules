@@ -116,6 +116,7 @@ namespace MediaServer.Api.RemoteControllers
                             {
                                 updateEvent.Status = receiver.State;
                                 updateEvent.Position = positionUpdate!.Position;
+                                MediaServerService.UpdatePosition(receiver.CastMediaInfo!.UserMediaReferenceId, Convert.ToInt64(positionUpdate!.Position));
                                 Module.CurrentModule?.SendEvent(updateEvent);
                             }
 							break;

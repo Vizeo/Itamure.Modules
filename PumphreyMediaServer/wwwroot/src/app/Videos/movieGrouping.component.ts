@@ -14,6 +14,8 @@ export class MovieGroupingComponent {
         private router: Router) {
     }
 
+    private _loaded: boolean = false;;
+
     @Input("title")
     public Title: string = "";
 
@@ -42,6 +44,13 @@ export class MovieGroupingComponent {
     public OnShowAll() {
         this.mediaItemService.ViewAll = { Title: this.Title, MovieGroupingType: this.Grouping, Options: this.Options, Count: this.Count };
         this.router.navigate(['/', 'App', 'FullGroupView']);
+    }
+
+    public Load() {
+        if (!this._loaded) {
+            this.GetMovies();
+            this._loaded = true;
+        }
     }
 
     public get Overflowing(): boolean {
@@ -90,8 +99,6 @@ export class MovieGroupingComponent {
     }
 
     ngAfterViewInit() {
-        this.GetMovies();
-
         let observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 this.UpdatePaddles();

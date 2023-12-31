@@ -5,7 +5,7 @@ namespace MediaServer.Api.MovieGroupings
 {
     internal class GenreMovieGrouping : MovieGroupingBase
     {
-        public override IEnumerable<UserMediaItem> GetMovies(Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
+        public override IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
         {
 			var optionValues = System.Text.Json.JsonSerializer.Deserialize<Options>(options, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
 			var genres = optionValues!.Genres!.Select(g => g.ToUpper().Trim());

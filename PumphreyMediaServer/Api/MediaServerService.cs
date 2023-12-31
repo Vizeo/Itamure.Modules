@@ -17,6 +17,7 @@ using System.Xml;
 using MediaServer.SubServices;
 using MediaServer.Api.RemoteControllers;
 using IntegratedWebServer.Core;
+using System.Collections.Concurrent;
 
 namespace MediaServer.Api
 {
@@ -25,7 +26,7 @@ namespace MediaServer.Api
     {
         private const string LAST_ITEM_CHANGE = "LastItemChange";
         internal static DateTime LastItemChange = DateTime.Now;
-
+        private static ConcurrentDictionary<long, DateTime> _lastPositionStore = new ConcurrentDictionary<long, DateTime>();
         private static object _locket = new object();
 
         [Api]
@@ -424,6 +425,7 @@ namespace MediaServer.Api
                             CopyProperties(mediaItem, userMediaItem);
                             userMediaItem.UniqueKey = userMediaReference.UniqueLink;
                             userMediaItem.MediaItemId = mediaItem.Id;
+                            userMediaItem.UserMediaReferenceId = userMediaReference.Id;
 
                             if (mediaItem is FileMediaItem)
                             {
@@ -437,7 +439,6 @@ namespace MediaServer.Api
 
                         Session[USER_MEDIA_ITEMS] = result;
                         Session[LAST_ITEM_CHANGE] = LastItemChange;
-
                     }
                 }
             }
@@ -1162,7 +1163,8 @@ namespace MediaServer.Api
             var movieGrouping = factory.GetMovieGrouping(movieGroupingType);
             if (movieGrouping != null)
             {
-                return movieGrouping.GetMovies(GetUserMediaItems(), count, options);
+				var userUniqueId = Request.UserUniqueId!.Value;
+				return movieGrouping.GetMovies(userUniqueId, GetUserMediaItems(), count, options);
             }
             throw new Exception("Unknown grouping");
         }
@@ -1358,7 +1360,8 @@ namespace MediaServer.Api
                         Height = videoMediaItem.Height,
                         StartPosition = 0, //TODO: Impement this to resume or switch
                         UniqueLink = userMediaId,
-                        MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == videoMediaItem.MediaType)?.ContentType
+						UserMediaReferenceId = userMediaItem.Id,
+						MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == videoMediaItem.MediaType)?.ContentType
                     };
 					result = remotePlayer.Cast(Request, file, receiverId, mediaInfo);
 				}
@@ -1415,6 +1418,16 @@ namespace MediaServer.Api
             webSCreenController.AddWebSocket(screen, webSocket);
         }
 
+		[Api]
+		[Authorize()]
+		public void UpdateMediaPosition(Guid userMediaId, double positionInSeconds)
+		{
+            if (GetUserMediaItems().TryGetValue(userMediaId, out var userMediaItem))
+            {
+                UpdatePosition(userMediaItem.UserMediaReferenceId, Convert.ToInt64(positionInSeconds));
+            }
+        }
+
 		private static void CopyProperties(object source, object target, params string[] ignoreProperties)
         {
             var sourceType = source.GetType();
@@ -1436,6 +1449,33 @@ namespace MediaServer.Api
                 }
             }
         }
+
+        internal static void UpdatePosition(long userMediaReferenceId, long positionInSeconds)
+        {
+			//Limit updates to 1 minute. This will require a cache
+			if(!_lastPositionStore.TryGetValue(userMediaReferenceId, out var lastStore) ||
+                lastStore < DateTime.Now.AddMinutes(-1))
+            {
+				if (Module.ObjectStore == null)
+				{
+					throw new NullReferenceException("ObjectStore is null");
+				}
+
+                var userMediaItem = Module.ObjectStore.Retrieve<UserMediaReference>(userMediaReferenceId);
+                userMediaItem.LastPosition = positionInSeconds;
+                userMediaItem.LastViewed = DateTime.UtcNow;
+                Module.ObjectStore.Store(userMediaItem);
+
+				if (lastStore == default)
+                {
+                    _lastPositionStore.TryAdd(userMediaReferenceId, DateTime.Now.AddMinutes(1));
+				}
+                else
+                {
+					_lastPositionStore.TryUpdate(userMediaReferenceId, DateTime.Now.AddMinutes(1), lastStore);
+				}
+			}
+		}
 	}
 
     public class AddSeriesResponse
@@ -1453,7 +1493,8 @@ namespace MediaServer.Api
     public class UserMediaItem
     {
         public Guid UniqueKey { get; set; }
-        internal long MediaItemId { get; set; }
+        internal long UserMediaReferenceId { get; set; }
+		internal long MediaItemId { get; set; }
         internal long FolderId { get; set; }
         public short? SeriesId { get; set; }
         public short? SeasonId { get; set; }

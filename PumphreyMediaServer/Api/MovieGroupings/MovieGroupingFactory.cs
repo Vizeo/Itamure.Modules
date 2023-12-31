@@ -16,6 +16,8 @@
                     return new RangeMovieGrouping();
                 case MovieGroupingType.Rating:
                     return new RatingsMovieGrouping();
+                case MovieGroupingType.ContinueWatching:
+                    return new ContinueWatchingMovieGrouping();
 			}
 
             return null;

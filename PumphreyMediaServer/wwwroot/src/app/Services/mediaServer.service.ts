@@ -150,6 +150,7 @@ export enum MovieGroupingType {
 	Folder = 3,
 	Range = 4,
 	Rating = 5,
+	ContinueWatching = 6,
 }
 export class UserMediaItemSearchResult extends UserMediaItem 
 {
@@ -640,6 +641,13 @@ export class MediaService {
 		jsonObject.recieverType = recieverType
 		jsonObject.second = second
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/SeekMediaReceiver', jsonObject);
+	}
+
+	UpdateMediaPosition(userMediaId: string, positionInSeconds: number): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.userMediaId = userMediaId
+		jsonObject.positionInSeconds = positionInSeconds
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/UpdateMediaPosition', jsonObject);
 	}
 
 }

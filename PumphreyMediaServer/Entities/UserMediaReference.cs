@@ -11,6 +11,10 @@ namespace MediaServer.Entities
 
 		public long MediaItemId { get; set; }
 
+		public int ViewCount { get; set; }
+		public DateTime? LastViewed { get; set; }
+		public long LastPosition { get; set; }
+
 		[Index(IndexSearchOptions.Guid)]
 		public Guid UniqueLink { get; set; }
 	}

@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input } from '@angular/core';
-import { UserMediaItem } from '../Services/mediaServer.service';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { MediaService, UserMediaItem } from '../Services/mediaServer.service';
 
 @Component({
     selector: 'videoPlayer',
@@ -7,8 +7,12 @@ import { UserMediaItem } from '../Services/mediaServer.service';
     styleUrls: ['./videoPlayer.component.less']
 })
 export class VideoPlayerComponent {
-    constructor(private elRef: ElementRef) {
+    constructor(private mediaService: MediaService) {
     }
+
+    @ViewChild("player")
+    private _player!: ElementRef<HTMLVideoElement>;
+    private _lastPostionUpdate: Date | null = null;
 
     private _videoFileMediaItem: UserMediaItem | undefined;
 
@@ -16,10 +20,9 @@ export class VideoPlayerComponent {
     public set VideoFileMediaItem(value: UserMediaItem | undefined) {
         this._videoFileMediaItem = value;
         if (value != null) {
-            const player = this.elRef.nativeElement.querySelector('video');
-            player.load();
-            player.src = "/mediaServer/streamingService?UniqueKey=" + this._videoFileMediaItem?.UniqueKey;
-            player.play();
+            this._player.nativeElement.load();
+            this._player.nativeElement.src = "/mediaServer/streamingService?UniqueKey=" + this._videoFileMediaItem?.UniqueKey;
+            this._player.nativeElement.play();
         }
     }
 
@@ -27,16 +30,22 @@ export class VideoPlayerComponent {
     public Autoplay: boolean = true;
 
     public Play() {
-        const player = this.elRef.nativeElement.querySelector('video');
-        player.play();
+        this._player.nativeElement.play();
     }
 
     public Stop() {
-        const player = this.elRef.nativeElement.querySelector('video');
-        player.pause();
+        this._player.nativeElement.pause();
     }
 
-    ngAfterViewInit() {
-        const player = this.elRef.nativeElement.querySelector('video');
+    public PositionChanged() {
+        var date = new Date();
+        date.setSeconds(date.getSeconds() - 1);
+        if (this._lastPostionUpdate == null ||
+            this._lastPostionUpdate < date) {
+
+            this.mediaService.UpdateMediaPosition(this._videoFileMediaItem!.UniqueKey!, this._player.nativeElement.currentTime)
+
+            this._lastPostionUpdate = new Date();
+        }
     }
 }

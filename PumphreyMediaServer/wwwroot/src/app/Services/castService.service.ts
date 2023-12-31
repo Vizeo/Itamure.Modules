@@ -10,13 +10,13 @@ declare const chrome: any;
 
 @Injectable({ providedIn: 'root' })
 export class CastService {
-	constructor(private appRef: ApplicationRef,
+	constructor(appRef: ApplicationRef,
 		private mediaService: MediaService) {
 		this._receivers = new Array<Receiver>();
 
 		setTimeout(() => {
 			if (castAvailable) {
-				this._receivers.push(new ChromeCastReceiver(appRef));
+				this._receivers.push(new ChromeCastReceiver(appRef, mediaService));
 			}
 			this.GetReceivers();
 		});
@@ -172,7 +172,8 @@ class WebReceiver extends Receiver {
 }
 
 class ChromeCastReceiver extends Receiver {
-	constructor(private appRef: ApplicationRef) {
+	constructor(private appRef: ApplicationRef,
+		private mediaService: MediaService) {
 		super();
 
 		this.Name = "Chrome Cast";
@@ -194,8 +195,10 @@ class ChromeCastReceiver extends Receiver {
 
 	private _player: any;
 	private _playerController: any;
+	private _userMediaItem: UserMediaItem | null = null;
 
 	public override async Cast(userMediaItem: UserMediaItem): Promise<void> {
+		this._userMediaItem = userMediaItem;
 		let url = location.origin + "/mediaServer/streamingService?UniqueKey=" + userMediaItem.UniqueKey;
 
 		//Cannot run on local host so set to local ip
@@ -204,17 +207,12 @@ class ChromeCastReceiver extends Receiver {
 		let mimeType = userMediaItem.MimeType;
 		var mediaInfo = new chrome.cast.media.MediaInfo(url, mimeType);
 		mediaInfo.metadata = new chrome.cast.media.MovieMediaMetadata();
-		console.log("A");
 		mediaInfo.metadata.title = userMediaItem.Name;
 		var request = new chrome.cast.media.LoadRequest(mediaInfo);
-		console.log("b", request);
 		try {
 			let session = await this.CastSession();
-			console.log("c", session);
 			if (session != null) {
-				console.log("D");
 				await session.loadMedia(request);
-				console.log("e");
 				this.MediaName = userMediaItem.Name!;
 			}
 		} catch (e) {
@@ -224,14 +222,11 @@ class ChromeCastReceiver extends Receiver {
 
 	private async CastSession(): Promise<any> {
 		let castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-		console.log("1", castSession);
 		if (!castSession) {
 			let requestSession = await cast.framework.CastContext.getInstance().requestSession();
-			console.log("2", requestSession);
 
 			if (requestSession == null) {
 				castSession = cast.framework.CastContext.getInstance().getCurrentSession();
-				console.log("3", castSession);
 			}
 		}
 		return castSession;
@@ -270,6 +265,7 @@ class ChromeCastReceiver extends Receiver {
 		this._playerController.addEventListener(
 			cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED, (event: any) => {
 				this.Position = Number(event.value);
+				this.mediaService.UpdateMediaPosition(this._userMediaItem!.UniqueKey!, this.Position)
 				this.Updated.emit();
 				this.appRef.tick();
 			});

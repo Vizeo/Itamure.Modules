@@ -1,5 +1,6 @@
 <div class="videoPlayer">
-    <video controls>
-        Browser not supported
-    </video>
+	<video controls #player
+		   (timeupdate)="PositionChanged()">
+		Browser not supported
+	</video>
 </div>

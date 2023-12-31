@@ -6,7 +6,7 @@ namespace MediaServer.Api.MovieGroupings
 {
     internal abstract class MovieGroupingBase
     {
-        public abstract IEnumerable<UserMediaItem> GetMovies(Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options);
+        public abstract IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options);
 
         protected List<UserMediaItem> RandomizeList(List<UserMediaItem> userMediaItems)
         {

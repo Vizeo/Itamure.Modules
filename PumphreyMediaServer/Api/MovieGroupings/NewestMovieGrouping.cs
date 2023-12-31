@@ -5,7 +5,7 @@ namespace MediaServer.Api.MovieGroupings
 {
     internal class NewestMovieGrouping : MovieGroupingBase
     {
-        public override IEnumerable<UserMediaItem> GetMovies(Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
+        public override IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
         {
             if (Module.ObjectStore == null)
             {
