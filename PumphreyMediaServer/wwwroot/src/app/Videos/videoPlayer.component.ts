@@ -46,6 +46,16 @@ export class VideoPlayerComponent {
         }
     }
 
+    public async PlayNext() {
+        let next = await this.mediaService.GetSeriesNextRecent(this._videoFileMediaItem!.UniqueKey!);
+        if (next != null) {
+            this.Position = 0;
+            this._videoFileMediaItem = next;
+            this._player.nativeElement.load();
+            this._player.nativeElement.src = "/mediaServer/streamingService?UniqueKey=" + this._videoFileMediaItem?.UniqueKey;
+        }
+    }
+
     public PositionChanged() {
         var date = new Date();
         date.setSeconds(date.getSeconds() - 1);

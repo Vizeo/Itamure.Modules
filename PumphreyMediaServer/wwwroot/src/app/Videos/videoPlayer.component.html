@@ -1,7 +1,8 @@
 <div class="videoPlayer">
 	<video controls #player
 		   (timeupdate)="PositionChanged()"
-		   (loadedmetadata)="ReadyToPlay()">
+		   (loadedmetadata)="ReadyToPlay()"
+		   (ended)="PlayNext()">
 		Browser not supported
 	</video>
 </div>

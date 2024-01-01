@@ -13,7 +13,7 @@ import { ImagesViewComponent } from './imagesView.component';
 import { ImagesSettingComponent } from './imagesSettings.component';
 import { UnassignedVideoListComponent } from './Videos/Settings/unassignedVideoList.component';
 import { SeriesDetailsComponent } from './Videos/seriesDetails.component';
-import { MovieDetailsComponent } from './Videos/movieDetails.component';
+import { videoDetailsComponent } from './Videos/videoDetails.component';
 import { SearchComponent } from './search.component';
 import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
@@ -25,7 +25,7 @@ const routes: Routes = [
         children: [
             { path: '', redirectTo: 'Movies', pathMatch: 'full' },
             { path: 'Movies', component: MoviesViewComponent },
-            { path: 'Movie/:id', component: MovieDetailsComponent },
+            { path: 'Movie/:id', component: videoDetailsComponent },
             { path: 'Series', component: SeriesViewComponent },
             { path: 'Series/:id', component: SeriesDetailsComponent },
             { path: 'Episode/:id', component: EpisodeDetailsComponent },

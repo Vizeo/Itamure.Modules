@@ -5,11 +5,11 @@ import { ActivatedRoute } from '@angular/router';
 import { CastService, Receiver } from '../Services/castService.service';
 
 @Component({
-    selector: 'movieDetails',
-    templateUrl: './movieDetails.component.html',
-    styleUrls: ['./movieDetails.component.less']
+    selector: 'videoDetails',
+    templateUrl: './videoDetails.component.html',
+    styleUrls: ['./videoDetails.component.less']
 })
-export class MovieDetailsComponent {
+export class videoDetailsComponent {
     constructor(private mediaService: MediaService,
         private route: ActivatedRoute,
         private castService: CastService) {
@@ -26,7 +26,7 @@ export class MovieDetailsComponent {
     public MovieVisible: boolean = false;
     public UserActive: boolean = false;
     public Receivers: Receiver[] | null = null;
-    public PositionPercent: number = 0;;
+    public PositionPercent: number = 0;
     
     private _timout: number = 0;
 
@@ -78,10 +78,17 @@ export class MovieDetailsComponent {
         this.Image = "/MediaServer/assets/UnknownMedia.svg";
     }
 
+    public get ShowRestart(): boolean {
+        return this.Movie!.Position! > 0 &&
+            Math.floor(this.Movie!.Position!) != Math.floor(this.Movie!.Duration!);
+    }
+
     public PlayMovie() {
         this.MovieVisible = true;
         setTimeout(() => {
-            this._videoPlayer!.Position = this.Movie!.Position!;
+            if (Math.floor(this.Movie!.Position!) != Math.floor(this.Movie!.Duration!)) {
+                this._videoPlayer!.Position = this.Movie!.Position!;
+            }
             this._videoPlayer!.VideoFileMediaItem = this.Movie!;
         });
     }

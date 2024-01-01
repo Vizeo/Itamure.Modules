@@ -1194,6 +1194,48 @@ namespace MediaServer.Api
 		}
 
 		[Api]
+        //Don't require auth
+		public UserMediaItem? GetSeriesNextRecent(Guid uniqueKey)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+            UserMediaItem? result = null;
+            var finished = GetUserMediaItems().Values
+                .FirstOrDefault(u => u.UniqueKey == uniqueKey);
+				
+            if(finished != null)
+            {
+				result = GetUserMediaItems().Values
+                    .Where(u => u.SeriesId == finished.SeriesId &&
+                        u.SeasonId == finished.SeasonId &&
+                        u.Order > finished.Order)
+                    .OrderBy(u => u.Order)
+                    .FirstOrDefault();
+
+				if(result == null) {
+                    //Look at next season
+                    var series = Module.ObjectStore!.Retrieve<Series>(finished.SeriesId!.Value);
+                    if(series != null) {
+                        var seasonIndex = series.Seasons!.FindIndex(s => s.Id == finished.SeasonId);
+                        if(seasonIndex != -1 && series.Seasons.Count - 1 > seasonIndex) {
+                            var nextSeason = series.Seasons[seasonIndex + 1];
+							result = GetUserMediaItems().Values
+                                .Where(u => u.SeriesId == finished.SeriesId &&
+                                    u.SeasonId == nextSeason.Id)
+                                .OrderBy(u => u.Order)
+                                .FirstOrDefault();
+						}
+                    }
+				}
+			}
+
+			return result;
+		}
+
+		[Api]
         [Authorize]
         public IEnumerable<UserMediaItem> GetMovieGrouping(MovieGroupingType movieGroupingType, int count, string options)
         {

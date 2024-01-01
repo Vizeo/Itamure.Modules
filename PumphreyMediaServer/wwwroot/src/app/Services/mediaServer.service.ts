@@ -581,6 +581,12 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeriesMostRecent', jsonObject);
 	}
 
+	GetSeriesNextRecent(uniqueKey: string): Promise<UserMediaItem> {
+		var jsonObject = <any>new Object();
+		jsonObject.uniqueKey = uniqueKey
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeriesNextRecent', jsonObject);
+	}
+
 	GetMovieGrouping(movieGroupingType: MovieGroupingType, count: number, options: string | null): Promise<UserMediaItem[]> {
 		var jsonObject = <any>new Object();
 		jsonObject.movieGroupingType = movieGroupingType
