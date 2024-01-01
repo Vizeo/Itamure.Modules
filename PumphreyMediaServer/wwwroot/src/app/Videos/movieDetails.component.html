@@ -9,6 +9,10 @@
                 {{Movie.Name}}
             </div>
             <div class="plot">{{Movie.Description!}}</div>
+            <div class="progress">
+                <div class="progressPercent" [style.width.%]="PositionPercent">
+                </div>
+            </div>
             <div class="metadata">
                 <ng-container *ngIf="Rating != null && Rating.length > 0">
                     <div class="rating">
@@ -50,10 +54,11 @@
                 </div>
             </div>
             <div class="actions">
-                <img class="unknown" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
-                <img class="unknown" src="/MediaServer/assets/CastToButton.svg" (click)="ShowCastDevices()" />
+                <img class="unknown" title="Restart" src="/MediaServer/assets/RestartButton.svg" *ngIf="Movie!.Position! > 0" (click)="RestartMovie()" />
+                <img class="unknown" title="Play" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
+                <img class="unknown" title="Cast" src="/MediaServer/assets/CastToButton.svg" (click)="ShowCastDevices()" />
                 <label>Watch Movie</label>
-            </div>           
+            </div>
         </div>
     </ng-container>
 </div>

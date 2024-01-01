@@ -26,6 +26,7 @@ export class MovieDetailsComponent {
     public MovieVisible: boolean = false;
     public UserActive: boolean = false;
     public Receivers: Receiver[] | null = null;
+    public PositionPercent: number = 0;;
     
     private _timout: number = 0;
 
@@ -44,7 +45,7 @@ export class MovieDetailsComponent {
             this.Actors = this.CreateList(this.Movie.MetadataTags!, MetadataTagType.Actor);
             this.Writers = this.CreateList(this.Movie.MetadataTags!, MetadataTagType.Writer);
             this.Directors = this.CreateList(this.Movie.MetadataTags!, MetadataTagType.Director);
-
+            this.PositionPercent = (this.Movie!.Position! / this.Movie!.Duration!) * 100;
             this.CalcDuration();
         });        
     }
@@ -79,7 +80,18 @@ export class MovieDetailsComponent {
 
     public PlayMovie() {
         this.MovieVisible = true;
-        setTimeout(() => this._videoPlayer!.VideoFileMediaItem = this.Movie!);        
+        setTimeout(() => {
+            this._videoPlayer!.Position = this.Movie!.Position!;
+            this._videoPlayer!.VideoFileMediaItem = this.Movie!;
+        });
+    }
+
+    public RestartMovie() {
+        this.MovieVisible = true;
+        setTimeout(() => {
+            this._videoPlayer!.Position = 0;
+            this._videoPlayer!.VideoFileMediaItem = this.Movie!;
+        });
     }
 
     public CloseMovie() {

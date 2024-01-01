@@ -26,10 +26,15 @@
                     <button class="selectedSeason" popovertarget="seasonSelect">
                         <div *ngIf="SelectedSeason != null">{{SelectedSeason!.Name!}}</div><div class="pointer"></div>
                     </button>
+                    <img *ngIf="MostRecent != null" class="play" title="Play" src="/MediaServer/assets/PlayButton.svg" (click)="Continue()"/>
                 </div>
                 <div class="episodeList" *ngIf="Episodes != null">
-                    <div class="episode" *ngFor="let episode of Episodes; index as i" (click)="PlayEpisode(episode)">
+                    <div class="episode" *ngFor="let episode of Episodes; index as i" (click)="PlayEpisode(episode)" [ngClass]="{mostRecent: MostRecent != null && MostRecent.UniqueKey == episode.UniqueKey}">
                         <img [src]="episode.Image" (error)="EpisodeImageError(episode)" />
+                        <div class="progress">
+                            <div class="progressPercent" [style.width.%]="episode.PositionPercent">
+                            </div>
+                        </div>                        
                         <div class="index">Episode {{i + 1}}</div>
                         <div class="name">{{episode.Name!}}</div>
                         <div class="plot">{{episode.Description!}}</div>
@@ -41,13 +46,15 @@
 </div>
 
 <div id="seasonSelect" popover>
-    <button *ngFor="let season of Series!.Seasons!" 
-         class="season" 
-         popovertarget="seasonSelect"
-         popovertargetaction="hide"
-         (click)="SetSeason(season)">
-        {{season.Name!}}
-    </button>
+    <ng-container *ngIf="Series != null">
+        <button *ngFor="let season of Series!.Seasons!"
+                class="season"
+                popovertarget="seasonSelect"
+                popovertargetaction="hide"
+                (click)="SetSeason(season)">
+            {{season.Name!}}
+        </button>
+    </ng-container>    
 </div>
 
 <!--<dialog class="videoPlayer" #videoPlayerDialog (mousemove)="MouseMove()" [ngClass]="{userActive: UserActive}">

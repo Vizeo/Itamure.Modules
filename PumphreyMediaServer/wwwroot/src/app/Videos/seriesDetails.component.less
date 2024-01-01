@@ -76,6 +76,20 @@
             padding: 10px;
 
             .seasonsList {
+                display: flex;
+                flex-direction: row;
+                gap: 10px;
+
+                .play {
+                    width: 50px;
+                    transition: transform .5s;
+
+                    &:hover {
+                        cursor: pointer;
+                        transform: scale(1.10)
+                    }
+                }
+
                 .selectedSeason {
                     border-radius: 0;
                     padding: 21px;
@@ -106,7 +120,7 @@
 
                 .episode {
                     padding: 5px;
-                    width: 276px;
+                    width: 285px;
 
                     img {
                         width: 276px;
@@ -125,6 +139,23 @@
 
                         &:active {
                             opacity: .5;
+                        }
+                    }
+
+                    &.mostRecent {
+                        background: #414141;
+                    }
+
+                    .progress {
+                        background-color: #696969;
+                        width: 100%;
+                        border-radius: 10px;
+                        height: 5px;
+
+                        .progressPercent {
+                            background-color: white;
+                            border-radius: 10px;
+                            height: 5px;
                         }
                     }
 

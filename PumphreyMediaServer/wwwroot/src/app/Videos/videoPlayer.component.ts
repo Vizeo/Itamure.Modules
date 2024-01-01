@@ -22,12 +22,14 @@ export class VideoPlayerComponent {
         if (value != null) {
             this._player.nativeElement.load();
             this._player.nativeElement.src = "/mediaServer/streamingService?UniqueKey=" + this._videoFileMediaItem?.UniqueKey;
-            this._player.nativeElement.play();
         }
     }
 
     @Input("autoplay")
     public Autoplay: boolean = true;
+
+    @Input("position")
+    public Position: number = 0;
 
     public Play() {
         this._player.nativeElement.play();
@@ -35,6 +37,13 @@ export class VideoPlayerComponent {
 
     public Stop() {
         this._player.nativeElement.pause();
+    }
+
+    public ReadyToPlay() {
+        this._player.nativeElement.currentTime = this.Position;
+        if (this.Autoplay) {
+            this._player.nativeElement.play();
+        }
     }
 
     public PositionChanged() {

@@ -22,10 +22,11 @@ export class SeriesDetailsComponent {
     public Episodes: (UserMediaItem & IEpisodeEx)[] | null = null;
     public UserActive: boolean = false;
     public MovieVisible: boolean = false;
+    public MostRecent: UserMediaItem | null = null;
 
     private _timout: number = 0;
 
-    ngOnInit() {
+    async ngOnInit() {
         this.route.params.subscribe(async params => {
             let seriesId = +params['id'];
 
@@ -40,7 +41,15 @@ export class SeriesDetailsComponent {
             if (this.Series != null &&
                 this.Series.Seasons != null &&
                 this.Series.Seasons.length > 0) {
-                this.SelectedSeason = this.Series.Seasons[0];
+
+                this.MostRecent = await this.mediaService.GetSeriesMostRecent(seriesId);
+                if (this.MostRecent == null) {
+                    this.SelectedSeason = this.Series.Seasons[0];
+                }
+                else {
+                    var seasonIndex = this.Series.Seasons.findIndex(s => s.Id == this.MostRecent!.SeasonId);
+                    this.SelectedSeason = this.Series.Seasons[seasonIndex];
+                }
                 await this.GetEpisodes();
             }
         });
@@ -52,6 +61,9 @@ export class SeriesDetailsComponent {
     @ViewChild(VideoPlayerComponent)
     private _videoPlayer: VideoPlayerComponent | undefined;
 
+    public Continue() {
+        this.router.navigate(['/', 'App', 'Movie', this.MostRecent!.UniqueKey]);
+    }
 
     public ImageError() {
         this.Image = "/MediaServer/assets/UnknownMedia.svg";
@@ -73,16 +85,15 @@ export class SeriesDetailsComponent {
             this.Episodes = await this.mediaService.GetSeasonUserMediaItems(this.Series.Id!, this.SelectedSeason.Id!);
 
             for (let i = 0; i < this.Episodes.length; i++) {
+                let episode = this.Episodes[i];
+                episode.PositionPercent = (episode.Position! / episode.Duration!) * 100;
                 this.Episodes[i].Image = "/mediaServer/api/mediaServerService/GetUserMediaItemImage?uniqueKey=" + this.Episodes[i].UniqueKey! + "&date=" + this.Episodes[i].MetadataDate!.getTime();
             }
         }
     }
 
     public PlayEpisode(episode: UserMediaItem) {
-        //this._videoPlayerDialog!.nativeElement.showModal();
-        //this._videoPlayer!.VideoFileMediaItem = episode;
         this.router.navigate(['/', 'App', 'Movie', episode.UniqueKey]);
-
     }
 
     public ClosePlayer() {
@@ -111,4 +122,5 @@ export class SeriesDetailsComponent {
 
 interface IEpisodeEx {
     Image?: string;
+    PositionPercent?: number;
 }

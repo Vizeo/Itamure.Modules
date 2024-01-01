@@ -18,18 +18,21 @@ using MediaServer.SubServices;
 using MediaServer.Api.RemoteControllers;
 using IntegratedWebServer.Core;
 using System.Collections.Concurrent;
+using TagLib.Flac;
+using Microsoft.AspNetCore.Connections.Features;
 
 namespace MediaServer.Api
 {
     [RequestProcessorMap($"/{Module.WEB_ROUTE_BASE}/Api/mediaServerService")]
     public class MediaServerService : RestServiceBase
     {
-        private const string LAST_ITEM_CHANGE = "LastItemChange";
         internal static DateTime LastItemChange = DateTime.Now;
+        private const string LAST_ITEM_CHANGE = "LastItemChange";
         private static ConcurrentDictionary<long, DateTime> _lastPositionStore = new ConcurrentDictionary<long, DateTime>();
         private static object _locket = new object();
+        private static ConcurrentDictionary<long, ActiveItem> _activeItems = new ConcurrentDictionary<long, ActiveItem>();
 
-        [Api]
+		[Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
         public IEnumerable<MediaSource> GetSources()
         {
@@ -399,8 +402,8 @@ namespace MediaServer.Api
                     {
                         var userUniqueId = Request.UserUniqueId!.Value;
                         var userMediaReferences = Module.ObjectStore.Retrieve<UserMediaReference>()
-                        .Where(u => u.UserUniqueId == userUniqueId)
-                        .ToDictionary(u => u.MediaItemId);
+                            .Where(u => u.UserUniqueId == userUniqueId)
+                            .ToDictionary(u => u.MediaItemId);
 
                         var mediaItems = Module.ObjectStore.Retrieve<MediaItem>()
                             .ToList();
@@ -426,20 +429,41 @@ namespace MediaServer.Api
                             userMediaItem.UniqueKey = userMediaReference.UniqueLink;
                             userMediaItem.MediaItemId = mediaItem.Id;
                             userMediaItem.UserMediaReferenceId = userMediaReference.Id;
+                            userMediaItem.Position = userMediaReference.LastPosition;
+							userMediaItem.LastViewed = userMediaReference.LastViewed;
 
-                            if (mediaItem is FileMediaItem)
+							if (mediaItem is FileMediaItem)
                             {
                                 var fileMediaItem = (FileMediaItem)mediaItem;
                                 var extension = Path.GetExtension(fileMediaItem.FilePath)!.ToLower();
                                 userMediaItem.MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == fileMediaItem.MediaType)?.ContentType;
                             }
 
-                            result.Add(userMediaItem.UniqueKey, userMediaItem);
+                            result.Add(userMediaItem.UniqueKey, userMediaItem);                           
                         }
 
                         Session[USER_MEDIA_ITEMS] = result;
                         Session[LAST_ITEM_CHANGE] = LastItemChange;
                     }
+                }
+            }
+
+            //Update
+            foreach(var pair in result)
+            {
+				if(_activeItems.TryGetValue(pair.Value.UserMediaReferenceId, out var activeItem))
+                {
+                    pair.Value.Position = activeItem.UserMediaReference!.LastPosition;
+					pair.Value.LastViewed = activeItem.UserMediaReference!.LastViewed;
+				}
+			}
+
+            //Do a cleanup of active items
+            foreach(var activeItem in _activeItems.ToArray())
+            {
+                if(activeItem.Value.LastModified < DateTime.Now.AddMinutes(-30))
+                {
+                    _activeItems.TryRemove(activeItem.Key, out _);
                 }
             }
 
@@ -1150,7 +1174,26 @@ namespace MediaServer.Api
             return null;
         }
 
-        [Api]
+		[Api]
+		[Authorize]
+		public UserMediaItem? GetSeriesMostRecent(long seriesId)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+            	
+			var userMediaItem = GetUserMediaItems().Values
+                .Where(u => u.SeriesId == seriesId &&
+                    u.LastViewed.HasValue &&
+                    u.Position > 0)
+                .OrderByDescending(u => u.LastViewed)
+                .FirstOrDefault();
+
+            return userMediaItem;
+		}
+
+		[Api]
         [Authorize]
         public IEnumerable<UserMediaItem> GetMovieGrouping(MovieGroupingType movieGroupingType, int count, string options)
         {
@@ -1344,7 +1387,7 @@ namespace MediaServer.Api
 			var videoMediaItem = (VideoFileMediaItem)Module.ObjectStore.Retrieve<MediaItem>(userMediaItem.MediaItemId);
             if (videoMediaItem != null)
             {
-                if (File.Exists(videoMediaItem.FilePath!))
+                if (System.IO.File.Exists(videoMediaItem.FilePath!))
                 {
                     var file = new FileInfo(videoMediaItem.FilePath!);
 					var extension = Path.GetExtension(videoMediaItem.FilePath)!.ToLower();
@@ -1424,7 +1467,9 @@ namespace MediaServer.Api
 		{
             if (GetUserMediaItems().TryGetValue(userMediaId, out var userMediaItem))
             {
-                UpdatePosition(userMediaItem.UserMediaReferenceId, Convert.ToInt64(positionInSeconds));
+                var position = Convert.ToInt64(positionInSeconds);
+				userMediaItem.Position = position;
+				UpdatePosition(userMediaItem.UserMediaReferenceId, position);
             }
         }
 
@@ -1453,28 +1498,43 @@ namespace MediaServer.Api
         internal static void UpdatePosition(long userMediaReferenceId, long positionInSeconds)
         {
 			//Limit updates to 1 minute. This will require a cache
-			if(!_lastPositionStore.TryGetValue(userMediaReferenceId, out var lastStore) ||
-                lastStore < DateTime.Now.AddMinutes(-1))
+			if(positionInSeconds > 0 &&
+				(!_lastPositionStore.TryGetValue(userMediaReferenceId, out var lastStore) ||
+                lastStore < DateTime.Now.AddMinutes(-1)))
             {
+				if (lastStore == default)
+				{
+					_lastPositionStore.TryAdd(userMediaReferenceId, DateTime.Now.AddMinutes(1));
+				}
+				else
+				{
+					_lastPositionStore.TryUpdate(userMediaReferenceId, DateTime.Now.AddMinutes(1), lastStore);
+				}
+
 				if (Module.ObjectStore == null)
 				{
 					throw new NullReferenceException("ObjectStore is null");
 				}
 
-                var userMediaItem = Module.ObjectStore.Retrieve<UserMediaReference>(userMediaReferenceId);
-                userMediaItem.LastPosition = positionInSeconds;
-                userMediaItem.LastViewed = DateTime.UtcNow;
-                Module.ObjectStore.Store(userMediaItem);
+                if (!_activeItems.TryGetValue(userMediaReferenceId, out var activeUserMediaItem))
+                {
+                    activeUserMediaItem = new ActiveItem();
+					activeUserMediaItem.UserMediaReference = Module.ObjectStore.Retrieve<UserMediaReference>(userMediaReferenceId);   
+                    
+                    //Add the active media item to get the duratio                    
+				}
 
-				if (lastStore == default)
-                {
-                    _lastPositionStore.TryAdd(userMediaReferenceId, DateTime.Now.AddMinutes(1));
-				}
-                else
-                {
-					_lastPositionStore.TryUpdate(userMediaReferenceId, DateTime.Now.AddMinutes(1), lastStore);
-				}
+				activeUserMediaItem.UserMediaReference!.LastPosition = positionInSeconds;
+				activeUserMediaItem.UserMediaReference!.LastViewed = DateTime.UtcNow;
+                activeUserMediaItem.LastModified = DateTime.Now;
+				Module.ObjectStore.Store(activeUserMediaItem.UserMediaReference);
 			}
+		}
+
+		private class ActiveItem
+		{
+			public UserMediaReference? UserMediaReference { get; set; }
+			public DateTime LastModified { get; set; } = DateTime.Now;
 		}
 	}
 
@@ -1504,8 +1564,10 @@ namespace MediaServer.Api
         public decimal? Duration { get; set; }
         public int Order { get; set; }
         public string? Description { get; set; }
-        internal DateTimeOffset AddedDate { get; set; }
-        public long? RatingId { get; set; }
+		internal DateTimeOffset AddedDate { get; set; }
+		public DateTimeOffset? LastViewed { get; set; }
+        public long Position { get; set; }
+		public long? RatingId { get; set; }
         public string? Name { get; set; }
         public MediaType MediaType { get; set; }
         public MediaItemType MediaItemType { get; set; }
