@@ -608,6 +608,12 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetUserMediaItemImage', jsonObject);
 	}
 
+	GetUserMediaItem(uniqueKey: string): Promise<UserMediaItem> {
+		var jsonObject = <any>new Object();
+		jsonObject.uniqueKey = uniqueKey
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetUserMediaItem', jsonObject);
+	}
+
 	GetSeasonUserMediaItems(seriesId: number, seasonId: number): Promise<UserMediaItem[]> {
 		var jsonObject = <any>new Object();
 		jsonObject.seriesId = seriesId
@@ -620,11 +626,12 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMediaReceivers', jsonObject);
 	}
 
-	CastToReceiver(recieverType: string | null, receiverId: string | null, userMediaId: string): Promise<MediaCastResult> {
+	CastToReceiver(recieverType: string | null, receiverId: string | null, userMediaId: string, position: number): Promise<MediaCastResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.recieverType = recieverType
 		jsonObject.receiverId = receiverId
 		jsonObject.userMediaId = userMediaId
+		jsonObject.position = position
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/CastToReceiver', jsonObject);
 	}
 

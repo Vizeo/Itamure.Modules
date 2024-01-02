@@ -2,6 +2,7 @@
 using MediaServer.Entities;
 using MediaServer.SubServices;
 using UpnpLib.Devices.Services;
+using UpnpLib.Devices.Services.Media;
 using UpnpLib.Devices.Services.Media.AVTransport_1;
 
 namespace MediaServer.Api.RemoteControllers
@@ -40,9 +41,6 @@ namespace MediaServer.Api.RemoteControllers
 								{
 									MimeType = castMediaInfo.MimeType,
 									Value = url,
-									//AudioChannels = "2",
-									//Bitrate = "78639",
-									//SampleFrequency = "48000",
 									Duration = TimeSpan.FromSeconds(Convert.ToDouble(castMediaInfo.Duration!)).ToString(@"h\:mm\:ss\.ffff"),
 									Resolution = $"{castMediaInfo.Width}x{castMediaInfo.Height}",
 									Size = fileInfo.Length,
@@ -56,10 +54,21 @@ namespace MediaServer.Api.RemoteControllers
 								}
 
 								var playResponse = await service!.Play();
-								if (playResponse.HasError)
+								//if (playResponse.HasError)
+								//{
+								//	result = new MediaCastResult() { Success = false, Message = playResponse.ErrorMessage };
+								//	return;
+								//}
+
+								if (castMediaInfo.StartPosition != 0)
 								{
-									result = new MediaCastResult() { Success = false, Message = playResponse.ErrorMessage };
-									return;
+									var transportInfo = await service.GetTransportInfo();
+									while (transportInfo.TransportState != TransportState.Playing)
+									{
+										transportInfo = await service.GetTransportInfo();
+										await Task.Delay(1000);
+									}
+									await service!.SeekRealTime(TimeSpan.FromSeconds(castMediaInfo.StartPosition));
 								}
 
 								result = new MediaCastResult() { Success = true, Message = string.Empty };
@@ -78,7 +87,7 @@ namespace MediaServer.Api.RemoteControllers
 			return result!;
 		}
 
-		public AVTransport1? GetTransportService(string receiverId)
+		private AVTransport1? GetTransportService(string receiverId)
 		{
 			foreach (var device in UpnpSubService.SsdpServer!.Devices)
 			{

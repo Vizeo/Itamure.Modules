@@ -40,6 +40,31 @@
 			<button (click)="Stop()">
 				<img class="castControls" src="/MediaServer/assets/CastStopButton.svg" />
 			</button>
+			<button (click)="Recast()">
+				<img class="castControls" src="/MediaServer/assets/CastRecastButton.svg" />
+			</button>
 		</div>
 	</ng-container>
 </div>
+
+
+<dialog #recastDevicesDialog id="recastDevicesDialog">
+	<div class="title">
+		Recast Device(s)
+	</div>
+	<div class="content">
+		<div *ngIf="Receivers != null && Receivers.length > 0">
+			<div *ngFor="let receiver of Receivers" class="receiver" (click)="PlayVideoOnDevice(receiver)">
+				<div class="name">{{receiver.Name}}</div>
+				<div class="state">{{receiver.Status}}</div>
+				<div class="mediaName">{{receiver.MediaName}}</div>
+			</div>
+		</div>
+		<div *ngIf="Receivers == null || Receivers.length == 0">
+			<div class="noReceiversd">No devices found.</div>
+		</div>
+	</div>
+	<div class="buttons">
+		<button (click)="CloseRecastDevices()">Close</button>
+	</div>
+</dialog>

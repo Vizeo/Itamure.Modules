@@ -116,10 +116,17 @@
         top: 0;
         transition: opacity .25s;
         opacity: 0;
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
 
         .command {
             font-size: 25px;
             color: white;
+
+            img {
+                width: 19px;
+            }
 
             &:hover {
                 cursor: pointer;

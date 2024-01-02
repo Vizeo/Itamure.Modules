@@ -114,9 +114,14 @@ export class EpisodeDetailsComponent {
         this._castDevicesDialog.nativeElement.showModal();
     }
 
-    public PlayVideoOnDevice(receiver: Receiver) {
-        this.castService.PlayOnReceiver(receiver, this.Episode!);
+    public async PlayVideoOnDevice(receiver: Receiver) {
+        await this.castService.PlayOnReceiver(receiver, this.Episode!, this.Episode!.Position!);
         this.CloseCastDevices();
+    }
+
+    public Recast() {
+        this.ShowCastDevices();
+        this.CloseEpisode();
     }
 
     @ViewChild(VideoPlayerComponent)

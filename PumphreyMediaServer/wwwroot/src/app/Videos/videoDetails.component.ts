@@ -133,9 +133,14 @@ export class videoDetailsComponent {
         this._castDevicesDialog.nativeElement.close();
     }
 
-    public PlayVideoOnDevice(receiver: Receiver) {
-        this.castService.PlayOnReceiver(receiver, this.Movie!);
+    public async PlayVideoOnDevice(receiver: Receiver) {
+        await this.castService.PlayOnReceiver(receiver, this.Movie!, this.Movie!.Position!);
         this.CloseCastDevices();
+        this.CloseMovie();
+    }
+
+    Recast() {
+        this.ShowCastDevices();
     }
 
     @ViewChild(VideoPlayerComponent)

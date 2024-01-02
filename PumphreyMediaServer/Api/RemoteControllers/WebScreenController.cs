@@ -147,6 +147,7 @@ namespace MediaServer.Api.RemoteControllers
                 result.Length = Convert.ToDouble(receiver.CastMediaInfo!.Duration!);
                 result.MediaName = receiver.CastMediaInfo!.Title;
 				result.UserName = receiver.CastMediaInfo!.UserName;
+                result.UniqueLink = receiver.CastMediaInfo.UniqueLink.ToString();
 			}
 
             return result;
@@ -210,7 +211,7 @@ namespace MediaServer.Api.RemoteControllers
 			webReceiver.CastMediaInfo = castMediaInfo;
 			var json = JsonSerializer.Serialize(new LoadCommand()
             {
-                Position = 0,
+                Position = castMediaInfo.StartPosition,
                 UniqueLink = castMediaInfo.UniqueLink,
             });
             webReceiver.WebSocket.Send(UTF8Encoding.GetBytes(json));

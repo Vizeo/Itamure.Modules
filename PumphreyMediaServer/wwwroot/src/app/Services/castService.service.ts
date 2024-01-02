@@ -31,6 +31,7 @@ export class CastService {
 				existing.Status = update.Status;
 				existing.Length = update.Length;
 				existing.Position = update.Position;
+				existing.UniqueLink = update.UniqueLink;
 				existing.Updated.emit();
 			}
 		});
@@ -90,13 +91,13 @@ export class CastService {
 		this._receivers.push(upnpReceiver);
 	}
 
-	public PlayOnReceiver(receiver: Receiver, userMediaItem: UserMediaItem) {
-		receiver.Cast(userMediaItem);
+	public async PlayOnReceiver(receiver: Receiver, userMediaItem: UserMediaItem, position: number) {
+		await receiver.Cast(userMediaItem, position);
 	}
 }
 
 export abstract class Receiver {
-	public abstract Cast(userMediaItem: UserMediaItem): Promise<void>;
+	public abstract Cast(userMediaItem: UserMediaItem, position: number): Promise<void>;
 	public abstract PlayOrPause(): void;
 	public abstract Stop(): void;
 	public abstract Seek(seconds: number): void;
@@ -109,6 +110,7 @@ export abstract class Receiver {
 	public Status?: string;
 	public Length?: number;
 	public Position?: number;
+	public UniqueLink?: string;
 }
 
 class UpnpReceiver extends Receiver {
@@ -116,8 +118,8 @@ class UpnpReceiver extends Receiver {
 		super();
 	}
 
-	public override async Cast(userMediaItem: UserMediaItem): Promise<void> {
-		await this.mediaService.CastToReceiver("Upnp", this.Id!, userMediaItem.UniqueKey!);
+	public override async Cast(userMediaItem: UserMediaItem, position: number): Promise<void> {
+		await this.mediaService.CastToReceiver("Upnp", this.Id!, userMediaItem.UniqueKey!, position);
 	}
 
 	public override PlayOrPause(): void {
@@ -146,8 +148,8 @@ class WebReceiver extends Receiver {
 		super();
 	}
 
-	public override async Cast(userMediaItem: UserMediaItem): Promise<void> {
-		await this.mediaService.CastToReceiver("Web", this.Id!, userMediaItem.UniqueKey!);
+	public override async Cast(userMediaItem: UserMediaItem, position: number): Promise<void> {
+		await this.mediaService.CastToReceiver("Web", this.Id!, userMediaItem.UniqueKey!, position);
 	}
 
 	public override PlayOrPause(): void {
@@ -195,10 +197,9 @@ class ChromeCastReceiver extends Receiver {
 
 	private _player: any;
 	private _playerController: any;
-	private _userMediaItem: UserMediaItem | null = null;
+	private _url?: string;
 
-	public override async Cast(userMediaItem: UserMediaItem): Promise<void> {
-		this._userMediaItem = userMediaItem;
+	public override async Cast(userMediaItem: UserMediaItem, position: number): Promise<void> {
 		let url = location.origin + "/mediaServer/streamingService?UniqueKey=" + userMediaItem.UniqueKey;
 
 		//Cannot run on local host so set to local ip
@@ -214,6 +215,10 @@ class ChromeCastReceiver extends Receiver {
 			if (session != null) {
 				await session.loadMedia(request);
 				this.MediaName = userMediaItem.Name!;
+				this.SetupPlayer();
+				if (position > 0) {
+					this.Seek(position);
+				}
 			}
 		} catch (e) {
 			console.error(e);
@@ -265,9 +270,16 @@ class ChromeCastReceiver extends Receiver {
 		this._playerController.addEventListener(
 			cast.framework.RemotePlayerEventType.CURRENT_TIME_CHANGED, (event: any) => {
 				this.Position = Number(event.value);
-				this.mediaService.UpdateMediaPosition(this._userMediaItem!.UniqueKey!, this.Position)
-				this.Updated.emit();
-				this.appRef.tick();
+
+				this._url = <string>this._player.mediaInfo.contentId;
+				let uniqueKeyIndex = this._url.lastIndexOf("UniqueKey=");
+				if (uniqueKeyIndex != -1) {
+					uniqueKeyIndex += 10;
+					this.UniqueLink = this._url.substring(uniqueKeyIndex, uniqueKeyIndex + 36);
+					this.mediaService.UpdateMediaPosition(this.UniqueLink, this.Position)
+					this.Updated.emit();
+					this.appRef.tick();
+				}
 			});
 
 		this.SetStatus(this._player.playerState);

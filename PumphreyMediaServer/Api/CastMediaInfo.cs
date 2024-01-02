@@ -10,6 +10,6 @@
 		public short? Height { get; set; }
 		public decimal? Duration { get; set; }
 		public long UserMediaReferenceId { get; set; }
-		public decimal StartPosition { get; set; } //In percentage
+		public double StartPosition { get; set; } //In percentage
 	}
 }

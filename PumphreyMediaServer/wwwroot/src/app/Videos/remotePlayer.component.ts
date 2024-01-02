@@ -1,5 +1,6 @@
 import { Component, ElementRef, Input, Renderer2, ViewChild } from '@angular/core';
-import { Receiver } from '../Services/castService.service';
+import { CastService, Receiver } from '../Services/castService.service';
+import { MediaService, UserMediaItem } from '../Services/mediaServer.service';
 
 @Component({
     selector: 'remotePlayer',
@@ -7,7 +8,9 @@ import { Receiver } from '../Services/castService.service';
     styleUrls: ['./remotePlayer.component.less']
 })
 export class RemotePlayerComponent {
-    constructor(private renderer: Renderer2) {
+    constructor(private renderer: Renderer2,
+        private castService: CastService,
+        private mediaService: MediaService) {
     }
 
     private _startPosition = 0;
@@ -95,6 +98,7 @@ export class RemotePlayerComponent {
 
     public Played: string = "0";
     public Remaining: string = "0";
+    public Receivers: Receiver[] | null = null;
 
     public get Receiver(): Receiver {
         return this._receiver!;
@@ -102,6 +106,9 @@ export class RemotePlayerComponent {
 
     @ViewChild("currentPosition")
     private _currentPosition!: ElementRef<HTMLDialogElement>;
+
+    @ViewChild("recastDevicesDialog")
+    private _recastDevicesDialog!: ElementRef<HTMLDialogElement>;
 
     @ViewChild("progress")
     private _progress!: ElementRef<HTMLDialogElement>;
@@ -149,5 +156,24 @@ export class RemotePlayerComponent {
 
     public Stop() {
         this.Receiver!.Stop();
+    }
+
+    public CloseRecastDevices() {
+        this._recastDevicesDialog.nativeElement.close();
+    }
+
+    public Recast() {
+        this.Receivers = this.castService.Receivers;
+        this._recastDevicesDialog.nativeElement.showModal();
+    }
+
+    public async PlayVideoOnDevice(recastReceiver: Receiver) {
+        var uniqueLink = this.Receiver.UniqueLink;
+        let userMediaItem = await this.mediaService.GetUserMediaItem(uniqueLink!);
+        if (userMediaItem != null) {
+            await recastReceiver.Cast(userMediaItem, this.Receiver.Position!);
+            this.Receiver.Stop();
+            this.CloseRecastDevices();
+        }
     }
 }

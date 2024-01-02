@@ -1361,7 +1361,19 @@ namespace MediaServer.Api
             return null;
         }
 
-        [Api]
+		[Api]
+		[Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+		public UserMediaItem? GetUserMediaItem(Guid uniqueKey)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			return GetUserMediaItems()[uniqueKey];
+        }
+
+		[Api]
         [Authorize()]
         public IEnumerable<UserMediaItem> GetSeasonUserMediaItems(long seriesId, long seasonId)
         {
@@ -1414,7 +1426,7 @@ namespace MediaServer.Api
 
         [Api]
         [Authorize()]
-        public MediaCastResult? CastToReceiver(string recieverType, string receiverId, Guid userMediaId)
+        public MediaCastResult? CastToReceiver(string recieverType, string receiverId, Guid userMediaId, double position)
         {
             MediaCastResult? result = null;
 
@@ -1443,7 +1455,7 @@ namespace MediaServer.Api
                         Duration = videoMediaItem.Duration,
                         Width = videoMediaItem.Width,
                         Height = videoMediaItem.Height,
-                        StartPosition = 0, //TODO: Impement this to resume or switch
+                        StartPosition = position,
                         UniqueLink = userMediaId,
 						UserMediaReferenceId = userMediaItem.Id,
 						MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == videoMediaItem.MediaType)?.ContentType

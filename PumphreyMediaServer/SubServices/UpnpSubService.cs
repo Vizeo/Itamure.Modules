@@ -112,6 +112,7 @@ namespace MediaServer.SubServices
 										receiverEvent.Position = 0;
 										receiverEvent.MediaName = string.Empty;
 										receiverEvent.UserName = string.Empty;
+										receiverEvent.UniqueLink = string.Empty;
 										break;
 								}
 
@@ -150,7 +151,7 @@ namespace MediaServer.SubServices
 			var positionInfo = await service.GetPositionInfo();
 			receiverEvent.Length = positionInfo.TrackDuration.TotalSeconds;
 			receiverEvent.Position = positionInfo.RelTime.TotalSeconds;
-			if(positionInfo.Item != null)
+			if (positionInfo.Item != null)
 			{
 				var mediaId = positionInfo.Item.Id;
 				if(Guid.TryParse(mediaId, out var mediaLinkId) &&
@@ -158,6 +159,7 @@ namespace MediaServer.SubServices
 				{
 					var userMediaReferences = Module.ObjectStore.Retrieve<UserMediaReference>()
 						.First(u => u.UniqueLink == mediaLinkId);
+					receiverEvent.UniqueLink = userMediaReferences.UniqueLink.ToString();
 					var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(userMediaReferences.MediaItemId);
 					if(mediaItem != null) 
 					{

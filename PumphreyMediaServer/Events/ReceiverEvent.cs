@@ -9,7 +9,8 @@ namespace MediaServer.Events
         {
         }
 
-        public string? ReceiverId { get; set; }
+		public string? ReceiverId { get; set; }
+		public string? UniqueLink { get; set; }
 		public string? UserName { get; set; }
 		public string? MediaName { get; set; }
 		public double Length { get; set; }
