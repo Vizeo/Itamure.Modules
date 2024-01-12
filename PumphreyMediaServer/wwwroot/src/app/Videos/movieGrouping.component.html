@@ -1,7 +1,7 @@
-<div class="movies" title="" elementVisible (visible)="Load()">
+<div class="movies" title="" elementVisible (visible)="Load()" [ngClass]="{noItems: NoItems}">
     <div class="header">
-        {{Title}} 
-        <ng-container *ngIf="CanShowAll">
+        {{VideoGroup!.Name!}} 
+        <ng-container *ngIf="CanShowAll()">
             <div class="viewAll" (click)="OnShowAll()">View All</div>
             <img src="/MediaServer/assets/Paddle.svg" (click)="OnShowAll()"/>
         </ng-container>

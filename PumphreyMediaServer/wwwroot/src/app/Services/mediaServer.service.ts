@@ -16,6 +16,14 @@ export class OmdbApiData
 {
 	Key?: string | null; 
 }
+export class StringValue
+{
+	Value?: string | null; 
+}
+export class Access
+{
+	SettingsPermissions?: boolean; 
+}
 export enum MediaSubType {
 	Music = 1,
 	Pictures = 2,
@@ -46,6 +54,23 @@ export class MediaFileType
 	MediaType?: MediaType; 
 	FileExtension?: string | null; 
 	ContentType?: string | null; 
+}
+export enum MovieGroupingType {
+	Newest = 1,
+	Genres = 2,
+	Folder = 3,
+	Range = 4,
+	Rating = 5,
+	ContinueWatching = 6,
+}
+export class VideoGroup
+{
+	Id?: number; 
+	Name?: string | null; 
+	MovieGroupingType?: MovieGroupingType; 
+	Count?: number; 
+	Options?: string | null; 
+	Order?: number; 
 }
 export enum MediaItemType {
 	UnknownAudioFile = 0,
@@ -146,13 +171,9 @@ export class AddSeriesResponse
 	Message?: string | null; 
 	Series?: Series; 
 }
-export enum MovieGroupingType {
-	Newest = 1,
-	Genres = 2,
-	Folder = 3,
-	Range = 4,
-	Rating = 5,
-	ContinueWatching = 6,
+export class FolderTree extends Folder 
+{
+	SubFolders?: FolderTree[]; 
 }
 export class UserMediaItemSearchResult extends UserMediaItem 
 {
@@ -338,6 +359,16 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/AddMediaSource', jsonObject);
 	}
 
+	GetGenres(): Promise<StringValue[]> {
+		var jsonObject = <any>new Object();
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetGenres', jsonObject);
+	}
+
+	GetAccess(): Promise<Access> {
+		var jsonObject = <any>new Object();
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetAccess', jsonObject);
+	}
+
 	ValidateDirectory(path: string | null): Promise<boolean> {
 		var jsonObject = <any>new Object();
 		jsonObject.path = path
@@ -415,6 +446,12 @@ export class MediaService {
 		var jsonObject = <any>new Object();
 		jsonObject.mediaFileType = mediaFileType
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/AddMediaFileType', jsonObject);
+	}
+
+	UpdateVideoGroup(videoGroup: VideoGroup): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.videoGroup = videoGroup
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/UpdateVideoGroup', jsonObject);
 	}
 
 	UpdateMediaFielType(mediaFileType: MediaFileType): Promise<void> {
@@ -587,12 +624,39 @@ export class MediaService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetSeriesNextRecent', jsonObject);
 	}
 
-	GetMovieGrouping(movieGroupingType: MovieGroupingType, count: number, options: string | null): Promise<UserMediaItem[]> {
+	GetVideoGroupMedia(videoGroupId: number, all: boolean): Promise<UserMediaItem[]> {
 		var jsonObject = <any>new Object();
-		jsonObject.movieGroupingType = movieGroupingType
-		jsonObject.count = count
-		jsonObject.options = options
-		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMovieGrouping', jsonObject);
+		jsonObject.videoGroupId = videoGroupId
+		jsonObject.all = all
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetVideoGroupMedia', jsonObject);
+	}
+
+	GetVideoGroups(): Promise<VideoGroup[]> {
+		var jsonObject = <any>new Object();
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetVideoGroups', jsonObject);
+	}
+
+	UpdateVideoGroups(videoGroups: VideoGroup[]): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.videoGroups = videoGroups
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/UpdateVideoGroups', jsonObject);
+	}
+
+	GetVideoFolders(): Promise<FolderTree[]> {
+		var jsonObject = <any>new Object();
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetVideoFolders', jsonObject);
+	}
+
+	AddVideoGroup(videoGroup: VideoGroup): Promise<VideoGroup> {
+		var jsonObject = <any>new Object();
+		jsonObject.videoGroup = videoGroup
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/AddVideoGroup', jsonObject);
+	}
+
+	DeleteVideoGroup(videoGroup: VideoGroup): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.videoGroup = videoGroup
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/DeleteVideoGroup', jsonObject);
 	}
 
 	Search(search: string | null, count: number): Promise<UserMediaItemSearchResult[]> {

@@ -1,0 +1,15 @@
+<div class="FolderMovieGroup">
+    <div class="properties">
+        <div class="property">
+            <label>Folder</label>
+            <select [(ngModel)]="SelectedFolderId"
+                    groupValidator="videoGroupSetup"
+                    #folder="validator"
+                    [required]="true">
+                <option *ngFor="let folder of Folders" [ngValue]="folder.Id">
+                    {{folder.Name}}
+                </option>
+            </select>
+        </div>
+    </div>
+</div>

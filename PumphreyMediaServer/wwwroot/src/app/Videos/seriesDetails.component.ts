@@ -43,8 +43,13 @@ export class SeriesDetailsComponent {
                 this.Series.Seasons.length > 0) {
 
                 this.MostRecent = await this.mediaService.GetSeriesMostRecent(seriesId);
-                if (this.MostRecent == null) {
+
+                console.log("Yeah", this.MostRecent);
+
+                if (this.MostRecent == null ||
+                    this.MostRecent.SeriesId == null) {
                     this.SelectedSeason = this.Series.Seasons[0];
+                    this.MostRecent = null;
                 }
                 else {
                     var seasonIndex = this.Series.Seasons.findIndex(s => s.Id == this.MostRecent!.SeasonId);

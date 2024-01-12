@@ -5,7 +5,7 @@ namespace MediaServer.Api.MovieGroupings
 {
     internal class ContinueWatchingMovieGrouping : MovieGroupingBase
     {
-        public override IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
+        public override IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string? options, bool all)
         {
             if (Module.ObjectStore == null)
             {

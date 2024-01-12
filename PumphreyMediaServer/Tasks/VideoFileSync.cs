@@ -53,13 +53,16 @@ namespace MediaServer.Tasks
 			}
 
 			var metadataTags = new List<MetadataTag>();
-			foreach (var actor in metaData.Tag.Performers)
+			if (metaData.Tag.Conductor != null)
 			{
-				metadataTags.Add(new MetadataTag()
+				foreach (var actor in metaData.Tag.Performers)
 				{
-					MetadataTagType = MetadataTagType.Actor,
-					Value = actor
-				});
+					metadataTags.Add(new MetadataTag()
+					{
+						MetadataTagType = MetadataTagType.Actor,
+						Value = actor
+					});
+				}
 			}
 
 			if (metaData.Tag.Conductor != null)
@@ -74,22 +77,28 @@ namespace MediaServer.Tasks
 				}
 			}
 
-			foreach (var writers in metaData.Tag.Composers)
+			if (metaData.Tag.Composers != null)
 			{
-				metadataTags.Add(new MetadataTag()
+				foreach (var writers in metaData.Tag.Composers)
 				{
-					MetadataTagType = MetadataTagType.Writer,
-					Value = writers
-				});
+					metadataTags.Add(new MetadataTag()
+					{
+						MetadataTagType = MetadataTagType.Writer,
+						Value = writers
+					});
+				}
 			}
 
-			foreach (var genre in metaData.Tag.Genres)
+			if (metaData.Tag.Genres != null)
 			{
-				metadataTags.Add(new MetadataTag()
+				foreach (var genre in metaData.Tag.Genres)
 				{
-					MetadataTagType = MetadataTagType.Genre,
-					Value = genre
-				});
+					metadataTags.Add(new MetadataTag()
+					{
+						MetadataTagType = MetadataTagType.Genre,
+						Value = genre
+					});
+				}
 			}
 
 			videoFileMediaItem.MetadataTags = metadataTags;

@@ -1,0 +1,6 @@
+<div class="RatingMovieGroup">
+    <div *ngFor="let rating of Ratings">
+        <input type="checkbox" [(ngModel)]="rating.Selected" (ngModelChange)="Update()" />
+        <label>{{rating.Name}}</label>
+    </div>
+</div>

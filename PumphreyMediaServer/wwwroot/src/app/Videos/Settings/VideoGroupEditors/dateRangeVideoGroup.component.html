@@ -1,0 +1,24 @@
+<div class="FolderMovieGroup">
+	<div class="properties">
+		<div class="property">
+			<label>Start Year:</label>
+			<input type="number" [(ngModel)]="Start"
+				   (ngModelChange)="Update()"
+				   groupValidator="videoGroupSetup"
+				   #start="validator"
+				   [min]="1900"
+				   [max]="2400"
+				   [required]="true">
+		</div>
+		<div class="property">
+			<label>End Year:</label>
+			<input type="number" [(ngModel)]="End"
+				   (ngModelChange)="Update()"
+				   groupValidator="videoGroupSetup"
+				   #end="validator"
+				   [min]="1900"
+				   [max]="2400"
+				   [required]="true">
+		</div>
+	</div>
+</div>

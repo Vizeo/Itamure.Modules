@@ -1,7 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
-import { FileMediaItem, MediaItem } from "./mediaServer.service";
-import { ViewAllEvent } from "../Videos/movieGrouping.component";
-
+import { FileMediaItem, MediaItem, VideoGroup } from "./mediaServer.service";
 
 @Injectable({ providedIn: 'root' })
 export class MediaItemService {
@@ -31,7 +29,7 @@ export class MediaItemService {
     }
 
     public MediaItem: MediaItem | null = null;
-    public ViewAll: ViewAllEvent | null = null;
+    public ViewAllVideoGroup: VideoGroup | null = null;
 }
 
 export enum SpecialFolders {

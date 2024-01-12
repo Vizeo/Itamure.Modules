@@ -3,12 +3,12 @@ using MediaServer.Entities;
 
 namespace MediaServer.Api.MovieGroupings
 {
-    internal class GenreMovieGrouping : MovieGroupingBase
+    internal class RatingsMovieGrouping : MovieGroupingBase
     {
-        public override IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string options)
+        public override IEnumerable<UserMediaItem> GetMovies(Guid userUniqueId, Dictionary<Guid, UserMediaItem> userMediaItems, int count, string? options, bool all)
         {
 			var optionValues = System.Text.Json.JsonSerializer.Deserialize<Options>(options, new System.Text.Json.JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-			var genres = optionValues!.Genres!.Select(g => g.ToUpper().Trim());
+			var ratingIds = optionValues!.RatingIds!;
 
 			if (Module.ObjectStore == null)
 			{
@@ -17,8 +17,8 @@ namespace MediaServer.Api.MovieGroupings
 
 			var list = userMediaItems.Values
 				.Where(i => i.MediaItemType == MediaItemType.MovieFile &&
-					i.MetadataTags!.Any(t => t.MetadataTagType == MetadataTagType.Genre &&
-					genres.Contains(t.Value!.ToUpper().Trim())))
+					i.RatingId.HasValue &&
+					ratingIds.Contains(i.RatingId!.Value))
 				.ToList();
 
 			return base.RandomizeList(list)
@@ -26,7 +26,7 @@ namespace MediaServer.Api.MovieGroupings
 		}
 
 		public class Options {
-			public List<string>? Genres { get; set; } 
+			public List<long>? RatingIds { get; set; } 
 		}
     }
 }

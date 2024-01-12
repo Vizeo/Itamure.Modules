@@ -1,0 +1,6 @@
+<div class="genreMovieGroup">
+    <div *ngFor="let genre of Genres">
+        <input type="checkbox" [(ngModel)]="genre.Selected" (ngModelChange)="Update()" />
+        <label>{{genre.Value}}</label>
+    </div>
+</div>

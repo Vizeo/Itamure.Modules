@@ -1,7 +1,9 @@
 <div class="mediaServerApp">
     <mainMenu>
         <a routerLink="/App">
-            <div class="logo">Logo</div>
+            <div class="logo">
+                <img class="unknown" src="/MediaServer/assets/MediaServerIcon.svg"/>
+            </div>
         </a>
         <div class="menuItems">
             <div class="menuItem" routerLink="/App/Movies" routerLinkActive="selected">Movies</div>
@@ -10,10 +12,9 @@
             <div class="menuItem" routerLink="/App/Pictures" routerLinkActive="selected">Pictures</div>-->
         </div>
         <div class="tools">
-            <!--<google-cast-launcher></google-cast-launcher>-->
             <img class="tool" src="/MediaServer/assets/CastButton.svg" (click)="ShowCastDevices()" />
             <icon class="tool" name="Magnifying Glass" routerLink="/App/Search" routerLinkActive="selected"></icon>
-            <a routerLink="/Settings">
+            <a routerLink="/Settings" *ngIf="Access != null && Access.SettingsPermissions">
                 <icon class="tool" name="Gear"></icon>
             </a>
         </div>

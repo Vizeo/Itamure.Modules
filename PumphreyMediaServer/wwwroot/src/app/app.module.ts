@@ -48,6 +48,12 @@ import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
 import { RemotePlayerComponent } from './Videos/remotePlayer.component';
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
+import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
+import { FolderVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/folderVideoGroup.component';
+
+import { DateRangeVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/dateRangeVideoGroup.component';
+import { RatingVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/ratingVideoGroup.component';
+import { GenreVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/genreVideoGroup.component';
 
 @NgModule({
     declarations: [
@@ -95,7 +101,12 @@ import { RemoteWebScreenComponent } from './remoteWebScreen.component';
         EpisodeDetailsComponent,
         FullMovieGroupingComponent,
         RemotePlayerComponent,
-        RemoteWebScreenComponent
+        RemoteWebScreenComponent,
+        VideoGroupManagerComponent,
+        FolderVideoGroupComponent,
+        DateRangeVideoGroupComponent,
+        RatingVideoGroupComponent,
+        GenreVideoGroupComponent
     ],
     imports: [
         BrowserModule,

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { MediaService, UserMediaItem } from '../Services/mediaServer.service';
-import {  Router } from '@angular/router';
-import { IMovieEx, ViewAllEvent } from './movieGrouping.component';
+import { MediaService, UserMediaItem, VideoGroup } from '../Services/mediaServer.service';
+import { Router } from '@angular/router';
+import { IMovieEx } from './movieGrouping.component';
 import { MediaItemService } from '../Services/mediaItem.service';
 
 @Component({
@@ -13,12 +13,11 @@ export class FullMovieGroupingComponent {
 	constructor(private mediaService: MediaService,
 		mediaItemService: MediaItemService,
 		private router: Router) {
-
-		this.ViewAll = mediaItemService.ViewAll;
+		this.ViewAllVideoGroup = mediaItemService.ViewAllVideoGroup!;
 	}
 	
-	public ViewAll?: ViewAllEvent | null;
 	public Movies: (UserMediaItem & IMovieEx)[] | undefined;
+	public ViewAllVideoGroup: VideoGroup;
 
 	public ShowDetail(movie: UserMediaItem) {
 		this.router.navigate(['/', 'App', 'Movie', movie.UniqueKey]);
@@ -33,10 +32,8 @@ export class FullMovieGroupingComponent {
 	}
 
 	private async GetMovies() {
-		if (this.ViewAll != null) {
-
-			var json = JSON.stringify(this.ViewAll.Options);
-			this.Movies = await this.mediaService.GetMovieGrouping(this.ViewAll.MovieGroupingType!, 1000, json);
+		if (this.ViewAllVideoGroup != null) {
+			this.Movies = await this.mediaService.GetVideoGroupMedia(this.ViewAllVideoGroup!.Id!, true);
 
 			for (let i = 0; i < this.Movies.length; i++) {
 				this.Movies[i].Image = "/mediaServer/api/mediaServerService/GetUserMediaItemImage?uniqueKey=" + this.Movies[i].UniqueKey! + "&date=" + this.Movies[i].MetadataDate!.getTime();

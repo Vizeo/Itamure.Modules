@@ -8,7 +8,7 @@ namespace CalendarTools
         {
         }
 
-        public override string SettingsLink => $"/{Module.WEB_ROUTE_BASE}/ClockWidgetSettings";
+        public override string SettingsLink => $"/{Module.WEB_ROUTE_BASE}/ClockWidgetSetting";
         public override string Link => $"/{Module.WEB_ROUTE_BASE}/ClockWidget";
         public override string Name => "Clock";
     }

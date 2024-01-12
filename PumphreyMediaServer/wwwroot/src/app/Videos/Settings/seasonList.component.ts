@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MediaService, Season, Series, VideoFileMediaItem } from '../../Services/mediaServer.service';
+import { MediaService, Season, Series } from '../../Services/mediaServer.service';
 import { IVideoManager } from './videoSettings.component';
 import { GlobalService, IEditableObject, SortChangeEvent } from 'interLink';
 import { SeriesEditorComponent } from './seriesEditor.component';

@@ -1,8 +1,10 @@
-﻿namespace MediaServer.Api.MovieGroupings
+﻿using MediaServer.Entities;
+
+namespace MediaServer.Api.MovieGroupings
 {
     internal class MovieGroupingFactory
     {
-        public MovieGroupingBase? GetMovieGrouping(MovieGroupingType movieGroupingType)
+        public MovieGroupingBase? GetVideoGroupMedia(MovieGroupingType movieGroupingType)
         {
             switch(movieGroupingType)
             {

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { MovieGroupingType, UserMediaItem } from '../Services/mediaServer.service';
+import { MediaService, MovieGroupingType, UserMediaItem, VideoGroup } from '../Services/mediaServer.service';
 import { Router } from '@angular/router';
-import { MediaItemService } from '../Services/mediaItem.service';
 
 @Component({
     selector: 'moviesView',
@@ -10,10 +9,16 @@ import { MediaItemService } from '../Services/mediaItem.service';
 })
 export class MoviesViewComponent {
     constructor(private router: Router,
-        private mediaItemService: MediaItemService) {
+        private mediaService: MediaService) {
+        this.GetVideoGroups();
     }
 
+    public VideoGroups: VideoGroup[] | null = null;
     public MovieGroupingType = MovieGroupingType;
+
+    public async GetVideoGroups() {
+        this.VideoGroups = await this.mediaService.GetVideoGroups();        
+    }
 
     public ShowDetail(movie: UserMediaItem) {
         this.router.navigate(['/', 'App', 'Movie', movie.UniqueKey]);

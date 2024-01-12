@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { MediaService, MovieGroupingType, UserMediaItem } from '../Services/mediaServer.service';
+import { MediaService, MovieGroupingType, UserMediaItem, VideoGroup } from '../Services/mediaServer.service';
 import { Router } from '@angular/router';
 import { MediaItemService } from '../Services/mediaItem.service';
 
@@ -16,20 +16,8 @@ export class MovieGroupingComponent {
 
     private _loaded: boolean = false;;
 
-    @Input("title")
-    public Title: string = "";
-
-    @Input("grouping")
-    public Grouping: MovieGroupingType | undefined;
-
-    @Input("count")
-    public Count: number | undefined;
-
-    @Input("options")
-    public Options: any = new Object();
-
-    @Input("canShowAll")
-    public CanShowAll: boolean = true;
+    @Input("videoGroup")
+    public VideoGroup?: VideoGroup;
 
     @ViewChild("moviesList")
     public MoviesList: ElementRef<HTMLDivElement> | undefined;
@@ -40,9 +28,10 @@ export class MovieGroupingComponent {
     public Movies: (UserMediaItem & IMovieEx)[] | undefined;
     public AllTheWayRight: boolean = false;
     public AllTheWayLeft: boolean = true;
+    public NoItems: boolean = false;
 
     public OnShowAll() {
-        this.mediaItemService.ViewAll = { Title: this.Title, MovieGroupingType: this.Grouping, Options: this.Options, Count: this.Count };
+        this.mediaItemService.ViewAllVideoGroup = this.VideoGroup!;
         this.router.navigate(['/', 'App', 'FullGroupView']);
     }
 
@@ -51,6 +40,13 @@ export class MovieGroupingComponent {
             this.GetMovies();
             this._loaded = true;
         }
+    }
+
+    public CanShowAll(): boolean {
+        return this.VideoGroup?.MovieGroupingType == MovieGroupingType.Folder ||
+            this.VideoGroup?.MovieGroupingType == MovieGroupingType.Genres ||
+            this.VideoGroup?.MovieGroupingType == MovieGroupingType.Range ||
+            this.VideoGroup?.MovieGroupingType == MovieGroupingType.Rating;
     }
 
     public get Overflowing(): boolean {
@@ -114,17 +110,19 @@ export class MovieGroupingComponent {
    }
 
     private async GetMovies() {
-        if (this.Count != null &&
-            this.Grouping != null) {
+        if (this.VideoGroup != null) {
+            this.Movies = await this.mediaService.GetVideoGroupMedia(this.VideoGroup.Id!, false);
 
-            var json = JSON.stringify(this.Options);
-            this.Movies = await this.mediaService.GetMovieGrouping(this.Grouping, this.Count, json);
+            if (this.Movies.length > 0) {
+                for (let i = 0; i < this.Movies.length; i++) {
+                    this.Movies[i].Image = "/mediaServer/api/mediaServerService/GetUserMediaItemImage?uniqueKey=" + this.Movies[i].UniqueKey + "&date=" + this.Movies[i].MetadataDate!.getTime();
+                }
 
-            for (let i = 0; i < this.Movies.length; i++) {
-                this.Movies[i].Image = "/mediaServer/api/mediaServerService/GetUserMediaItemImage?uniqueKey=" + this.Movies[i].UniqueKey + "&date=" + this.Movies[i].MetadataDate!.getTime();
+                this.UpdatePaddles();
             }
-
-            this.UpdatePaddles();
+            else {
+                this.NoItems = true;
+            }
         }
     }
 
@@ -145,11 +143,4 @@ export class MovieGroupingComponent {
 
 export interface IMovieEx {
     Image?: string;
-}
-
-export class ViewAllEvent {
-    public Title?: string;
-    public MovieGroupingType?: MovieGroupingType;
-    public Options?: any;
-    public Count?: Number;
 }

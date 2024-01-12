@@ -20,6 +20,8 @@ using IntegratedWebServer.Core;
 using System.Collections.Concurrent;
 using TagLib.Flac;
 using Microsoft.AspNetCore.Connections.Features;
+using System.Runtime.CompilerServices;
+using System.Diagnostics.Metrics;
 
 namespace MediaServer.Api
 {
@@ -81,7 +83,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public MediaSource AddMediaSource(MediaSource mediaSource)
         {
             if (Module.ObjectStore == null)
@@ -95,15 +97,56 @@ namespace MediaServer.Api
             return mediaSource; //Return the media source with the id
         }
 
-        [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public IEnumerable<StringValue> GetGenres()
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			var videoFileMediaItems = GetUserMediaItems().Values
+                .Where(i => i.MediaItemType == MediaItemType.MovieFile)
+                .ToList();
+
+            var hashset = new HashSet<string>();
+
+            foreach(var videoFile in videoFileMediaItems)
+            {
+                foreach (var genre in videoFile.MetadataTags!.Where(t => t.MetadataTagType == MetadataTagType.Genre))
+                {
+                    hashset.Add(genre.Value!);
+				}
+            }
+
+            return hashset.Select(v => new StringValue() { Value = v });
+		}
+
+		[Api]
+		[Authorize]
+		public Access GetAccess()
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+            return new Access()
+            {
+                SettingsPermissions = Module.CurrentModule!.UserHasAccess(Session.UniqueId, MediaServerPermissions.SettingsPermissions),
+            };		
+		}
+
+		[Api]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public bool ValidateDirectory(string path)
         {
             return System.IO.Directory.Exists(path);
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void RemoveSource(MediaSource mediaSource)
         {
             if (Module.ObjectStore == null)
@@ -116,7 +159,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void RemoveMediaFileItem(long mediaItemId)
         {
             if (Module.ObjectStore == null)
@@ -141,7 +184,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public Rating AddRating(string name, MediaSubType mediaSubType)
         {
             if (Module.ObjectStore == null)
@@ -171,7 +214,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void UpdateRating(Rating rating)
         {
             if (Module.ObjectStore == null)
@@ -193,7 +236,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void DeleteRating(long ratingId)
         {
             if (Module.ObjectStore == null)
@@ -219,7 +262,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public Tag AddTag(string name, MediaSubType mediaSubType)
         {
             if (Module.ObjectStore == null)
@@ -249,7 +292,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void UpdateTag(Tag tag)
         {
             if (Module.ObjectStore == null)
@@ -271,7 +314,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void DeleteTag(long tagId)
         {
             if (Module.ObjectStore == null)
@@ -296,7 +339,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public MediaFileType AddMediaFileType(MediaFileType mediaFileType)
         {
             if (Module.ObjectStore == null)
@@ -317,8 +360,20 @@ namespace MediaServer.Api
             return mediaFileType;
         }
 
-        [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public void UpdateVideoGroup(VideoGroup videoGroup)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			Module.ObjectStore.Store(videoGroup);
+		}
+
+		[Api]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void UpdateMediaFielType(MediaFileType mediaFileType)
         {
             if (Module.ObjectStore == null)
@@ -341,7 +396,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void RemoveMediaFileType(long mediaFileTypeId)
         {
             if (Module.ObjectStore == null)
@@ -353,7 +408,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public IEnumerable<VideoFileMediaItem> GetVideoMediaItems(MediaItemType mediaItemType, long folderId)
         {
             if (Module.ObjectStore == null)
@@ -478,7 +533,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public long AddFolder(Folder folder)
         {
             if (Module.ObjectStore == null)
@@ -498,7 +553,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void UpdateFolder(Folder folder)
         {
             if (Module.ObjectStore == null)
@@ -537,7 +592,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void DeleteFolder(long folderId)
         {
             if (Module.ObjectStore == null)
@@ -587,7 +642,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public IEnumerable<VideoFileMediaItem> GetUnassignedVideoMediaItems()
         {
             if (Module.ObjectStore == null)
@@ -605,7 +660,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void AssignVideoToMovies(IEnumerable<long> videoFileMediaItemIds, long folderId)
         {
             if (Module.ObjectStore == null)
@@ -658,7 +713,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public AddSeriesResponse AddSeries(Series series)
         {
             if (Module.ObjectStore == null)
@@ -704,7 +759,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void SaveSeries(Series series)
         {
             if (Module.ObjectStore == null)
@@ -734,7 +789,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void AssignVideoToSeason(short seriesId, short seasonId, IEnumerable<long> videoFileMediaItemIds)
         {
             if (Module.ObjectStore == null)
@@ -762,7 +817,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public IEnumerable<VideoFileMediaItem> GetSeasonMediaItems(long seriesId, long seasonId)
         {
             if (Module.ObjectStore == null)
@@ -782,7 +837,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void SetSeasonMediaItemSort(IEnumerable<long> videoFileMediaItemIds)
         {
             if (Module.ObjectStore == null)
@@ -808,7 +863,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void DeleteSeason(long seriesId, long seasonId)
         {
             if (Module.ObjectStore == null)
@@ -838,7 +893,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void DeleteSeries(long seriesId)
         {
             if (Module.ObjectStore == null)
@@ -860,7 +915,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void UnassignVideoFileMediaItems(IEnumerable<long> videoFileMediaItemIds)
         {
             if (Module.ObjectStore == null)
@@ -890,7 +945,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void SetVideoFileMediaItemImage(long mediaItemId, string mimeType, byte[] data)
         {
             if (Module.ObjectStore == null)
@@ -946,7 +1001,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public Stream? GetVideoFileMediaItemImage(long mediaItemId)
         {
             if (Module.ObjectStore == null)
@@ -966,7 +1021,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void SetVideoFileMediaMetadata(VideoFileMediaItem videoFileMediaItem)
         {
             if (Module.ObjectStore == null)
@@ -1109,7 +1164,7 @@ namespace MediaServer.Api
 
                 Module.ObjectStore.Update<MediaItem>(videoFileMediaItem.Id, new
                 {
-                    MetadataDate = DateTime.UtcNow
+                    MetadataDate = DateTimeOffset.UtcNow
                 });
             }
             catch (Exception ex)
@@ -1122,7 +1177,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public void SetSeriesImage(long seriesId, string mimeType, byte[] data)
         {
             if (Module.ObjectStore == null)
@@ -1237,24 +1292,133 @@ namespace MediaServer.Api
 
 		[Api]
         [Authorize]
-        public IEnumerable<UserMediaItem> GetMovieGrouping(MovieGroupingType movieGroupingType, int count, string options)
+        public IEnumerable<UserMediaItem> GetVideoGroupMedia(long videoGroupId, bool all)
         {
             if (Module.ObjectStore == null)
             {
                 throw new NullReferenceException("ObjectStore is null");
             }
 
-            var factory = new MovieGroupingFactory();
-            var movieGrouping = factory.GetMovieGrouping(movieGroupingType);
-            if (movieGrouping != null)
-            {
-				var userUniqueId = Request.UserUniqueId!.Value;
-				return movieGrouping.GetMovies(userUniqueId, GetUserMediaItems(), count, options);
-            }
+            var videoGroup = Module.ObjectStore.Retrieve<VideoGroup>(videoGroupId);
+
+            if(videoGroup != null) {
+				var factory = new MovieGroupingFactory();
+				var movieGrouping = factory.GetVideoGroupMedia(videoGroup.MovieGroupingType);
+				if (movieGrouping != null)
+				{
+					var userUniqueId = Request.UserUniqueId!.Value;
+					return movieGrouping.GetMovies(userUniqueId, GetUserMediaItems(), videoGroup.Count, videoGroup.Options, all);
+				}
+			}
+            
             throw new Exception("Unknown grouping");
         }
 
+		[Api]
+		[Authorize]
+		public IEnumerable<VideoGroup> GetVideoGroups()
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			return Module.ObjectStore!.Retrieve<VideoGroup>()
+				.ToList();
+		}
+
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public void UpdateVideoGroups(IEnumerable<VideoGroup> videoGroups)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			Module.ObjectStore.ProcessTransactionGroup(t =>
+			{
+				foreach (var videoGroup in videoGroups)
+				{
+					if (videoGroup.Id != 0) //Ignore any new ones
+					{
+						t.Store(videoGroup);
+					}
+				}
+			});
+		}
+
         [Api]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
+        public IEnumerable<FolderTree> GetVideoFolders()
+        {
+            if (Module.ObjectStore == null)
+            {
+                throw new NullReferenceException("ObjectStore is null");
+            }
+
+            var folders = Module.ObjectStore.Retrieve<Folder>()
+                .ToList()
+                .OrderBy(f => f.ParentId)
+                .ThenBy(s => s.Name);
+
+            var roots = folders.Where(f => f.ParentId == -1);
+
+            var result = new List<FolderTree>();
+            foreach (var folder in roots)
+            {
+                result.Add(RecursiveGetSubFolders(folder, folders));
+            }
+
+            return result;
+        }
+
+        private FolderTree RecursiveGetSubFolders(Folder folder, IEnumerable<Folder> folders)
+        {
+            var result = new FolderTree();
+
+            var subFolders = folders.Where(f => f.ParentId == folder.Id);
+            result.SubFolders = new List<FolderTree>();
+			result.Name = folder.Name;
+            result.Id = folder.Id;
+
+			foreach (var subFolder in subFolders) 
+            {
+                result.SubFolders.Add(RecursiveGetSubFolders(subFolder, folders));
+			}
+
+            result.SubFolders = result.SubFolders
+                .OrderBy(s => s.Name)
+                .ToList();
+            return result;
+        }
+
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public VideoGroup AddVideoGroup(VideoGroup videoGroup)
+        {
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			Module.ObjectStore.Store(videoGroup);
+            return videoGroup; //This returns the object with the id
+		}
+
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public void DeleteVideoGroup(VideoGroup videoGroup)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			Module.ObjectStore.Remove(videoGroup);
+		}
+
+		[Api]
         [Authorize]
         public IEnumerable<UserMediaItemSearchResult> Search(string search, int count)
         {
@@ -1341,7 +1505,6 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize(MediaServerPermissions.ModifySourcesPermissions)]
         public Stream? GetUserMediaItemImage(Guid uniqueKey)
         {
             if (Module.ObjectStore == null)
@@ -1362,7 +1525,7 @@ namespace MediaServer.Api
         }
 
 		[Api]
-		[Authorize(MediaServerPermissions.ModifySourcesPermissions)]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
 		public UserMediaItem? GetUserMediaItem(Guid uniqueKey)
 		{
 			if (Module.ObjectStore == null)
@@ -1650,5 +1813,17 @@ namespace MediaServer.Api
     {
         public bool Success { get; set; }
         public string? Message { get; set; }
+    }
+
+    public class Access {
+		public bool SettingsPermissions { get; set; }
+	}
+
+    public class FolderTree : Folder {
+        public List<FolderTree>? SubFolders { get; set; }
+    }
+
+    public class StringValue {
+        public string? Value { get; set; }
     }
 }

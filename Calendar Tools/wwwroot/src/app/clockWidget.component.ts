@@ -33,20 +33,22 @@ export class ClockWidgetComponent {
     public ShowSeconds: boolean = false;
 
     private Setup() {
-        if (this.Settings.TwentyFourHour != null) {
-            this.TwentyFourHour = this.Settings.TwentyFourHour;
-        }
+        if (this.Settings != null) {
+            if (this.Settings.TwentyFourHour != null) {
+                this.TwentyFourHour = this.Settings.TwentyFourHour;
+            }
 
-        if (this.Settings.ShowSeconds != null) {
-            this.ShowSeconds = this.Settings.ShowSeconds;
-        }
+            if (this.Settings.ShowSeconds != null) {
+                this.ShowSeconds = this.Settings.ShowSeconds;
+            }
 
-        if (this.Settings.Color != null) {
-            this.hostRef!.nativeElement.style.setProperty("--color", this.Settings.Color);
-        }
+            if (this.Settings.Color != null) {
+                this.hostRef!.nativeElement.style.setProperty("--color", this.Settings.Color);
+            }
 
-        if (this.Settings.BackgroundColor != null) {
-            this.hostRef!.nativeElement.style.setProperty("--backgroundColor", this.Settings.BackgroundColor);
+            if (this.Settings.BackgroundColor != null) {
+                this.hostRef!.nativeElement.style.setProperty("--backgroundColor", this.Settings.BackgroundColor);
+            }
         }
     }
 
@@ -62,7 +64,8 @@ export class ClockWidgetComponent {
         let minutes: string;
         let seconds = "";
 
-        if (!this.TwentyFourHour) {
+        if (this.TwentyFourHour == null ||
+            !this.TwentyFourHour) {
             part = h > 12 ? "PM" : "AM";
             var h = h % 12;
             if (h == 0) {
@@ -76,7 +79,8 @@ export class ClockWidgetComponent {
             hours = this.Harold(12);
         }
 
-        if (this.ShowSeconds == true) {
+        if (this.ShowSeconds == null ||
+            this.ShowSeconds == true) {
             seconds = ":" + this.Harold(s);
         }
 

@@ -52,7 +52,7 @@ namespace MediaServer
             }
             _mappedRequestProcessors = Assembly.GetExecutingAssembly().GetMappedRequestProcessors();
 
-            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaServer.Itamure.svg");
+            var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("MediaServer.MediaServerIcon.svg");
             var appIcon = new AppIcon(iconStream, "Image/svg+xml");
 
             _syncTask = new SyncTask();
@@ -125,7 +125,8 @@ namespace MediaServer
             {
                 SetupDefaultMediaTypeFiles();
                 SetupDefaultMediaRatings();
-            }
+                SetupVideoGroupings();
+			}
 
             var settings = Module.ObjectStore.GetSetting<AppSettings>("AppSettings");
             if (settings == null)
@@ -139,7 +140,12 @@ namespace MediaServer
             //ShowWidget(new PumphreyMediaServerWidget());
         }
 
-        internal new IEnumerable<IUser> GetUsers()
+        internal bool UserHasAccess(Guid uniqueId, MediaServerPermissions userPermission)
+        {
+            return base.UserHasAccess(uniqueId, userPermission);
+		}
+
+		internal new IEnumerable<IUser> GetUsers()
         {
             return base.GetUsers();
         }
@@ -156,7 +162,7 @@ namespace MediaServer
 			ObjectStore?.Dispose();
             ObjectStore = null;
 
-            _stream!.Close();
+            _stream?.Close();
             _stream = null;
         }
 
@@ -221,5 +227,16 @@ namespace MediaServer
                 ObjectStore.Store<Rating>(new Rating() { MediaSubType = MediaSubType.Pictures, Name = "General" });
             }
         }
-    }
+
+		private void SetupVideoGroupings()
+		{
+			if (ObjectStore != null)
+			{
+                ObjectStore.DropCollection("VideoGroup");
+
+				ObjectStore.Store<VideoGroup>(new VideoGroup() { MovieGroupingType = MovieGroupingType.ContinueWatching, Name = "Continue Watching", Count = 10, Order = 1 });
+				ObjectStore.Store<VideoGroup>(new VideoGroup() { MovieGroupingType = MovieGroupingType.Newest, Name = "Recent Additions", Count = 10, Order = 2 });
+			}
+		}
+	}
 }

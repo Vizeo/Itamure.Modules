@@ -18,6 +18,7 @@ import { SearchComponent } from './search.component';
 import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
+import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
 
 const routes: Routes = [
     {
@@ -47,8 +48,9 @@ const routes: Routes = [
                     { path: 'Unassigned', component: UnassignedVideoListComponent },
                 ]
             },
-            { path: 'Audio', component: AudioSettingComponent },
-            { path: 'Images', component: ImagesSettingComponent },
+            { path: 'VideoGroups', component: VideoGroupManagerComponent },
+            //{ path: 'Audio', component: AudioSettingComponent },
+            //{ path: 'Images', component: ImagesSettingComponent },
         ]
     },
     { path: '', component: MediaServerAppComponent },

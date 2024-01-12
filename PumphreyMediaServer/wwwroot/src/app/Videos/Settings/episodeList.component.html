@@ -6,12 +6,12 @@
     </ng-container>
 
     <ng-template #list>
-        <div class="episods" sortDragList (sortChange)="EpisodeSortChange($event)">
+        <div class="episods" elementDragArea (sortChange)="EpisodeSortChange($event)">
             <div *ngFor="let episode of EpisodeVideoMediaItems"
                  class="episode"
                  [ngClass]="{selected: IsSelected(episode)}"
                  (click)="Select($event, episode)"
-                 [sortDrag]="episode">
+                 [elementDrag]="episode">
 
                 <div class="dragHandle" dragHandle>
 

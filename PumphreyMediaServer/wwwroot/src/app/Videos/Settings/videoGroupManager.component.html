@@ -1,0 +1,102 @@
+<div class="movieGroupingManager">
+	<div class="toolbar">
+		<button class="addButton" popovertarget="videoGroupingSelect">
+			<div class="content">Add Video Group</div>
+			<div class="arrow"></div>
+		</button>
+	</div>
+
+	<div class="videoGroups">
+		<div class="sortedList" *ngIf="SortedGroups != null" elementDragArea
+			 (sortChange)="SortChange($event)"
+			 (removed)="SortRemoved($event)"
+			 (added)="SortAdded($event)">
+			<div class="section">
+				Sorted Video Groups
+			</div>
+			<div *ngFor="let videoGroup of SortedGroups" class="videoGroup" [ngClass]="{unset: videoGroup.Id == null}" [elementDrag]="videoGroup">
+				<div class="dragHandle" dragHandle>
+				</div>
+				<ng-container [ngTemplateOutlet]="videoGroupTemplate" [ngTemplateOutletContext]="{ $implicit: videoGroup}"></ng-container>
+			</div>
+		</div>
+		<div class="randomList" *ngIf="RandomGroups != null" elementDragArea
+			 (removed)="RandomRemoved($event)"
+			 (added)="RandomAdded($event)">
+			<div class="section">
+				Random Video Groups
+			</div>
+			<div class="videoGroup" *ngFor="let videoGroup of RandomGroups" [ngClass]="{unset: videoGroup.Id == null}" [elementDrag]="videoGroup">
+				<div class="dragHandle" dragHandle>
+				</div>
+				<ng-container [ngTemplateOutlet]="videoGroupTemplate" [ngTemplateOutletContext]="{ $implicit: videoGroup}"></ng-container>
+			</div>
+		</div>
+	</div>
+</div>
+
+<ng-template #videoGroupTemplate let-videoGroup>
+	<div class="content">
+		<div class="header">
+			<div class="title">
+				{{GetMovieGroupingTypeName(videoGroup.MovieGroupingType!)}}
+			</div>
+			<div class="icons">
+				<icon class="tool" name="Gear" (click)="ShowVideoGroupSetup(videoGroup)" *ngIf="RequiresSetup(videoGroup)"></icon>
+				<icon class="tool" name="Trashcan" (click)="DeleteVideoGroup(videoGroup)"></icon>
+			</div>
+		</div>
+
+		<div class="videoGroupProperties">
+			<div class="property">
+				<label [ngClass]="{invalid: !name.Valid}">Name:</label>
+				<input type="text"
+					   [(ngModel)]="videoGroup.Name"
+					   [minLength]="3"
+					   [required]="true"
+					   (blur)="UpdateVideoGroup(videoGroup)"
+					   #name="validator"					   
+					   groupValidator="videoGroup" />
+			</div>
+			<div class="property">
+				<label [ngClass]="{invalid: !count.Valid}">Count:</label>
+				<input type="number"
+					   [min]="10"
+					   #count="validator"
+					   groupValidator="videoGroup"
+					   [required]="true"
+					   [(ngModel)]="videoGroup.Count"
+					   (blur)="UpdateVideoGroup(videoGroup)" />
+			</div>
+		</div>
+	</div>
+</ng-template>
+
+<div id="videoGroupingSelect" popover>
+	<div class="contextMenu">
+		<button (click)="CreateContinueWatchingVideoGroup()" popovertarget="videoGroupingSelect" popovertargetaction="hide">Continue Watching</button>
+		<button (click)="CreateNewestVideoGroup()" popovertarget="videoGroupingSelect" popovertargetaction="hide">Newest</button>
+		<button (click)="CreateFolderVideoGroup()" popovertarget="videoGroupingSelect" popovertargetaction="hide">Folder</button>
+		<button (click)="CreateGenreVideoGroup()" popovertarget="videoGroupingSelect" popovertargetaction="hide">Genres</button>
+		<button (click)="CreateDateRangeVideoGroup()" popovertarget="videoGroupingSelect" popovertargetaction="hide">Date Range</button>
+		<button (click)="CreateRatingVideoGroup()" popovertarget="videoGroupingSelect" popovertargetaction="hide">Ratings</button>
+	</div>
+</div>
+
+<dialog #videoGroupSetup id="videoGroupSetup">
+	<div class="title" *ngIf="EditingVideoGroup != null">
+		Setup {{EditingVideoGroup.Name}}
+	</div>
+	<div class="content" *ngIf="EditingVideoGroup != null">
+		<ng-container [ngSwitch]="EditingVideoGroup.MovieGroupingType">
+			<folderVideoGroup *ngSwitchCase="MovieGroupingType.Folder" [videoGroup]="EditingVideoGroup"></folderVideoGroup>
+			<dateRangeVideoGroup *ngSwitchCase="MovieGroupingType.Range" [videoGroup]="EditingVideoGroup"></dateRangeVideoGroup>
+			<ratingVideoGroup *ngSwitchCase="MovieGroupingType.Rating" [videoGroup]="EditingVideoGroup"></ratingVideoGroup>
+			<genreVideoGroup *ngSwitchCase="MovieGroupingType.Genres" [videoGroup]="EditingVideoGroup"></genreVideoGroup>
+		</ng-container>
+	</div>
+	<div class="buttons">
+		<button (click)="SaveVideGroupSetup()" [disabled]="!CanSaveVideoGroupSetup()">Save</button>
+		<button (click)="CancelVideGroupSetup()">Cancel</button>
+	</div>
+</dialog>

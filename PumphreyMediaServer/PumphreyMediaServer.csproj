@@ -56,10 +56,27 @@
 	  <None Remove="wwwroot\src\app\remoteWebScreen.component.ts" />
 	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\movieGrouping.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\movieGrouping.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\dateRangeVideoGroup.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\episodeList.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\episodeList.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\episodeVideo.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\episodeVideo.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\folderVideoGroup - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\folderVideoGroup - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\folderVideoGroup.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\genreVideoGroup.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\ratingVideoGroup - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\ratingVideoGroup - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\ratingVideoGroup.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\videoGroupBase.component.ts" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\videoGroupManager.component.ts" />
+	  <None Remove="wwwroot\src\assets\MediaServerIcon.svg" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Itamure.svg" />
+		<EmbeddedResource Include="MediaServerIcon.svg" />
 	</ItemGroup>
 	
 	<ItemGroup>

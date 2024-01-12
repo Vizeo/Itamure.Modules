@@ -10,8 +10,8 @@
     </ng-container>
     
     <ng-template #list>
-        <div class="seasons" sortDragList (sortChange)="SeasonSortChange($event)">
-            <div *ngFor="let season of Series!.Seasons!" class="season" [sortDrag]="season">
+        <div class="seasons" elementDragArea (sortChange)="SeasonSortChange($event)">
+            <div *ngFor="let season of Series!.Seasons!" class="season" [elementDrag]="season">
                 <season [season]="season"></season>
             </div>
         </div>
