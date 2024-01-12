@@ -1,6 +1,7 @@
 <div class="remoteReceiver">
 	<video controls #video 
 		(timeupdate)="PositionChanged()" 
+		(loadeddata)="VideoLoaded()"
 		(playing)="StatusChange('Playing')"
 		(pause)="StatusChange('Paused')">
 		Browser not supported

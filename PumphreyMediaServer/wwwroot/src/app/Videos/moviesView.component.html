@@ -1,11 +1,3 @@
 <div class="groupings">   
     <movieGrouping *ngFor="let group of VideoGroups" [videoGroup]="group" (selected)="ShowDetail($event)"></movieGrouping>
-
-    <!--<movieGrouping title="Continue Watching" [canShowAll]="false" [count]="10" [grouping]="MovieGroupingType.ContinueWatching" (selected)="ShowDetail($event)"></movieGrouping>
-    <movieGrouping title="New Additions" [canShowAll]="false" [count]="10" [grouping]="MovieGroupingType.Newest" (selected)="ShowDetail($event)"></movieGrouping>-->
-    <!--<movieGrouping title="Action Adventure" [count]="10" [grouping]="MovieGroupingType.Genres" [options]="{genres: ['action', 'adventure']}" (selected)="ShowDetail($event)"></movieGrouping>-->
-    <!--<movieGrouping title="4K" [count]="10" [grouping]="MovieGroupingType.Folder" [options]="{path: '4K Movies'}" (selected)="ShowDetail($event)"></movieGrouping>-->
-    <!--<movieGrouping title="Comedies" [count]="10" [grouping]="MovieGroupingType.Genres" [options]="{genres: ['comedy']}" (selected)="ShowDetail($event)"></movieGrouping>
-    <movieGrouping title="Oldies" [count]="10" [grouping]="MovieGroupingType.Range" [options]="{start: 1950, end: 2000}" (selected)="ShowDetail($event)"></movieGrouping>
-    <movieGrouping title="Kids" [count]="10" [grouping]="MovieGroupingType.Rating" [options]="{Ratings: ['PG', 'G']}" (selected)="ShowDetail($event)"></movieGrouping>-->
 </div>

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 
 @Component({
 	selector: 'remoteWebScreen',
@@ -11,6 +11,7 @@ export class RemoteWebScreenComponent {
 
 	private _webSocket: WebSocket | null = null;
 	private _lastPostionUpdate: Date | null = null;
+	private _startPosition: number | null = null;
 
 	public ngAfterViewInit() {
 		this.Connect();
@@ -42,7 +43,6 @@ export class RemoteWebScreenComponent {
 		this._webSocket = new WebSocket(host);
 		this._webSocket.onopen = (event) => {
 			this.Send({ State: "Ready" });
-			(<any>window).maximizeWindow();
 		}
 
 		this._webSocket.onmessage = (message) => {
@@ -51,7 +51,6 @@ export class RemoteWebScreenComponent {
 			switch ((<ICommand>data).State) {
 				case "Load":
 					this.Load(<LoadCommand>data);
-					this.Play();
 					break;
 				case "Play":
 					this.Play();
@@ -78,8 +77,20 @@ export class RemoteWebScreenComponent {
 	}
 
 	private Load(playCommand: LoadCommand) {
+		(<any>window).maximizeWindow();
 		this._video.nativeElement.load();
 		this._video.nativeElement.src = "/mediaServer/streamingService?UniqueKey=" + playCommand.UniqueLink;
+		this._startPosition = playCommand.Position;
+	}
+
+	public VideoLoaded() {
+		if (this._startPosition != null &&
+			this._startPosition > 0) {
+			this._video.nativeElement.currentTime = this._startPosition;
+			this._startPosition = null;
+		}
+
+		this._video.nativeElement.play();
 	}
 
 	private Play() {
@@ -118,6 +129,13 @@ export class RemoteWebScreenComponent {
 	public Send(update: Update) {
 		var json = JSON.stringify(update);
 		this._webSocket?.send(json);
+	}
+
+	@HostListener('window:unload')
+	public NotifyStop() {
+		let termindatedUpdate = new Update();
+		termindatedUpdate.State = "Terminated";
+		this.Send(termindatedUpdate);
 	}
 }
 

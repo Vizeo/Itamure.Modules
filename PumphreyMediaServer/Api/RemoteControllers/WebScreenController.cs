@@ -37,7 +37,7 @@ namespace MediaServer.Api.RemoteControllers
                                 var mediaReceiver = new MediaReceiver()
                                 {
                                     Id = screen.Id.ToString(),
-                                    Name = screen.Name,
+                                    Name = $"{screen.Name} - {screen.User.Name}",
                                     ReceiverType = "Web"
                                 };
 
@@ -129,6 +129,9 @@ namespace MediaServer.Api.RemoteControllers
 								updateEvent.Status = receiver.State;
 								Module.CurrentModule?.SendEvent(updateEvent);
 							}
+							break;
+						case "Terminated":
+							Stop(screen);
 							break;
 					}
 				};               
