@@ -1,0 +1,8 @@
+<div class="activityWidget">
+	<div class="receiversList">
+		<div class="remotePlayer" *ngFor="let receiver of Receivers">
+			<remotePlayer [receiver]="receiver" [enableControls]="false">
+			</remotePlayer>
+		</div>
+	</div>
+</div>

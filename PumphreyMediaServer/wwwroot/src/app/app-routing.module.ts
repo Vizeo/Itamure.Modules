@@ -8,9 +8,7 @@ import { MusicViewComponent } from './musicView.component';
 import { MediaFileTypesSettingComponent } from './mediaFileTypesSetting.component';
 import { VideoSettingComponent } from './Videos/Settings/videoSettings.component';
 import { SourcesSettingsComponent } from './sourcesSettings.component';
-import { AudioSettingComponent } from './audioSettings.component';
 import { ImagesViewComponent } from './imagesView.component';
-import { ImagesSettingComponent } from './imagesSettings.component';
 import { UnassignedVideoListComponent } from './Videos/Settings/unassignedVideoList.component';
 import { SeriesDetailsComponent } from './Videos/seriesDetails.component';
 import { videoDetailsComponent } from './Videos/videoDetails.component';
@@ -19,6 +17,9 @@ import { EpisodeDetailsComponent } from './Videos/episodeDetails.component';
 import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component';
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
 import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
+import { ActivityWidgetComponent } from './widgets/activityWidget.component';
+//import { AudioSettingComponent } from './audioSettings.component';
+//import { ImagesSettingComponent } from './imagesSettings.component';
 
 const routes: Routes = [
     {
@@ -34,7 +35,7 @@ const routes: Routes = [
             { path: 'Pictures', component: ImagesViewComponent },
             { path: 'Search', component: SearchComponent },
             { path: 'FullGroupView', component: FullMovieGroupingComponent }
-        ]
+        ],
     },
     {
         path: 'Settings', component: MediaServerSettingsComponent,
@@ -54,7 +55,8 @@ const routes: Routes = [
         ]
     },
     { path: '', component: MediaServerAppComponent },
-    { path: 'RemoteWebScreen', component: RemoteWebScreenComponent }
+    { path: 'RemoteWebScreen', component: RemoteWebScreenComponent },
+    { path: 'ActivityWidget', component: ActivityWidgetComponent },
 ];
 
 @NgModule({

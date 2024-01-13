@@ -19,6 +19,9 @@ export class RemotePlayerComponent {
 
     private _funcs: Function[] = new Array<Function>();
 
+    @Input("enableControls")
+    public EnableControls: boolean = true;
+
     @Input("receiver")
     public set Receiver(val: Receiver) {
         if (this._receiver == null) {
@@ -116,38 +119,40 @@ export class RemotePlayerComponent {
     public Position: number = 0;
 
     public Seek(event: MouseEvent) {
-        event.preventDefault();
+        if (this.EnableControls) {
+            event.preventDefault();
 
-        var rec = this._progress.nativeElement.getBoundingClientRect();
-        this._startPosition = rec.x;
-        this._dragging = true;
+            var rec = this._progress.nativeElement.getBoundingClientRect();
+            this._startPosition = rec.x;
+            this._dragging = true;
 
-        this._funcs.push(this.renderer.listen('document', 'mousemove', e => {
-            if (this._dragging) {
-                let position = e.clientX - this._startPosition;
-                if (position > 0 && position < this._progress.nativeElement.clientWidth) {
-                    this._currentPosition.nativeElement.style.left = position + "px"
+            this._funcs.push(this.renderer.listen('document', 'mousemove', e => {
+                if (this._dragging) {
+                    let position = e.clientX - this._startPosition;
+                    if (position > 0 && position < this._progress.nativeElement.clientWidth) {
+                        this._currentPosition.nativeElement.style.left = position + "px"
+                    }
                 }
-            }
-        }));
+            }));
 
-        this._funcs.push(this.renderer.listen('document', 'mouseup', e => {
-            if (this._dragging) {
-                let position = e.clientX - this._startPosition;
-                if (position < 0) {
-                    position = 0;
-                }
-                if (position > this._progress.nativeElement.clientWidth) {
-                    position = this._progress.nativeElement.clientWidth;
-                }
-                let percent = position / this._progress.nativeElement.clientWidth;
-                let seconds = this.Receiver!.Length! * percent;
+            this._funcs.push(this.renderer.listen('document', 'mouseup', e => {
+                if (this._dragging) {
+                    let position = e.clientX - this._startPosition;
+                    if (position < 0) {
+                        position = 0;
+                    }
+                    if (position > this._progress.nativeElement.clientWidth) {
+                        position = this._progress.nativeElement.clientWidth;
+                    }
+                    let percent = position / this._progress.nativeElement.clientWidth;
+                    let seconds = this.Receiver!.Length! * percent;
 
-                this._funcs.forEach(f => f());          
-                this._dragging = false;
-                this.Receiver!.Seek(seconds);
-            }
-        }));
+                    this._funcs.forEach(f => f());
+                    this._dragging = false;
+                    this.Receiver!.Seek(seconds);
+                }
+            }));
+        }
     }
 
     public PauseOrPlay() {

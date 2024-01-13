@@ -7,7 +7,9 @@ namespace MediaServer
     {
         [PermissionDescription("Media Server App")]
         AppPermissions,
-        [PermissionDescription("Media Server Settings")]
+		[PermissionDescription("Activity Widget")]
+		ActivityPermissions,
+		[PermissionDescription("Media Server Settings")]
         SettingsPermissions,
 	}
 }

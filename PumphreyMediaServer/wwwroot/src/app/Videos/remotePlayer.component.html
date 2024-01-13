@@ -30,7 +30,7 @@
 			</ng-template>
 		</div>
 
-		<div class="buttons" *ngIf="Receiver.MediaName != null && Receiver.MediaName.length > 0">
+		<div class="buttons" *ngIf="Receiver.MediaName != null && Receiver.MediaName.length > 0 && EnableControls">
 			<button (click)="PauseOrPlay()" *ngIf="Receiver.Status != 'Playing'">
 				<img class="castControls" src="/MediaServer/assets/CastPlayButton.svg" />
 			</button>

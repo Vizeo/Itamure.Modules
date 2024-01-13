@@ -10,6 +10,7 @@ using MediaServer.Events;
 using MediaServer.Omdb;
 using MediaServer.SubServices;
 using MediaServer.Tasks;
+using MediaServer.Widgets;
 using System.IO;
 using System.Reflection;
 
@@ -58,8 +59,7 @@ namespace MediaServer
             _syncTask = new SyncTask();
             AddScheduledTasks(_syncTask);
 
-            //RegisterWidget<PumphreyMediaServerWidget>("PumphreyMediaServer Widget", PumphreyMediaServerPermissions.WidgetPermissions);
-
+            RegisterWidget<ActivityWidget>("Activity Widget", MediaServerPermissions.ActivityPermissions);
             RegisterApp(new Itamure.Core.App("Media Server", $"/{WEB_ROUTE_BASE}/App", appIcon, MediaServerPermissions.AppPermissions));
 			RegisterEvent<ReceiverEvent>("Receiver Update", MediaServerPermissions.AppPermissions);
 			RegisterEvent<ReceiverAddedEvent>("Receiver Added", MediaServerPermissions.AppPermissions);
@@ -137,7 +137,7 @@ namespace MediaServer
 
             UpnpSubService.Start();
 
-            //ShowWidget(new PumphreyMediaServerWidget());
+            ShowWidget(new ActivityWidget());
         }
 
         internal bool UserHasAccess(Guid uniqueId, MediaServerPermissions userPermission)

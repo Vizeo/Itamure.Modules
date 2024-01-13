@@ -54,6 +54,7 @@ import { FolderVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/f
 import { DateRangeVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/dateRangeVideoGroup.component';
 import { RatingVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/ratingVideoGroup.component';
 import { GenreVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/genreVideoGroup.component';
+import { ActivityWidgetComponent } from './widgets/activityWidget.component';
 
 @NgModule({
     declarations: [
@@ -106,7 +107,8 @@ import { GenreVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/ge
         FolderVideoGroupComponent,
         DateRangeVideoGroupComponent,
         RatingVideoGroupComponent,
-        GenreVideoGroupComponent
+        GenreVideoGroupComponent,
+        ActivityWidgetComponent,
     ],
     imports: [
         BrowserModule,

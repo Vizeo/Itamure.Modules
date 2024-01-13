@@ -72,6 +72,9 @@
 	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\ratingVideoGroup.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\videoGroupBase.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\videoGroupManager.component.ts" />
+	  <None Remove="wwwroot\src\app\widgets\activityWidget.component.ts" />
+	  <None Remove="wwwroot\src\app\widgets\mainMenu.component.html" />
+	  <None Remove="wwwroot\src\app\widgets\mainMenu.component.less" />
 	  <None Remove="wwwroot\src\assets\MediaServerIcon.svg" />
 	</ItemGroup>
 
