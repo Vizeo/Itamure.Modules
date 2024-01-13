@@ -6,20 +6,15 @@
     box-sizing: border-box;
 
     .clock {
-        font-size: 23vw;
         display: flex;
         justify-content: center;
         align-items: center;
         flex: 1 1 auto;
 
-        .part {
-            margin-left: 4vw;
-        }
-
-        &.showSeconds {
-            &:not(.twentyFourHour) {
-                font-size: 17vw;
-            }
+        .clockDisplay {
+            white-space: nowrap;
+            transition: transform 1s;
+            transform: scale(var(--scale, 1));
         }
     }
 }

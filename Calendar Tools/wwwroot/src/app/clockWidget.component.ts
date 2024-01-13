@@ -1,6 +1,4 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
-import { CalendarToolsService, CalendarItemData } from './Services/calendarTools.service';
 
 @Component({
     selector: 'clockWidget',
@@ -22,15 +20,15 @@ export class ClockWidgetComponent {
     } 
 
     private _handle: any = null;
+    private _mutationObserver?: MutationObserver;
 
-    //public Hours: string = "00";
-    //public Minutes: string = "00";
-    //public Seconds: string = "00";
-    //public Part: string = "AM";
     public Time: string = "00:00:00";
     public Settings: any | null = null
     public TwentyFourHour: boolean = false;
     public ShowSeconds: boolean = false;
+
+    @ViewChild("clock")
+    private _clock: ElementRef<HTMLDivElement> | undefined; 
 
     private Setup() {
         if (this.Settings != null) {
@@ -50,6 +48,31 @@ export class ClockWidgetComponent {
                 this.hostRef!.nativeElement.style.setProperty("--backgroundColor", this.Settings.BackgroundColor);
             }
         }
+    }
+
+    private ResizeContent() {
+        //console.log(this._clock, this._clock!.nativeElement.getBoundingClientRect().width);
+
+        //Find the smaller of the container
+        let clockRec = this._clock!.nativeElement.getBoundingClientRect();
+        let parentRec = this.hostRef.nativeElement.getBoundingClientRect();
+
+        let heightRatio = (this.hostRef.nativeElement.offsetHeight - 20) / clockRec.height;
+        let widthRatio = (this.hostRef.nativeElement.offsetWidth - 20) / clockRec.width;
+
+        let ratio = Math.min(heightRatio, widthRatio);
+        
+
+        console.log("ratio", ratio);
+        this.hostRef!.nativeElement.style.setProperty("--scale", ratio.toString());
+    }
+
+    ngAfterViewInit() {
+        this.ResizeContent();
+        //setTimeout(() => {
+        //    this._mutationObserver = new MutationObserver(() => this.ResizeContent());
+        //    this._mutationObserver.observe(this.hostRef.nativeElement, { attributes: true, childList: true, characterData: true, subtree: true, attributeOldValue: true });
+        //});
     }
 
     private UpdateClock() {
