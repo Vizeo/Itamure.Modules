@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'TodayWidget', component: TodayWidgetComponent },
   { path: 'TodayWidgetSettings', component: TodayWidgetSettingsComponent },
   { path: 'ClockWidget', component: ClockWidgetComponent },
-  { path: 'ClockWidgetSettings', component: ClockWidgetSettingsComponent },
+  { path: 'ClockWidgetSetting', component: ClockWidgetSettingsComponent },
   { path: 'CalendarDisplay', component: CalendarDisplayComponent },
   { path: '', component: SettingsComponent }
 ];

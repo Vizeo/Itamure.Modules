@@ -6,6 +6,8 @@ using System.Collections.Concurrent;
 using MediaServer.Entities;
 using MediaServer.Api;
 using static MediaServer.Api.RemoteControllers.WebScreenController;
+using Itamure.Core;
+using UpnpLib.Devices;
 
 namespace MediaServer.SubServices
 {
@@ -14,13 +16,14 @@ namespace MediaServer.SubServices
 		internal static SsdpServer? SsdpServer { get; private set; }
 		private static bool _running = false;
 		private static ConcurrentDictionary<string, ReceiverEvent> _recentEvents = new ConcurrentDictionary<string, ReceiverEvent>();
+		private static Cache<Guid, UserMediaReference> _recentItemReferences = new Cache<Guid, UserMediaReference>();
 
 		public static void Start()
 		{
 			_running = true;
 			SsdpServer = new SsdpServer();
 			SsdpServer.DeviceDiscovered += SsdpServerDeviceDiscovered;
-			SsdpServer.DeviceOffline += SsdpServerDeviceOffline; 
+			SsdpServer.DeviceOffline += (s, e) => SsdpServerDeviceOffline(e.Device); 
 			SsdpServer.Start();
 			SsdpServer.Search(KnownDevices.MediaRenderer1);
 			Task.Run(() => ReceiverPositionUpdateTimer());
@@ -55,12 +58,12 @@ namespace MediaServer.SubServices
 			catch { }
 		}
 
-		private static void SsdpServerDeviceOffline(object? sender, DeviceChangeArg e)
+		private static void SsdpServerDeviceOffline(Device device)
 		{
-			if (e.Device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
+			if (device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
 			{
-				var indexOfIdEnd = e.Device.UniqueServiceName.IndexOf("::");
-				var Id = e.Device.UniqueServiceName.Substring(5, indexOfIdEnd - 5);
+				var indexOfIdEnd = device.UniqueServiceName.IndexOf("::");
+				var Id = device.UniqueServiceName.Substring(5, indexOfIdEnd - 5);
 
 				Module.CurrentModule?.SendEvent(new ReceiverRemovedEvent()
 				{
@@ -80,7 +83,6 @@ namespace MediaServer.SubServices
 					{
 						try
 						{
-							device.Load().Wait();
 							await device.Load();
 							var service = device.Services.FirstOrDefault() as UpnpLib.Devices.Services.Media.AVTransport_1.AVTransport1;
 							if (service != null)
@@ -135,7 +137,7 @@ namespace MediaServer.SubServices
 						}
 						catch
 						{
-							//Send a removed event
+							SsdpServerDeviceOffline(device);
 						}
 					}
 				}
@@ -157,23 +159,33 @@ namespace MediaServer.SubServices
 				if(Guid.TryParse(mediaId, out var mediaLinkId) &&
 					Module.ObjectStore != null)
 				{
-					var userMediaReferences = Module.ObjectStore.Retrieve<UserMediaReference>()
-						.First(u => u.UniqueLink == mediaLinkId);
-					receiverEvent.UniqueLink = userMediaReferences.UniqueLink.ToString();
-					var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(userMediaReferences.MediaItemId);
-					if(mediaItem != null) 
+					//Pull from cache if available
+					var userMediaReferences = _recentItemReferences.GetValue(mediaLinkId);
+					if (userMediaReferences == null)
 					{
-						receiverEvent.MediaName = mediaItem.Name;
+						userMediaReferences = Module.ObjectStore.Retrieve<UserMediaReference>()
+							.FirstOrDefault(u => u.UniqueLink == mediaLinkId);
 					}
+					//Store in cache even if null
+					_recentItemReferences.StoreValue(mediaLinkId, userMediaReferences, Convert.ToInt32(TimeSpan.FromMinutes(5))); 
 
-					var users = Module.CurrentModule!.GetUsers();
-					var user = users.FirstOrDefault(u => u.Id == userMediaReferences.UserUniqueId);
-					if(user != null) 
-					{
-						receiverEvent.UserName = user.Name;
+					if (userMediaReferences != null) {
+						receiverEvent.UniqueLink = userMediaReferences.UniqueLink.ToString();
+						var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(userMediaReferences.MediaItemId);
+						if (mediaItem != null)
+						{
+							receiverEvent.MediaName = mediaItem.Name;
+						}
+
+						var users = Module.CurrentModule!.GetUsers();
+						var user = users.FirstOrDefault(u => u.Id == userMediaReferences.UserUniqueId);
+						if (user != null)
+						{
+							receiverEvent.UserName = user.Name;
+						}
+
+						result = userMediaReferences.Id;
 					}
-
-					result = userMediaReferences.Id;
 				}
 			}
 

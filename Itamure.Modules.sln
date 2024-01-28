@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32825.248
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Octoprint Monitor", "Octoprint Monitor\Octoprint Monitor.csproj", "{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "T4 Scripts", "T4 Scripts", "{006F3FDF-3353-4904-97DE-B4BE8F8B7339}"
 	ProjectSection(SolutionItems) = preProject
 		..\..\..\..\..\Source Code\T4Scripts\GenerateAngularApi.t4 = ..\..\..\..\..\Source Code\T4Scripts\GenerateAngularApi.t4
@@ -16,8 +14,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegratedWebServer.Core", "..\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj", "{3D54B608-FAF1-455A-9090-253F38809BEB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Itamure.Core", "..\Itamure\Itamure.Core\Itamure.Core.csproj", "{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OctoprintApi", "OctoprintApi\OctoprintApi.csproj", "{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calendar Tools", "Calendar Tools\Calendar Tools.csproj", "{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}"
 EndProject
@@ -43,10 +39,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C292B4DA-0BEA-42E9-A66D-4843D9704DB4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{39BCAA5A-2852-422B-B9D6-ABAC4B45F9D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,10 +51,6 @@ Global
 		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{445DEB04-3FBB-4835-A991-6E11CE9D2DD8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{95D01208-BAC8-4AE5-AF98-7B70F5AEC184}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7864713-B4E7-483E-BCBE-71CE97E9A3DB}.Release|Any CPU.ActiveCfg = Release|Any CPU

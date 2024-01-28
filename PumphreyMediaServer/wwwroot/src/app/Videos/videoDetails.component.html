@@ -8,6 +8,12 @@
             <div class="title">
                 {{Movie.Name}}
             </div>
+            <div class="actions">
+                <img class="unknown" title="Restart" src="/MediaServer/assets/RestartButton.svg" *ngIf="ShowRestart" (click)="RestartMovie()" />
+                <img class="unknown" title="Play" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
+                <img class="unknown" title="Cast" src="/MediaServer/assets/CastToButton.svg" (click)="ShowCastDevices()" />
+                <label>Watch Movie</label>
+            </div>
             <div class="plot">{{Movie.Description!}}</div>
             <div class="progress">
                 <div class="progressPercent" [style.width.%]="PositionPercent">
@@ -52,12 +58,6 @@
                         {{Directors}}
                     </div>
                 </div>
-            </div>
-            <div class="actions">
-                <img class="unknown" title="Restart" src="/MediaServer/assets/RestartButton.svg" *ngIf="ShowRestart" (click)="RestartMovie()" />
-                <img class="unknown" title="Play" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
-                <img class="unknown" title="Cast" src="/MediaServer/assets/CastToButton.svg" (click)="ShowCastDevices()" />
-                <label>Watch Movie</label>
             </div>
         </div>
     </ng-container>

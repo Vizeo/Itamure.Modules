@@ -1,42 +1,20 @@
 <div class="list" #list>
-<<<<<<< HEAD
-    <div class="day" *ngFor="let day of Days">
-        <div class="date">
-            <div>{{day.Date | date:'EEEE, MMMM d'}}</div>
-            <div class="dayLine"></div>
-        </div>
+	<div class="day" *ngFor="let day of Days">
+		<div class="date">
+			<div>{{day.Date | date:'EEEE, MMMM d'}}</div>
+			<div class="dayLine"></div>
+		</div>
 
-        <div class="calItem allDay" *ngFor="let calItem of day.AllDay">
-            <div class="time"></div>
-            <div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
-            <div class="summary">{{calItem.Summary}}</div>
-        </div>
+		<div class="calItem allDay" *ngFor="let calItem of day.AllDay">
+			<div class="time"></div>
+			<div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
+			<div class="summary">{{calItem.Summary}}</div>
+		</div>
 
-        <div class="calItem event" *ngFor="let calItem of day.Events">
-            <div class="time">{{calItem.StartDate | date:'h:mm'}}</div>
-            <div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
-            <div class="summary">{{calItem.Summary}}</div>
-        </div>
-    </div>
+		<div class="calItem event" *ngFor="let calItem of day.Events">
+			<div class="time">{{calItem.StartDate | date:'h:mm'}}</div>
+			<div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
+			<div class="summary">{{calItem.Summary}}</div>
+		</div>
+	</div>
 </div>
-=======
-  <div class="day" *ngFor="let day of Days">
-    <div class="date">
-      <div>{{day.Date | date:'EEEE, MMMM d'}}</div>
-      <div class="dayLine"></div>
-    </div>    
-
-    <div class="calItem allDay" *ngFor="let calItem of day.AllDay">
-      <div class="time"></div>
-      <div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
-      <div class="summary">{{calItem.Summary}}</div>
-    </div>
-
-    <div class="calItem event" *ngFor="let calItem of day.Events">
-      <div class="time">{{calItem.StartDate | date:'h:mm'}}</div>
-      <div class="colorBox" [ngStyle]="{'background-color': calItem.Color}"></div>
-      <div class="summary">{{calItem.Summary}}</div>
-    </div>
-    </div>
-  </div>
->>>>>>> 59206c8022c61c0e01b2fb31a5db4a2f17b4e705
