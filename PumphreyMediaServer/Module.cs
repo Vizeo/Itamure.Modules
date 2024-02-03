@@ -117,11 +117,22 @@ namespace MediaServer
 
         protected override void Start()
         {
-            _stream = GetFileStream("Database.db", false);
-            var newFile = _stream.Length == 0;
-            ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString());
+            bool newFile;
 
-            if (newFile)
+			try
+            {
+                _stream = GetFileStream("Database.db", false);
+                newFile = _stream.Length == 0;
+                ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString());
+            }
+            catch {
+                _stream?.Close();
+				_stream = GetFileStream("Database.db", true);
+				newFile = _stream.Length == 0;
+				ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString());
+			}
+
+			if (newFile)
             {
                 SetupDefaultMediaTypeFiles();
                 SetupDefaultMediaRatings();
