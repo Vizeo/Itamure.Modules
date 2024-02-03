@@ -79,6 +79,8 @@ namespace MediaServer.Tasks
                     };
 
                     RemoveMissingFiles(scheduledTaskInterface);
+
+					MediaServerService.LastItemChange = DateTime.Now;
 				}
             }
             finally
@@ -197,7 +199,7 @@ namespace MediaServer.Tasks
                         fileMediaItem.AddedDate = DateTimeOffset.UtcNow;
 
                         Module.ObjectStore!.Store<MediaItem>(fileMediaItem);
-                    }
+					}
                     subCount++;
                     scheduledTaskInterface.SendProgress(subTitle, finalFiles.Count, subCount);
                 }

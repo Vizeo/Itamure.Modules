@@ -94,7 +94,8 @@ namespace MediaServer.Api
             mediaSource.CreatedDate = DateTimeOffset.UtcNow;
             Module.ObjectStore.Store<MediaSource>(mediaSource);
             Module.CurrentModule?.RunSync();
-            return mediaSource; //Return the media source with the id
+			LastItemChange = DateTime.Now;
+			return mediaSource; //Return the media source with the id
         }
 
 		[Api]
@@ -156,7 +157,8 @@ namespace MediaServer.Api
 
             Module.ObjectStore.Remove<MediaSource>(mediaSource);
             Module.CurrentModule?.RunSync();
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -168,7 +170,8 @@ namespace MediaServer.Api
             }
 
             Module.ObjectStore.Remove<MediaItem>(mediaItemId);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize]
@@ -209,8 +212,8 @@ namespace MediaServer.Api
             };
 
             Module.ObjectStore.Store(result);
-
-            return result;
+			LastItemChange = DateTime.Now;
+			return result;
         }
 
         [Api]
@@ -233,7 +236,8 @@ namespace MediaServer.Api
             {
                 Name = rating.Name
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -245,7 +249,8 @@ namespace MediaServer.Api
             }
 
             Module.ObjectStore.Remove<Rating>(ratingId);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
 
         [Api]
@@ -287,8 +292,8 @@ namespace MediaServer.Api
             };
 
             Module.ObjectStore.Store(result);
-
-            return result;
+			LastItemChange = DateTime.Now;
+			return result;
         }
 
         [Api]
@@ -311,7 +316,8 @@ namespace MediaServer.Api
             {
                 Name = tag.Name
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -323,8 +329,8 @@ namespace MediaServer.Api
             }
 
             Module.ObjectStore.Remove<Tag>(tagId);
-        }
-
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize]
@@ -486,6 +492,7 @@ namespace MediaServer.Api
                             userMediaItem.UserMediaReferenceId = userMediaReference.Id;
                             userMediaItem.Position = userMediaReference.LastPosition;
 							userMediaItem.LastViewed = userMediaReference.LastViewed;
+							userMediaItem.AddedDate = mediaItem.AddedDate;
 
 							if (mediaItem is FileMediaItem)
                             {
@@ -572,7 +579,8 @@ namespace MediaServer.Api
             {
                 throw new Exception("Could not find folder with id " + folder.Id);
             }
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize]
@@ -587,7 +595,7 @@ namespace MediaServer.Api
                 .Where(f => f.ParentId == parentId)
                 .ToList()
                 .OrderBy(a => a.Name);
-
+            
             return result;
         }
 
@@ -623,7 +631,8 @@ namespace MediaServer.Api
                     g.Remove<Folder>(subFolder.Id);
                 }
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         private void RecursiveGetFolderMedia(long folderId, List<MediaItem> mediaItems, List<Folder> folders)
         {
@@ -685,7 +694,8 @@ namespace MediaServer.Api
                     //Update file metadata?
                 }
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize]
@@ -754,8 +764,8 @@ namespace MediaServer.Api
                 result.Success = true;
                 result.Series = series;
             }
-
-            return result;
+			LastItemChange = DateTime.Now;
+			return result;
         }
 
         [Api]
@@ -786,7 +796,8 @@ namespace MediaServer.Api
                 .ToList();
 
             UpdateVideoMediaItemFilesMetadata(videoMediaFileItems);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -814,7 +825,8 @@ namespace MediaServer.Api
             }
 
             UpdateVideoMediaItemFilesMetadata(videoFileMediaItemIds);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -860,7 +872,8 @@ namespace MediaServer.Api
             });
 
             UpdateVideoMediaItemFilesMetadata(videoFileMediaItemIds);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -890,7 +903,8 @@ namespace MediaServer.Api
                 UnassignVideoFileMediaItemItems(videoFileMediaItemIds, g);
                 g.Store<Series>(series);
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -912,7 +926,8 @@ namespace MediaServer.Api
                 UnassignVideoFileMediaItemItems(videoFileMediaItemIds, g);
                 g.Remove<Series>(seriesId);
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -927,7 +942,8 @@ namespace MediaServer.Api
             {
                 UnassignVideoFileMediaItemItems(videoFileMediaItemIds, g);
             });
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         private void UnassignVideoFileMediaItemItems(IEnumerable<long> videoFileMediaItemIds, TransactionGroup transactionGroup)
         {
@@ -942,7 +958,8 @@ namespace MediaServer.Api
             {
                 transactionGroup.Update<MediaItem, VideoFileMediaItem>(id, update);
             }
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -980,7 +997,7 @@ namespace MediaServer.Api
 
             Module.ObjectStore.Update<MediaItem>(mediaItem.Id, new
             {
-                MetadataDate = DateTime.UtcNow
+                MetadataDate = DateTimeOffset.UtcNow
             });
 
             try
@@ -998,7 +1015,8 @@ namespace MediaServer.Api
             {
                 //Do nothing
             }
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -1040,7 +1058,8 @@ namespace MediaServer.Api
             });
 
             UpdateVideoMediaItemFileMetadata(videoFileMediaItem);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         private void UpdateVideoMediaItemFilesMetadata(IEnumerable<long> videoFileMediaItemIds)
         {
@@ -1056,7 +1075,8 @@ namespace MediaServer.Api
                 .ToList();
 
             UpdateVideoMediaItemFilesMetadata(videoMediaFileItems);
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         private void UpdateVideoMediaItemFilesMetadata(IEnumerable<VideoFileMediaItem> videoFileMediaItems)
         {
@@ -1069,7 +1089,8 @@ namespace MediaServer.Api
             {
                 UpdateVideoMediaItemFileMetadata(item);
             }
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         private string[] GetMetadataFromTags(VideoFileMediaItem videoFileMediaItem, MetadataTagType metadataTagType)
         {
@@ -1174,7 +1195,8 @@ namespace MediaServer.Api
                     Error = ex.Message
                 });
             }
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize(MediaServerPermissions.SettingsPermissions)]
@@ -1207,7 +1229,8 @@ namespace MediaServer.Api
                     MimeType = mimeType
                 });
             }
-        }
+			LastItemChange = DateTime.Now;
+		}
 
         [Api]
         [Authorize]
@@ -1346,6 +1369,7 @@ namespace MediaServer.Api
 					}
 				}
 			});
+			LastItemChange = DateTime.Now;
 		}
 
         [Api]
@@ -1426,6 +1450,9 @@ namespace MediaServer.Api
             {
                 throw new NullReferenceException("ObjectStore is null");
             }
+
+            var test = Module.ObjectStore.Retrieve<MediaItem>()
+            .FirstOrDefault(i => i.Name == "Iron Man");
 
             var videoFileMediaItems = GetUserMediaItems().Values
                .Where(i => i.MediaItemType == MediaItemType.MovieFile ||
