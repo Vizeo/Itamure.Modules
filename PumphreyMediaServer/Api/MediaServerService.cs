@@ -973,6 +973,7 @@ namespace MediaServer.Api
             var mediaItem = (VideoFileMediaItem)Module.ObjectStore!.Retrieve<MediaItem>(mediaItemId);
 
             //Store in database
+            var start = DateTime.Now;
             var metaDataImage = Module.ObjectStore.Retrieve<MetadataImage>()
                 .FirstOrDefault(m => m.MediaItemId == mediaItemId);
 
@@ -985,22 +986,25 @@ namespace MediaServer.Api
                 metaDataImage.Data = data;
                 metaDataImage.MimeType = mimeType;
                 Module.ObjectStore.Store(metaDataImage);
-            }
-            else
+				Module.CurrentModule!.WriteToConsole($"Database insert image {DateTime.Now.Subtract(start).Seconds}s");
+			}
+			else
             {
                 Module.ObjectStore.Update<MetadataImage>(metaDataImage.Id, new
                 {
                     Data = data,
                     MimeType = mimeType
                 });
-            }
+				Module.CurrentModule!.WriteToConsole($"Database update image {DateTime.Now.Subtract(start).Seconds}s");
+			}
 
-            Module.ObjectStore.Update<MediaItem>(mediaItem.Id, new
+			Module.ObjectStore.Update<MediaItem>(mediaItem.Id, new
             {
                 MetadataDate = DateTimeOffset.UtcNow
             });
 
-            try
+			start = DateTime.Now;
+			try
             {
                 var file = TagLib.File.Create(mediaItem.FilePath);
                 var pics = new TagLib.IPicture[1];
@@ -1010,11 +1014,13 @@ namespace MediaServer.Api
                 pics[0].Data = data;
                 file.Tag.Pictures = pics;
                 file.Save();
-            }
-            catch
+				Module.CurrentModule!.WriteToConsole($"File metadata update {DateTime.Now.Subtract(start).Seconds}s");
+			}
+			catch(Exception e)
             {
-                //Do nothing
-            }
+				//Do nothing
+				Module.CurrentModule!.WriteToConsole($"File metadata failed {DateTime.Now.Subtract(start).Seconds}s. {e.Message}");
+			}
 			LastItemChange = DateTime.Now;
 		}
 
@@ -1585,19 +1591,22 @@ namespace MediaServer.Api
         public IEnumerable<MediaReceiver> GetMediaReceivers()
         {
             var result = new List<MediaReceiver>();
-            foreach (var device in UpnpSubService.SsdpServer!.Devices)
+            if (UpnpSubService.SsdpServer != null)
             {
-                if (device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
+                foreach (var device in UpnpSubService.SsdpServer!.Devices)
                 {
-                    device.Load().Wait();
-                    var indexOfIdEnd = device.UniqueServiceName.IndexOf("::");
-
-                    result.Add(new MediaReceiver()
+                    if (device.UniformResourceName == UpnpLib.KnownDevices.MediaRenderer1)
                     {
-                        Id = device.UniqueServiceName.Substring(5, indexOfIdEnd - 5),
-                        Name = device.FriendlyName,
-                        ReceiverType = "Upnp"
-                    });
+                        device.Load().Wait();
+                        var indexOfIdEnd = device.UniqueServiceName.IndexOf("::");
+
+                        result.Add(new MediaReceiver()
+                        {
+                            Id = device.UniqueServiceName.Substring(5, indexOfIdEnd - 5),
+                            Name = device.FriendlyName,
+                            ReceiverType = "Upnp"
+                        });
+                    }
                 }
             }
 

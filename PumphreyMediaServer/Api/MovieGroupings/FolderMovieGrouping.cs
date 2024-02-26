@@ -19,8 +19,15 @@ namespace MediaServer.Api.MovieGroupings
 						i.FolderId == folder.Id)
 					.ToList();
 
-				return base.RandomizeList(list)
-					.Take(count);
+				if (all)
+				{
+					return list.OrderBy(i => i.Name);
+				}
+				else
+				{
+					return base.RandomizeList(list)
+						.Take(count);
+				}
 			}
 			else 
 			{

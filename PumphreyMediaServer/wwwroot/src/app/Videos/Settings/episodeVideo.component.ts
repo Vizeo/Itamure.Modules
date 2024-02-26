@@ -52,7 +52,7 @@ export class EpisodeVideoComponent {
 
     public Reload() {
         this._name = this.mediaItemService.FindName(this._videoFileMediaItem!);
-        this._directory = this.mediaItemService.FindDirectory(this._videoFileMediaItem!);
+        this._directory = this._videoFileMediaItem!.FilePath!;
         this.GetImage();
     }
 }

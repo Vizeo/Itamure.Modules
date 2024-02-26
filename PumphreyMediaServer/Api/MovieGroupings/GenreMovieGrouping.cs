@@ -21,8 +21,15 @@ namespace MediaServer.Api.MovieGroupings
 					genres.Contains(t.Value!.ToUpper().Trim())))
 				.ToList();
 
-			return base.RandomizeList(list)
-				.Take(count);
+			if (all)
+			{
+				return list.OrderBy(i => i.Name);
+			}
+			else
+			{
+				return base.RandomizeList(list)
+					.Take(count);
+			}
 		}
 
 		public class Options {
