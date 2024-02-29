@@ -1615,7 +1615,7 @@ namespace MediaServer.Api
                 result.Add(new MediaReceiver()
                 {
                     Id = screen.Id.ToString(),
-                    Name = screen.Name,
+                    Name = screen.Name + " - " + screen.User.Name,
                     ReceiverType = "Web"
                 });
             }
