@@ -146,7 +146,7 @@ namespace MediaServer
             }
             OmdbManager.ApiKey = settings.OmdbApiKey;
 
-            //UpnpSubService.Start();
+            UpnpSubService.Start();
 
             ShowWidget(new ActivityWidget());
         }
@@ -172,7 +172,7 @@ namespace MediaServer
 
         public override void Stop()
         {
-            //UpnpSubService.Stop();
+            UpnpSubService.Stop();
 
             ObjectStore?.Dispose();
             ObjectStore = null;
