@@ -11,7 +11,7 @@ namespace MediaServer
 		ActivityPermissions,
 		[PermissionDescription("Media Server Settings")]
         SettingsPermissions,
-		[PermissionDescription("Can manage all receivers")]
+		[PermissionDescription("Mannage All Receivers")]
 		ReceiverAdmin,
 	}
 }
