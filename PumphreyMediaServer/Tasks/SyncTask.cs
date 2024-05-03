@@ -78,7 +78,7 @@ namespace MediaServer.Tasks
                             .ToList();
                     };
 
-                    RemoveMissingFiles(scheduledTaskInterface);
+                    FlagMissingFiles(scheduledTaskInterface);
 
 					MediaServerService.LastItemChange = DateTime.Now;
 				}
@@ -89,26 +89,25 @@ namespace MediaServer.Tasks
             }
         }
 
-        private void RemoveMissingFiles(IScheduledTaskInterface scheduledTaskInterface)
+        private void FlagMissingFiles(IScheduledTaskInterface scheduledTaskInterface)
         {
 			var mediaItems = Module.ObjectStore!.Retrieve<MediaItem>()
 		        .Cast<FileMediaItem>()
 		        .Where(i => FileMediaItemTypes.Contains(i.MediaItemType))
-		        .Select(i => new
-		        {
-			        i.Id,
-			        i.FilePath
-		        })
 		        .ToList();
 
             foreach(var file in mediaItems)
             {
                 try
                 {
-                    if (!File.Exists(file.FilePath))
+                    if(File.Exists(file.FilePath))
                     {
-                        Module.ObjectStore!.Remove<MediaItem>(file.Id);
-                    }
+						file.UnavailableDate = null;
+					}
+					else if(!file.UnavailableDate.HasValue)
+                    {
+						file.UnavailableDate = DateTime.UtcNow;
+					}
                 }
                 catch { }
             }

@@ -22,5 +22,6 @@ namespace MediaServer.Entities
         public long? FolderId { get; set; }
         public List<long>? TagIds { get; set; }
         public List<MetadataTag>? MetadataTags { get; set; }
-    }
+        public DateTime? UnavailableDate { get; set; }
+	}
 }

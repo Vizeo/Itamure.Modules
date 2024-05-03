@@ -447,7 +447,8 @@ namespace MediaServer.Api
 
 			var result = Module.ObjectStore!.Retrieve<MediaItem>()
 				.Where(i => i.MediaItemType == mediaItemType &&
-					i.FolderId == folderId)
+					i.FolderId == folderId &&
+					!i.UnavailableDate.HasValue)
 				.ToList()
 				.Cast<VideoFileMediaItem>()
 				.OrderBy(f => f.Name)
@@ -496,35 +497,39 @@ namespace MediaServer.Api
 
 						foreach (var mediaItem in mediaItems)
 						{
-							if (!userMediaReferences.TryGetValue(mediaItem.Id, out var userMediaReference))
+							if (!mediaItem.UnavailableDate.HasValue)
 							{
-								userMediaReference = new UserMediaReference()
+								if (!userMediaReferences.TryGetValue(mediaItem.Id, out var userMediaReference))
 								{
-									MediaItemId = mediaItem.Id,
-									UserUniqueId = Request.UserUniqueId!.Value,
-									UniqueLink = Guid.NewGuid()
-								};
+									userMediaReference = new UserMediaReference()
+									{
+										MediaItemId = mediaItem.Id,
+										UserUniqueId = Request.UserUniqueId!.Value,
+										UniqueLink = Guid.NewGuid()
+									};
 
-								Module.ObjectStore.Store(userMediaReference);
+									Module.ObjectStore.Store(userMediaReference);
+								}
+
+								var userMediaItem = new UserMediaItem();
+								CopyProperties(mediaItem, userMediaItem);
+								userMediaItem.UniqueKey = userMediaReference.UniqueLink;
+								userMediaItem.MediaItemId = mediaItem.Id;
+								userMediaItem.UserMediaReferenceId = userMediaReference.Id;
+								userMediaItem.Position = userMediaReference.LastPosition;
+								userMediaItem.LastViewed = userMediaReference.LastViewed;
+								userMediaItem.AddedDate = mediaItem.AddedDate;
+								userMediaItem.FolderId = mediaItem.FolderId;
+
+								if (mediaItem is FileMediaItem)
+								{
+									var fileMediaItem = (FileMediaItem)mediaItem;
+									var extension = Path.GetExtension(fileMediaItem.FilePath)!.ToLower();
+									userMediaItem.MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == fileMediaItem.MediaType)?.ContentType;
+								}
+
+								result.Add(userMediaItem.UniqueKey, userMediaItem);
 							}
-
-							var userMediaItem = new UserMediaItem();
-							CopyProperties(mediaItem, userMediaItem);
-							userMediaItem.UniqueKey = userMediaReference.UniqueLink;
-							userMediaItem.MediaItemId = mediaItem.Id;
-							userMediaItem.UserMediaReferenceId = userMediaReference.Id;
-							userMediaItem.Position = userMediaReference.LastPosition;
-							userMediaItem.LastViewed = userMediaReference.LastViewed;
-							userMediaItem.AddedDate = mediaItem.AddedDate;
-
-							if (mediaItem is FileMediaItem)
-							{
-								var fileMediaItem = (FileMediaItem)mediaItem;
-								var extension = Path.GetExtension(fileMediaItem.FilePath)!.ToLower();
-								userMediaItem.MimeType = mediaFileTypes.FirstOrDefault(t => t.FileExtension! == extension && t.MediaType == fileMediaItem.MediaType)?.ContentType;
-							}
-
-							result.Add(userMediaItem.UniqueKey, userMediaItem);
 						}
 
 						Session[USER_MEDIA_ITEMS] = result;
@@ -861,8 +866,9 @@ namespace MediaServer.Api
 			}
 
 			return Module.ObjectStore!.Retrieve<MediaItem, VideoFileMediaItem>()
-				.Where(i => i.SeriesId == seriesId
-					&& i.SeasonId == seasonId)
+				.Where(i => i.SeriesId == seriesId && 
+					i.SeasonId == seasonId &&
+					!i.UnavailableDate.HasValue)
 				.ToList()
 				.Cast<VideoFileMediaItem>()
 				.OrderBy(a => a.Order)
@@ -1888,7 +1894,7 @@ namespace MediaServer.Api
 		public Guid UniqueKey { get; set; }
 		internal long UserMediaReferenceId { get; set; }
 		internal long MediaItemId { get; set; }
-		internal long FolderId { get; set; }
+		internal long? FolderId { get; set; }
 		public short? SeriesId { get; set; }
 		public short? SeasonId { get; set; }
 		public short? Width { get; set; }
