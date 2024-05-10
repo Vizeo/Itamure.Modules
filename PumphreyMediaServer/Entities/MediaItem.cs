@@ -23,5 +23,7 @@ namespace MediaServer.Entities
         public List<long>? TagIds { get; set; }
         public List<MetadataTag>? MetadataTags { get; set; }
         public DateTime? UnavailableDate { get; set; }
+        public bool Restricted { get; set; }
+        public List<Guid>? UserAccess { get; set; }
 	}
 }

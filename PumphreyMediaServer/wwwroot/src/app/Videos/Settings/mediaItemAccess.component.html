@@ -1,0 +1,12 @@
+<div class="mediaItemAccess">
+	<div class="restricted">
+		<input type="checkbox" [(ngModel)]="MediaItem!.Restricted!"  (change)="UpdateAccess()"/>
+		<label>Restricted</label>
+	</div>
+	<div class="userAccessList">
+		<div *ngFor="let userAccess of UserAccess" class="user">
+			<input type="checkbox" [disabled]="MediaItem!.Restricted! == false" [(ngModel)]="userAccess.Allowed" (change)="UpdateAccess()"/>
+			{{userAccess.UserName}}
+		</div>
+	</div>
+</div>

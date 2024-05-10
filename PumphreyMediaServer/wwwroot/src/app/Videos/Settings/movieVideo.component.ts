@@ -11,7 +11,7 @@ export class MovieVideoComponent {
     constructor(private mediaItemService: MediaItemService) {
     }
 
-    private _videoFileMediaItem: VideoFileMediaItem | undefined;
+    private _videoFileMediaItem: VideoFileMediaItem | undefined | null;
     private _name: string | undefined;
     private _directory: string | undefined;
     private _imageLoaded: boolean = false;
@@ -20,12 +20,12 @@ export class MovieVideoComponent {
     private _image: ElementRef<HTMLImageElement> | undefined;
 
     @Input("video")
-    public set VideoFileMediaItem(val: VideoFileMediaItem | undefined) {
+    public set VideoFileMediaItem(val: VideoFileMediaItem | undefined | null) {
         this._videoFileMediaItem = val;
         this.Reload();
     }
 
-    public get VideoFileMediaItem(): VideoFileMediaItem | undefined {
+    public get VideoFileMediaItem(): VideoFileMediaItem | undefined | null {
         return this._videoFileMediaItem;
     }
 

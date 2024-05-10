@@ -8,7 +8,7 @@
          (click)="Select($event, movieVideoMediaItem)">
         <movieVideo [video]="movieVideoMediaItem" #movieVideo>
         </movieVideo>
-        <div class="toolbarArea" (click)="ShowMetadataEditor(movieVideoMediaItem, movieVideo)">
+        <div class="toolbarArea" (click)="ShowOptionsVideoMediaItem(movieVideoMediaItem, movieVideo)">
             <icon name="Three Dots"></icon>
         </div>
     </div>
@@ -41,6 +41,13 @@
     </div>
 </dialog>
 
+<div id="videoOptions" #videoOptions popover>
+    <div class="contextMenu">
+        <button (click)="ShowMetadataEditor()" popovertarget="videoOptions" popovertargetaction="hide">Metadata</button>
+        <button (click)="UserAccess()" popovertarget="videoOptions" popovertargetaction="hide">Access</button>
+    </div>
+</div>
+
 <dialog #metadataDialog>
     <div class="title">
         Movie
@@ -69,5 +76,17 @@
     <div class="buttons">
         <button (click)="StoreSearchedMetadata(); metadataSearch.close()" [disabled]="SelectedSearchItem == null">Select</button>
         <button (click)="metadataSearch.close()">Cancel</button>
+    </div>
+</dialog>
+
+<dialog #access class="access">
+    <div class="title">
+        User Access
+    </div>
+    <div class="content">
+        <mediaItemAccess [mediaItem]="EditingVideoMediaItem!" *ngIf="access.open"></mediaItemAccess>
+    </div>
+    <div class="buttons">
+        <button (click)="access.close()">Close</button>
     </div>
 </dialog>

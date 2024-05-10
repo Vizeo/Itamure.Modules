@@ -107,6 +107,53 @@ namespace MediaServer.Api
 
 		[Api]
 		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public void UpdateMediaItemAccess(long mediaItemId, bool restrict, IEnumerable<Guid> accessUserIds)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(mediaItemId);
+			mediaItem.Restricted = restrict;
+			mediaItem.UserAccess = accessUserIds.ToList();
+
+			Module.ObjectStore.Update<MediaItem>(mediaItemId, new
+			{
+				Restricted = restrict,
+				UserAccess = accessUserIds.ToList()
+			});
+		}
+
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		public IEnumerable<UserAccess> GetMediaItemAccess(long mediaItemId)
+		{
+			if (Module.ObjectStore == null)
+			{
+				throw new NullReferenceException("ObjectStore is null");
+			}
+
+			var mediaItem = Module.ObjectStore.Retrieve<MediaItem>(mediaItemId);
+
+			var users = Module.CurrentModule!.GetUsers();
+			var result = new List<UserAccess>();
+			foreach (var user in users)
+			{
+				var userAccess = new UserAccess()
+				{
+					UserId = user.Id,
+					UserName = user.Name,
+					Allowed = mediaItem.UserAccess != null && mediaItem.UserAccess.Contains(user.Id)
+				};
+				result.Add(userAccess);
+			}
+
+			return result;
+		}
+
+		[Api]
+		[Authorize(MediaServerPermissions.SettingsPermissions)]
 		public MediaSource AddMediaSource(MediaSource mediaSource)
 		{
 			if (Module.ObjectStore == null)
@@ -497,7 +544,9 @@ namespace MediaServer.Api
 
 						foreach (var mediaItem in mediaItems)
 						{
-							if (!mediaItem.UnavailableDate.HasValue)
+							if (!mediaItem.UnavailableDate.HasValue &&
+								(!mediaItem.Restricted || (mediaItem.UserAccess != null &&
+									mediaItem.UserAccess.Contains(userUniqueId))))
 							{
 								if (!userMediaReferences.TryGetValue(mediaItem.Id, out var userMediaReference))
 								{
@@ -866,7 +915,7 @@ namespace MediaServer.Api
 			}
 
 			return Module.ObjectStore!.Retrieve<MediaItem, VideoFileMediaItem>()
-				.Where(i => i.SeriesId == seriesId && 
+				.Where(i => i.SeriesId == seriesId &&
 					i.SeasonId == seasonId &&
 					!i.UnavailableDate.HasValue)
 				.ToList()
@@ -1950,5 +1999,12 @@ namespace MediaServer.Api
 	public class StringValue
 	{
 		public string? Value { get; set; }
+	}
+
+	public class UserAccess
+	{
+		public Guid UserId { get; set; }
+		public string? UserName { get; set; }
+		public bool Allowed { get; set; }
 	}
 }

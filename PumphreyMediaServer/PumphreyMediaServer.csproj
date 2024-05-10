@@ -56,8 +56,11 @@
 	  <None Remove="wwwroot\src\app\remoteWebScreen.component.ts" />
 	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.html" />
 	  <None Remove="wwwroot\src\app\tagSettings - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\mediaItemAccess.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\movieGrouping.component.html" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\movieGrouping.component.less" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\moviesList - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Videos\Settings\moviesList - Copy.component.less" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\dateRangeVideoGroup.component.ts" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\episodeList.component.html" />
 	  <None Remove="wwwroot\src\app\Videos\Settings\VideoGroupEditors\episodeList.component.less" />

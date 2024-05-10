@@ -49,6 +49,7 @@ import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component
 import { RemotePlayerComponent } from './Videos/remotePlayer.component';
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
 import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
+import { MediaItemAccessComponent } from './Videos/Settings/mediaItemAccess.component';
 import { FolderVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/folderVideoGroup.component';
 
 import { DateRangeVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/dateRangeVideoGroup.component';
@@ -109,6 +110,7 @@ import { ActivityWidgetComponent } from './widgets/activityWidget.component';
         RatingVideoGroupComponent,
         GenreVideoGroupComponent,
         ActivityWidgetComponent,
+        MediaItemAccessComponent
     ],
     imports: [
         BrowserModule,

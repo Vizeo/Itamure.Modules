@@ -16,6 +16,12 @@ export class OmdbApiData
 {
 	Key?: string | null; 
 }
+export class UserAccess
+{
+	UserId?: string; 
+	UserName?: string | null; 
+	Allowed?: boolean; 
+}
 export class StringValue
 {
 	Value?: string | null; 
@@ -104,6 +110,9 @@ export abstract class MediaItem
 	FolderId?: number; 
 	TagIds?: number[]; 
 	MetadataTags?: MetadataTag[]; 
+	UnavailableDate?: Date; 
+	Restricted?: boolean; 
+	UserAccess?: string[]; 
 }
 export class FileMediaItem extends MediaItem 
 {
@@ -351,6 +360,20 @@ export class MediaService {
 		var jsonObject = <any>new Object();
 		jsonObject.omdbApiData = omdbApiData
 		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/SetOmdbApiKey', jsonObject);
+	}
+
+	UpdateMediaItemAccess(mediaItemId: number, restrict: boolean, accessUserIds: string[]): Promise<void> {
+		var jsonObject = <any>new Object();
+		jsonObject.mediaItemId = mediaItemId
+		jsonObject.restrict = restrict
+		jsonObject.accessUserIds = accessUserIds
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/UpdateMediaItemAccess', jsonObject);
+	}
+
+	GetMediaItemAccess(mediaItemId: number): Promise<UserAccess[]> {
+		var jsonObject = <any>new Object();
+		jsonObject.mediaItemId = mediaItemId
+		return this.ApiCall<any>('POST', '/mediaServer/api/mediaServerService/GetMediaItemAccess', jsonObject);
 	}
 
 	AddMediaSource(mediaSource: MediaSource): Promise<MediaSource> {

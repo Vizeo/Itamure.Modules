@@ -1,0 +1,26 @@
+:host {
+    display: contents;
+}
+
+.mediaItemAccess {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    .restricted {
+        margin-bottom: 5px;
+    }
+
+    .userAccessList {
+        background-color: #2f2f2f;
+        color: white;
+        overflow: auto;
+
+        .user {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            padding-left: 10px;
+            padding-right: 30px;
+        }
+    }
+}

@@ -33,7 +33,13 @@ export class MoviesListComponent implements IVideoManager {
 	private _metadataEditor!: ElementRef<HTMLDialogElement>;
 
 	@ViewChild("metadataSearch")
-	private _metadataSearch!: ElementRef<HTMLDialogElement>;
+	private _metadataSearch!: ElementRef<HTMLDialogElement>; 
+
+	@ViewChild("access")
+	private _access!: ElementRef<HTMLDialogElement>; 
+
+	@ViewChild("videoOptions")
+	private _videoOptions!: ElementRef<HTMLElement>; 
 
 	public MoviesVideoMediaItems: VideoFileMediaItem[] | undefined;
 	public FilteredMovieVideoMediaItems: VideoFileMediaItem[] | null = null;
@@ -252,9 +258,14 @@ export class MoviesListComponent implements IVideoManager {
 		return GroupValidatorBaseDirective.IsValid("folderValidation");
 	}
 
-	public ShowMetadataEditor(videoMediaItem: VideoFileMediaItem, movieVideoComponent: MovieVideoComponent) {
-		this._movieVideoComponent = movieVideoComponent;
+	public ShowOptionsVideoMediaItem(videoMediaItem: VideoFileMediaItem, movieVideoComponent: MovieVideoComponent) {
 		this.EditingVideoMediaItem = this.globalService.CreateProxy(videoMediaItem);
+		this._movieVideoComponent = movieVideoComponent;
+		console.log(this._videoOptions.nativeElement);
+		(<any>this._videoOptions.nativeElement).showPopover();
+	}
+
+	public ShowMetadataEditor() {
 		this._metadataEditor.nativeElement.showModal();
 	}
 
@@ -276,6 +287,10 @@ export class MoviesListComponent implements IVideoManager {
 	public MetadataSearch() {
 		this._metadataSearch.nativeElement.showModal();
 		this.SelectedSearchItem = null;
+	}
+
+	public UserAccess() {
+		this._access.nativeElement.showModal();
 	}
 
 	public MetadataSelected(metadataSearchResult: SearchItem) {

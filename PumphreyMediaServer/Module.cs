@@ -125,7 +125,8 @@ namespace MediaServer
                 newFile = _stream.Length == 0;
                 ObjectStore = new RizeDb.ObjectStore(_stream, ModuleUniqueId.ToString());
             }
-            catch {
+            catch 
+            {
                 _stream?.Close();
 				_stream = GetFileStream("Database.db", true);
 				newFile = _stream.Length == 0;
