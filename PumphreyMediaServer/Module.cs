@@ -18,6 +18,8 @@ using System.Reflection;
 namespace MediaServer
 {
     [Name("Media Server")]
+    [Description("Manage and play your media library")]
+    [Icon("MediaServerIcon.svg")]
     public class Module : ItamureModule
     {
         public const string WEB_ROUTE_BASE = "mediaServer";

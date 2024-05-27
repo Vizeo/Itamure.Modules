@@ -25,7 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RemoveFromGet", "RemoveFrom
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RizeDb", "..\..\..\..\..\Source Code\RizeDb\RizeDb\RizeDb.csproj", "{44E6C1E3-AFE6-47EC-A1DE-AE092F03FAE5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PumphreyMediaServer", "PumphreyMediaServer\PumphreyMediaServer.csproj", "{61A4DE7F-4BD9-4D5C-B766-1BEA839D4B44}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaServer", "PumphreyMediaServer\MediaServer.csproj", "{61A4DE7F-4BD9-4D5C-B766-1BEA839D4B44}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedAngular", "..\..\..\..\..\Source Code\SharedAngular\SharedAngular.csproj", "{5BECF5EE-A366-46C0-86F1-9025636F2DE0}"
 EndProject
