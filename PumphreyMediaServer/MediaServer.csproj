@@ -16,8 +16,11 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="PWA\**" />
 		<Compile Remove="wwwroot\node_modules\**" />
+		<EmbeddedResource Remove="PWA\**" />
 		<EmbeddedResource Remove="wwwroot\node_modules\**" />
+		<None Remove="PWA\**" />
 		<None Remove="wwwroot\node_modules\**" />
 	</ItemGroup>
 

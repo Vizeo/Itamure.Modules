@@ -198,11 +198,6 @@ namespace MediaServer.Api
 		[Authorize]
 		public Access GetAccess()
 		{
-			if (Module.ObjectStore == null)
-			{
-				throw new NullReferenceException("ObjectStore is null");
-			}
-
 			return new Access()
 			{
 				SettingsPermissions = Module.CurrentModule!.UserHasAccess(Session.UniqueId, MediaServerPermissions.SettingsPermissions),

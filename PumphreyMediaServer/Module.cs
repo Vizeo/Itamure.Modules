@@ -29,8 +29,6 @@ namespace MediaServer
         private Stream? _stream;
         private SyncTask _syncTask;
 
-        //private Notification _notification;
-
         internal static Module? CurrentModule { get; private set; }
         internal static RizeDb.ObjectStore? ObjectStore { get; private set; }
 
@@ -66,9 +64,6 @@ namespace MediaServer
 			RegisterEvent<ReceiverEvent>("Receiver Update", MediaServerPermissions.AppPermissions);
 			RegisterEvent<ReceiverAddedEvent>("Receiver Added", MediaServerPermissions.AppPermissions);
 			RegisterEvent<ReceiverRemovedEvent>("Receiver Removed", MediaServerPermissions.AppPermissions);
-
-			//Notifications can be subscribed to by users. Here is an example of using one in a module
-			//AddNotification(_notification);
 		}
 
 		public override async Task RouteWebRequest(IRequest request, IResponse response, IntegratedWebServer.Core.ISession session)
@@ -109,8 +104,6 @@ namespace MediaServer
         public override string AdministrationWebPath => string.Empty;
 
         public override string WebRouteBase => WEB_ROUTE_BASE;
-
-        //internal Notification Notification { get; } = new Notification("PumphreyMediaServer Notification");
 
         internal new IEnumerable<IScreen> GetScreens()
         {
