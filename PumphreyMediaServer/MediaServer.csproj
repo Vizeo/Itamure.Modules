@@ -16,10 +16,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Remove="bin\**" />
 		<Compile Remove="PWA\**" />
 		<Compile Remove="wwwroot\node_modules\**" />
+		<EmbeddedResource Remove="bin\**" />
 		<EmbeddedResource Remove="PWA\**" />
 		<EmbeddedResource Remove="wwwroot\node_modules\**" />
+		<None Remove="bin\**" />
 		<None Remove="PWA\**" />
 		<None Remove="wwwroot\node_modules\**" />
 	</ItemGroup>
@@ -47,12 +50,27 @@
 	  <Content Remove="wwwroot\.angular\**" />
 	  <Content Remove="wwwroot\.vscode\**" />
 	  <Content Remove="wwwroot\node_modules\**" />
+	  <TypeScriptCompile Remove="bin\**" />
+	  <TypeScriptCompile Remove="wwwroot\node_modules\**" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Content Remove="wwwroot\src\app\Services\castService.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\mediaItem.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\metadata.service.tt" />
+	  <Content Remove="wwwroot\src\app\Services\webAuthn.service.tt" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="wwwroot\src\app\Services\metadata - Copy.service.ts" />
+	  <None Remove="wwwroot\src\app\WebAuthn\enterAuthCode - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\WebAuthn\enterAuthCode - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\WebAuthn\enterAuthCode.component.ts" />
+	  <None Remove="wwwroot\src\app\WebAuthn\generateAuthCode.component.ts" />
+	  <None Remove="wwwroot\src\app\WebAuthn\imagesView.component.html" />
+	  <None Remove="wwwroot\src\app\WebAuthn\imagesView.component.less" />
+	  <None Remove="wwwroot\src\app\WebAuthn\webCode - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\WebAuthn\webCode - Copy.component.less" />
 	</ItemGroup>
 	
 	<ItemGroup>
@@ -60,6 +78,13 @@
 	</ItemGroup>
 	
 	<ItemGroup>
+	  <PackageReference Include="Fido2" Version="4.0.0-beta.13" />
+	  <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="8.0.1" />
+	  <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.5.3">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.0.1" />
 	  <PackageReference Include="TagLibSharp" Version="2.3.0" />
 	</ItemGroup>
 
@@ -75,6 +100,15 @@
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>mediaServer.service.tt</DependentUpon>
+	  </None>
+	  <None Update="wwwroot\src\app\Services\webAuth.service.ts">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>webAuth.service.tt</DependentUpon>
+	  </None>
+	  <None Update="wwwroot\src\app\Services\webAuthn.service.tt">
+	    <LastGenOutput>webAuthn.service.ts</LastGenOutput>
+	    <Generator>TextTemplatingFileGenerator</Generator>
 	  </None>
 	  <None Update="wwwroot\src\app\Services\metadata.service.ts">
 	    <DesignTime>True</DesignTime>
@@ -114,11 +148,43 @@
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>mediaServer.service.tt</DependentUpon>
 	  </Content>
+	  <Content Update="wwwroot\src\app\Services\webAuthn.service.ts">
+	    <DependentUpon>webAuthn.service.tt</DependentUpon>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	  </Content>
 	  <Content Update="wwwroot\src\app\Services\metadata.service.ts">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>metadata.service.tt</DependentUpon>
 	  </Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="wwwroot\src\assets\icons\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <TypeScriptCompile Update="wwwroot\src\app\Services\mediaServer.service.ts">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>mediaServer.service.tt</DependentUpon>
+	  </TypeScriptCompile>
+	  <TypeScriptCompile Update="wwwroot\src\app\Services\metadata.service.ts">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>metadata.service.tt</DependentUpon>
+	  </TypeScriptCompile>
+	  <TypeScriptCompile Update="wwwroot\src\app\Services\webAuth.service.ts">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>webAuth.service.tt</DependentUpon>
+	  </TypeScriptCompile>
+	  <TypeScriptCompile Update="wwwroot\src\app\Services\webAuthn.service.ts">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>webAuthn.service.tt</DependentUpon>
+	  </TypeScriptCompile>
 	</ItemGroup>
 
 	<PropertyGroup>

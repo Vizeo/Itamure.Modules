@@ -8,7 +8,8 @@ import { Access, MediaService } from './Services/mediaServer.service';
     styleUrls: ['./mediaServerApp.component.less']
 })
 export class MediaServerAppComponent {
-    constructor(private castService: CastService, mediaService: MediaService) {
+    constructor(private castService: CastService,
+        mediaService: MediaService) {
         mediaService.GetAccess().then(a => this.Access = a);
     }
 

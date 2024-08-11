@@ -1424,6 +1424,9 @@ namespace MediaServer.Api
 		[Authorize]
 		public IEnumerable<VideoGroup> GetVideoGroups()
 		{
+			var test = this.UserId;
+			var test2 = Module.CurrentModule!.GetUsers();	
+
 			if (Module.ObjectStore == null)
 			{
 				throw new NullReferenceException("ObjectStore is null");

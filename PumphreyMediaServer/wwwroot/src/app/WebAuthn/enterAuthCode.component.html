@@ -1,0 +1,9 @@
+<div class="codeArea">
+	<div>Enter Code</div>
+	<input type="text" maxlength="8" [(ngModel)]="Code"/>
+	<button (click)="ProcessAuthentication()">Authenticate</button>
+
+	<div class="response" *ngIf="Response != null">
+		{{Response}}
+	</div>
+</div>

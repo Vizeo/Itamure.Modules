@@ -32,6 +32,7 @@
               "src/manifest.webmanifest",
               "src/manifest.webmanifest",
               "src/manifest.webmanifest",
+              "src/manifest.webmanifest",
               "src/manifest.webmanifest"
             ],
             "styles": [
@@ -72,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "MediaServer:build:production"
+              "buildTarget": "MediaServer:build:production"
             },
             "development": {
-              "browserTarget": "MediaServer:build:development"
+              "buildTarget": "MediaServer:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -83,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MediaServer:build"
+            "buildTarget": "MediaServer:build"
           }
         },
         "test": {
@@ -98,6 +99,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/manifest.webmanifest",
               "src/manifest.webmanifest",
               "src/manifest.webmanifest",
               "src/manifest.webmanifest",

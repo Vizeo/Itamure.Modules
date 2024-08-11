@@ -1,6 +1,6 @@
 {
-  "name": "MediaServer",
-  "short_name": "MediaServer",
+  "name": "Media Server",
+  "short_name": "Media Server",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",

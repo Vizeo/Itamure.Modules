@@ -166,7 +166,17 @@ namespace MediaServer
             base.WriteToConsole(text);
         }
 
-        public override void Stop()
+        public string CreateAccessToken(Guid uniqueId)
+        {
+            return base.CreateAccessToken(uniqueId);
+        }
+
+		public new TokenAuthenticationResult AuthenticateWithAccessToken(Guid uniqueId, string token)
+		{
+			return base.AuthenticateWithAccessToken(uniqueId, token);
+		}
+
+		public override void Stop()
         {
             UpnpSubService.Stop();
 

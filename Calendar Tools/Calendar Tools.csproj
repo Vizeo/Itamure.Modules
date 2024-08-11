@@ -27,6 +27,10 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Ical.Net" Version="4.2.0" />
+	  <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.5.3">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>

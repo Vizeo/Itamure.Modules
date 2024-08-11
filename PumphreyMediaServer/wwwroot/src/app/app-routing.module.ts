@@ -18,10 +18,16 @@ import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
 import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
 import { ActivityWidgetComponent } from './widgets/activityWidget.component';
+import { GenerateAuthCodeComponent } from './WebAuthn/generateAuthCode.component';
+import { EnterAuthCodeComponent } from './WebAuthn/enterAuthCode.component';
+import { WebAuthnComponent } from './WebAuthn/webAuthn.component';
 //import { AudioSettingComponent } from './audioSettings.component';
 //import { ImagesSettingComponent } from './imagesSettings.component';
 
 const routes: Routes = [
+    { path: '**', redirectTo: 'WebAuthn', pathMatch: 'full' },    
+    //{ path: '', component: WebAuthComponent },
+    //{ path: '**', component: WebAuthComponent },
     {
         path: 'App', component: MediaServerAppComponent,
         children: [
@@ -54,13 +60,17 @@ const routes: Routes = [
             //{ path: 'Images', component: ImagesSettingComponent },
         ]
     },
-    { path: '', component: MediaServerAppComponent },
+    //{ path: '', component: MediaServerAppComponent },
     { path: 'RemoteWebScreen', component: RemoteWebScreenComponent },
     { path: 'ActivityWidget', component: ActivityWidgetComponent },
+    { path: 'EnterAuthCode', component: EnterAuthCodeComponent },
+    { path: 'EnterAuthCode', component: EnterAuthCodeComponent },
+    { path: 'WebAuthn', component: WebAuthnComponent }
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes/*,
+        { enableTracing: true }*/)],
     exports: [RouterModule]
 })
 export class AppRoutingModule { }

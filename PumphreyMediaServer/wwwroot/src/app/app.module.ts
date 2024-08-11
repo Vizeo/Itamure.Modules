@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { InterlinkModule } from 'interLink';
+import { QrCodeModule } from 'ng-qrcode';
 
 import { AppComponent } from './app.component';
 import { MediaServerAppComponent } from './mediaServerApp.component';
@@ -57,6 +58,9 @@ import { RatingVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/r
 import { GenreVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/genreVideoGroup.component';
 import { ActivityWidgetComponent } from './widgets/activityWidget.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { GenerateAuthCodeComponent } from './WebAuthn/generateAuthCode.component';
+import { EnterAuthCodeComponent } from './WebAuthn/enterAuthCode.component';
+import { WebAuthnComponent } from './WebAuthn/webAuthn.component';
 
 @NgModule({
     declarations: [
@@ -111,13 +115,17 @@ import { ServiceWorkerModule } from '@angular/service-worker';
         RatingVideoGroupComponent,
         GenreVideoGroupComponent,
         ActivityWidgetComponent,
-        MediaItemAccessComponent
+        MediaItemAccessComponent,
+        GenerateAuthCodeComponent,
+        EnterAuthCodeComponent,
+        WebAuthnComponent
     ],
     imports: [
         BrowserModule,
         AppRoutingModule,
         FormsModule,
         InterlinkModule,
+        QrCodeModule,
         ServiceWorkerModule.register('ngsw-worker.js', {
           enabled: !isDevMode(),
           // Register the ServiceWorker as soon as the application is stable
