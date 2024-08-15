@@ -179,7 +179,7 @@ export class WebAuthnComponent {
 		};
 
 		try {
-			await this.webAuthService.MakeCredential(JSON.stringify(data))
+			await this.webAuthService.SaveCredential(JSON.stringify(data))
 		} catch (e) {
 			console.log(e);
 			alert(e);

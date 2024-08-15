@@ -1,0 +1,13 @@
+<ng-container *ngIf="RequiresLogin">
+    <div class="instructions">
+        Please navigate to {{Address}} to get a login code. Once you have a code you can enter it or scan the QR code on the page.
+    </div>
+
+    <div>
+        <input [(ngModel)]="LoginCode"/>
+        <button [disabled]="LoginCode == null || LoginCode.length == 0" (click)="RegisterAuthentication()">Login</button>
+    </div>
+</ng-container>
+<ng-templage #login>
+    Welcome to Itamure Media Server
+</ng-templage>

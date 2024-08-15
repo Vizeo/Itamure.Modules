@@ -166,9 +166,9 @@ namespace MediaServer
             base.WriteToConsole(text);
         }
 
-        public string CreateAccessToken(Guid uniqueId)
+        public CreateAccessTokenResult GetAccessToken(string loginCode)
         {
-            return base.CreateAccessToken(uniqueId);
+            return base.GetAccessToken(loginCode);
         }
 
 		public new TokenAuthenticationResult AuthenticateWithAccessToken(Guid uniqueId, string token)

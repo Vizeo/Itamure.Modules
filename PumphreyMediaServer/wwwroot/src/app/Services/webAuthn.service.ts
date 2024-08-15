@@ -2,6 +2,11 @@
 //Add ignore attribute for class properties
 
 
+export class CreateTokenResult
+{
+	Success?: boolean; 
+	FailureMessage?: string | null; 
+}
 
 import { Injectable } from '@angular/core';
 declare var hasSession: boolean;
@@ -146,14 +151,16 @@ export class WebAuthnService {
         }
     }
 
-	GetCode(): Promise<string | null> {
+	CreateToken(loginCode: string | null, installId: string | null): Promise<CreateTokenResult> {
 		var jsonObject = <any>new Object();
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetCode', jsonObject);
+		jsonObject.loginCode = loginCode
+		jsonObject.installId = installId
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/CreateToken', jsonObject);
 	}
 
-	GetChallenge(verificationCode: string | null): Promise<string | null> {
+	GetChallenge(installId: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
-		jsonObject.verificationCode = verificationCode
+		jsonObject.installId = installId
 		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetChallenge', jsonObject);
 	}
 
@@ -163,15 +170,15 @@ export class WebAuthnService {
 		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetCredentialOptions', jsonObject);
 	}
 
-	MakeCredential(json: string | null): Promise<string | null> {
+	SaveCredential(json: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
 		jsonObject.json = json
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/MakeCredential', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/SaveCredential', jsonObject);
 	}
 
-	GetAssertionOptions(username: string | null): Promise<string | null> {
+	GetAssertionOptions(installId: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
-		jsonObject.username = username
+		jsonObject.installId = installId
 		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetAssertionOptions', jsonObject);
 	}
 

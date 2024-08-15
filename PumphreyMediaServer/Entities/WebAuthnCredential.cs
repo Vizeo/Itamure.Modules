@@ -1,12 +1,16 @@
 ﻿using Fido2NetLib.Objects;
+using RizeDb.ObjectOriented;
 
 namespace MediaServer.Entities
 {
 	public class WebAuthnCredential : IEntity
 	{
 		public long Id { get; set; }
-		public string? UserName { get; set; }
-		public string? CredentialJson { get; set; }
+		[Index(IndexSearchOptions.String)]
+        public string? InstallId { get; set; }
+        public string? AccessToken { get; set; }
+        public string? UserName { get; set; }
+        public string? CredentialJson { get; set; }
 		public DateTime TimeStamp { get; set; }
 		public DateTime? LastUsedDate { get; set; }
 		public List<byte[]>? DevicePublicKeys { get; set; }

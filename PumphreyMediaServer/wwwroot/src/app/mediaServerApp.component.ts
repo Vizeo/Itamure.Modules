@@ -11,6 +11,11 @@ export class MediaServerAppComponent {
     constructor(private castService: CastService,
         mediaService: MediaService) {
         mediaService.GetAccess().then(a => this.Access = a);
+
+        // This variable will save the event for later use.
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); //Don't show install prompt
+        });
     }
 
     public SelectedMenuItem: string = "Movies";
@@ -31,5 +36,10 @@ export class MediaServerAppComponent {
 
     public CloseCastDevices() {
         this._castDevicesDialog.nativeElement.close();
+    }
+
+    public NavigateToInstall() {
+        alert(`${window.location.protocol}//${window.location.hostname}/mediaServer/Install`);
+        window.top!.location.href = `${window.location.protocol}//${window.location.hostname}/mediaServer/Install`; 
     }
 }

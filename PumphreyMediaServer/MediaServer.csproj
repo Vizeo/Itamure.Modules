@@ -62,15 +62,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="wwwroot\src\app\Pwa\enterAuthCode - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Pwa\enterAuthCode - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Pwa\mediaServerApp.component.html" />
+	  <None Remove="wwwroot\src\app\Pwa\mediaServerApp.component.less" />
 	  <None Remove="wwwroot\src\app\Services\metadata - Copy.service.ts" />
-	  <None Remove="wwwroot\src\app\WebAuthn\enterAuthCode - Copy.component.html" />
-	  <None Remove="wwwroot\src\app\WebAuthn\enterAuthCode - Copy.component.less" />
-	  <None Remove="wwwroot\src\app\WebAuthn\enterAuthCode.component.ts" />
-	  <None Remove="wwwroot\src\app\WebAuthn\generateAuthCode.component.ts" />
-	  <None Remove="wwwroot\src\app\WebAuthn\imagesView.component.html" />
-	  <None Remove="wwwroot\src\app\WebAuthn\imagesView.component.less" />
-	  <None Remove="wwwroot\src\app\WebAuthn\webCode - Copy.component.html" />
-	  <None Remove="wwwroot\src\app\WebAuthn\webCode - Copy.component.less" />
+	  <None Remove="wwwroot\src\app\Pwa\imagesView.component.html" />
+	  <None Remove="wwwroot\src\app\Pwa\imagesView.component.less" />
+	  <None Remove="wwwroot\src\app\Pwa\webCode - Copy.component.html" />
+	  <None Remove="wwwroot\src\app\Pwa\webCode - Copy.component.less" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <TypeScriptCompile Remove="wwwroot\src\app\Pwa\pwa.component.ts" />
+	  <TypeScriptCompile Remove="wwwroot\src\app\Pwa\start.component.ts" />
+	  <TypeScriptCompile Remove="wwwroot\src\app\Pwa\webAppInstall.component.ts" />
 	</ItemGroup>
 	
 	<ItemGroup>

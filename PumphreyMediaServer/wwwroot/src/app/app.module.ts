@@ -58,9 +58,10 @@ import { RatingVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/r
 import { GenreVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/genreVideoGroup.component';
 import { ActivityWidgetComponent } from './widgets/activityWidget.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { GenerateAuthCodeComponent } from './WebAuthn/generateAuthCode.component';
-import { EnterAuthCodeComponent } from './WebAuthn/enterAuthCode.component';
-import { WebAuthnComponent } from './WebAuthn/webAuthn.component';
+import { WebAuthnComponent } from './Pwa/webAuthn.component';
+import { WebAppInstallComponent } from './Pwa/webAppInstall.component';
+import { StartComponent } from './Pwa/start.component';
+import { PwaComponent } from './Pwa/pwa.component';
 
 @NgModule({
     declarations: [
@@ -116,9 +117,12 @@ import { WebAuthnComponent } from './WebAuthn/webAuthn.component';
         GenreVideoGroupComponent,
         ActivityWidgetComponent,
         MediaItemAccessComponent,
-        GenerateAuthCodeComponent,
-        EnterAuthCodeComponent,
-        WebAuthnComponent
+
+        WebAppInstallComponent,
+        PwaComponent,
+        StartComponent,
+
+        WebAuthnComponent,
     ],
     imports: [
         BrowserModule,

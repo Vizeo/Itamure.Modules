@@ -18,59 +18,67 @@ import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
 import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
 import { ActivityWidgetComponent } from './widgets/activityWidget.component';
-import { GenerateAuthCodeComponent } from './WebAuthn/generateAuthCode.component';
-import { EnterAuthCodeComponent } from './WebAuthn/enterAuthCode.component';
-import { WebAuthnComponent } from './WebAuthn/webAuthn.component';
+import { WebAuthnComponent } from './Pwa/webAuthn.component';
+import { WebAppInstallComponent } from './Pwa/webAppInstall.component';
+import { StartComponent } from './Pwa/start.component';
+import { PwaComponent } from './Pwa/pwa.component';
 //import { AudioSettingComponent } from './audioSettings.component';
 //import { ImagesSettingComponent } from './imagesSettings.component';
 
 const routes: Routes = [
-    { path: '**', redirectTo: 'WebAuthn', pathMatch: 'full' },    
-    //{ path: '', component: WebAuthComponent },
-    //{ path: '**', component: WebAuthComponent },
-    {
-        path: 'App', component: MediaServerAppComponent,
-        children: [
-            { path: '', redirectTo: 'Movies', pathMatch: 'full' },
-            { path: 'Movies', component: MoviesViewComponent },
-            { path: 'Movie/:id', component: videoDetailsComponent },
-            { path: 'Series', component: SeriesViewComponent },
-            { path: 'Series/:id', component: SeriesDetailsComponent },
-            { path: 'Episode/:id', component: EpisodeDetailsComponent },
-            { path: 'Music', component: MusicViewComponent },
-            { path: 'Pictures', component: ImagesViewComponent },
-            { path: 'Search', component: SearchComponent },
-            { path: 'FullGroupView', component: FullMovieGroupingComponent }
-        ],
-    },
-    {
-        path: 'Settings', component: MediaServerSettingsComponent,
-        children: [
-            { path: '', redirectTo: 'Sources', pathMatch: 'full' },
-            { path: 'Sources', component: SourcesSettingsComponent },
-            { path: 'FileTypes', component: MediaFileTypesSettingComponent },
-            {
-                path: 'Videos', component: VideoSettingComponent,
-                children: [
-                    { path: 'Unassigned', component: UnassignedVideoListComponent },
-                ]
-            },
-            { path: 'VideoGroups', component: VideoGroupManagerComponent },
-            //{ path: 'Audio', component: AudioSettingComponent },
-            //{ path: 'Images', component: ImagesSettingComponent },
-        ]
-    },
-    //{ path: '', component: MediaServerAppComponent },
-    { path: 'RemoteWebScreen', component: RemoteWebScreenComponent },
-    { path: 'ActivityWidget', component: ActivityWidgetComponent },
-    { path: 'EnterAuthCode', component: EnterAuthCodeComponent },
-    { path: 'EnterAuthCode', component: EnterAuthCodeComponent },
-    { path: 'WebAuthn', component: WebAuthnComponent }
+	{ path: '', redirectTo: 'App/Movies', pathMatch: 'full' },
+	{
+		path: 'App', component: MediaServerAppComponent,
+		children: [
+			{ path: '', redirectTo: 'Movies', pathMatch: 'full' },
+			{ path: 'Movies', component: MoviesViewComponent },
+			{ path: 'Movie/:id', component: videoDetailsComponent },
+			{ path: 'Series', component: SeriesViewComponent },
+			{ path: 'Series/:id', component: SeriesDetailsComponent },
+			{ path: 'Episode/:id', component: EpisodeDetailsComponent },
+			{ path: 'Music', component: MusicViewComponent },
+			{ path: 'Pictures', component: ImagesViewComponent },
+			{ path: 'Search', component: SearchComponent },
+			{ path: 'FullGroupView', component: FullMovieGroupingComponent }
+		],
+	},
+	{
+		path: 'Settings', component: MediaServerSettingsComponent,
+		children: [
+			{ path: '', redirectTo: 'Sources', pathMatch: 'full' },
+			{ path: 'Sources', component: SourcesSettingsComponent },
+			{ path: 'FileTypes', component: MediaFileTypesSettingComponent },
+			{
+				path: 'Videos', component: VideoSettingComponent,
+				children: [
+					{ path: 'Unassigned', component: UnassignedVideoListComponent },
+				]
+			},
+			{ path: 'VideoGroups', component: VideoGroupManagerComponent },
+			//{ path: 'Audio', component: AudioSettingComponent },
+			//{ path: 'Images', component: ImagesSettingComponent },
+		]
+	},
+	{ path: 'RemoteWebScreen', component: RemoteWebScreenComponent },
+	{ path: 'ActivityWidget', component: ActivityWidgetComponent },
+
+	{
+		path: 'pwa', component: PwaComponent,
+		children: [
+			{ path: '', redirectTo: 'Start', pathMatch: 'full' },
+			{ path: 'Start', component: StartComponent },
+		]
+	},
+	
+	{ path: 'Install', component: WebAppInstallComponent }, 
+
+	{ path: 'WebAuthn', component: WebAuthnComponent },
+	{ path: '**', redirectTo: 'App/Movies', pathMatch: 'full' },
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes/*,
+	imports: [RouterModule.forRoot(routes/*,
         { enableTracing: true }*/)],
-    exports: [RouterModule]
+	exports: [RouterModule]
 })
 export class AppRoutingModule { }

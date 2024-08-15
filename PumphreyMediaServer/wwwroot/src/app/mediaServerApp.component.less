@@ -15,6 +15,19 @@
 		flex-direction: column;
 		width: 100vw;
 	}
+
+	.installApp {
+		padding: 20px;
+		display: flex;
+		justify-content: center;
+		background: #5d5d83;
+		font-size: 25px;
+		overflow: clip;
+		animation-name: hideAppPrompt;
+		animation-duration: 1s;
+		animation-delay: 5s;
+		animation-fill-mode: both;
+	}
 }
 
 
@@ -27,5 +40,15 @@
 .tools {
 	img {
 		width: 25px;
+	}
+}
+
+@keyframes hideAppPrompt {
+	from {
+		transform: translateY(0%)
+	}
+
+	to {
+		transform: translateY(-200%)
 	}
 }

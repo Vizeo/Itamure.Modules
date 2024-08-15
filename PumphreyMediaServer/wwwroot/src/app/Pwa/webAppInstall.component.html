@@ -1,0 +1,19 @@
+<div class="messageArea">
+	<div class="custom prompt" *ngIf="CanInstall" (click)="Install()">
+		Click here to install the Progressive Web App on to your device.
+	</div>
+
+	<div class="cantInstall prompt" *ngIf="!CanInstall">
+		Either the app is already installed or your device does not support Progressive Web Apps.
+	</div>
+
+	<div>
+		*To install on a different device, open your browser and navigate to
+	</div>
+	<div>
+		{{Address}}
+	</div>
+	<div>
+		<qr-code [value]="Address" size="200" errorCorrectionLevel="M" />
+	</div>
+</div>
