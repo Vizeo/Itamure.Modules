@@ -108,6 +108,11 @@ export interface ProgressCallback {
     (progress: number): void;
 }
 
+export class ApiCallOptions
+{
+    public Silent: boolean = false;
+}
+
 @Injectable({ providedIn: 'root' })
 export class MetadataService {
     private _reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.{0,1}\d*))(?:Z|(\+|-)([\d|:]*))?$/;
@@ -168,24 +173,12 @@ export class MetadataService {
         return value;
     }
 
-    protected ApiCall<T>(method: string, url: string, sendData: any, progressCallback?: ProgressCallback | null): Promise<T> {
+    protected ApiCall<T>(method: string, url: string, sendData: any, apiCallOptions: ApiCallOptions): Promise<T> {
         let result = new Promise<T>((resolve, reject) => {
             let xhr = new XMLHttpRequest();
             xhr.open(method, url, true);
             xhr.setRequestHeader("Content-Type", "application/json");
-
-            if (progressCallback != null) {
-                xhr.upload.addEventListener("progress", (progressEvent: ProgressEvent) => {
-                    if (progressEvent.lengthComputable) {
-                        progressCallback(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-                    }
-                }, false);
-
-                xhr.upload.addEventListener("load", (loadEvent: ProgressEvent) => {
-                    progressCallback(-1);
-                }, false);
-            }
-
+            
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
@@ -193,13 +186,21 @@ export class MetadataService {
                             resolve(JSON.parse(xhr.responseText, (k, v) => this.DateTimeParser(k, v)));
                         }
                         else {
-                            alert("Error when processing api call to " + url + " unhandled content " + xhr.getResponseHeader("Content-Type"));
+                            let errorMessage = "Error when processing api call to " + url + " unhandled content " + xhr.getResponseHeader("Content-Type");
+                            if(!apiCallOptions.Silent)
+                            {
+                                alert(errorMessage);
+                            }
+                            throw errorMessage;
                         }
                     }
                     else if (xhr.status == 205) {
                         if (hasSession != null &&
                             hasSession == true) {
-                            alert("Your session has expired.")
+                            if(!apiCallOptions.Silent)
+                            {
+                                alert("Your session has expired.")
+                            }                            
                             location.reload();
                         }
                     }
@@ -207,7 +208,12 @@ export class MetadataService {
                         //alert("Could not connect to server");
                     }
                     else {
-                        alert("Error when processing api call to " + url);
+                        let errorMessage = "Error when processing api call to " + url;
+                        if(!apiCallOptions.Silent)
+                        {
+                            alert(errorMessage);
+                        }
+                        throw errorMessage;
                         reject(xhr.statusText);
                     }
                 }
@@ -246,31 +252,31 @@ export class MetadataService {
 
 	ApiKeySet(): Promise<boolean> {
 		var jsonObject = <any>new Object();
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/ApiKeySet', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/ApiKeySet',jsonObject, { Silent: false } );
 	}
 
 	MovieSearch(name: string | null): Promise<SearchResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.name = name
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/MovieSearch', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/MovieSearch',jsonObject, { Silent: false } );
 	}
 
 	GetMovieMetadata(imdbId: string | null): Promise<MovieResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.imdbId = imdbId
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/GetMovieMetadata', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/GetMovieMetadata',jsonObject, { Silent: false } );
 	}
 
 	SeriesSearch(name: string | null): Promise<SearchResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.name = name
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/SeriesSearch', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/SeriesSearch',jsonObject, { Silent: false } );
 	}
 
 	GetSeriesMetadata(imdbId: string | null): Promise<SeriesResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.imdbId = imdbId
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/GetSeriesMetadata', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/GetSeriesMetadata',jsonObject, { Silent: false } );
 	}
 
 	EpisodeSearch(series: string | null, season: number, episode: number): Promise<EpisodeResult> {
@@ -278,13 +284,13 @@ export class MetadataService {
 		jsonObject.series = series
 		jsonObject.season = season
 		jsonObject.episode = episode
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/EpisodeSearch', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/EpisodeSearch',jsonObject, { Silent: false } );
 	}
 
 	GetEpisodeMetadata(imdbId: string | null): Promise<EpisodeResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.imdbId = imdbId
-		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/GetEpisodeMetadata', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/metadataService/GetEpisodeMetadata',jsonObject, { Silent: false } );
 	}
 
 }

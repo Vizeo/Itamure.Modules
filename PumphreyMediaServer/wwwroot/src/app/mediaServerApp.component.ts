@@ -39,7 +39,6 @@ export class MediaServerAppComponent {
     }
 
     public NavigateToInstall() {
-        alert(`${window.location.protocol}//${window.location.hostname}/mediaServer/Install`);
         window.top!.location.href = `${window.location.protocol}//${window.location.hostname}/mediaServer/Install`; 
     }
 }

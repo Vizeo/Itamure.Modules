@@ -31,12 +31,12 @@ namespace MediaServer.Api
         }
 
         [Api]
-        public CreateTokenResult CreateToken(string loginCode, string installId)
+        public CreateTokenResult CreateToken(string accessCode, string installId)
         {
             var result = new CreateTokenResult();
 
             //Claim the token
-            var accessTokenResult = Module.CurrentModule!.GetAccessToken(loginCode);
+            var accessTokenResult = Module.CurrentModule!.CreateAccessToken(accessCode);
 
             if (accessTokenResult.Success)
             {
@@ -89,7 +89,7 @@ namespace MediaServer.Api
 
             var authenticatorSelection = new AuthenticatorSelection
             {
-                ResidentKey = ResidentKeyRequirement.Required,
+                ResidentKey = ResidentKeyRequirement.Discouraged,
                 UserVerification = UserVerificationRequirement.Required,
                 AuthenticatorAttachment = AuthenticatorAttachment.Platform
             };
@@ -105,20 +105,22 @@ namespace MediaServer.Api
                 CredProps = true
             };
 
-            var options = GetFido2().RequestNewCredential(user, new PublicKeyCredentialDescriptor[0], authenticatorSelection, AttestationConveyancePreference.None, exts);
+            var options = GetFido2().RequestNewCredential(user, new PublicKeyCredentialDescriptor[0], authenticatorSelection, AttestationConveyancePreference.Direct, exts);
+            options.Timeout = 600000;
 
-            //Temporarily store options, session/in-memory cache/redis/db
-            var json = options.ToJson();
+			//Temporarily store options, session/in-memory cache/redis/db
+			var json = options.ToJson();
             Session[ATTESTATION_OPTIONS] = json;
             return json;
         }
 
         [Api]
-        public async Task<string> SaveCredential(string json)
+        public async Task<SaveCredentialResult> SaveCredential(string json)
         {
             var attestationResponse = System.Text.Json.JsonSerializer.Deserialize<AuthenticatorAttestationRawResponse>(json);
+            var result = new SaveCredentialResult();
 
-            try
+			try
             {
                 // 1. get the options we sent the client
                 var jsonOptions = (string)Session[ATTESTATION_OPTIONS];
@@ -134,8 +136,8 @@ namespace MediaServer.Api
                     return Task.FromResult(true);
                 };
 
-                // 2. Verify and make the credentials
-                var makeNewCredential = await GetFido2().MakeNewCredentialAsync(attestationResponse!, options, callback);
+				// 2. Verify and make the credentials
+				var makeNewCredential = await GetFido2().MakeNewCredentialAsync(attestationResponse!, options, callback);
                 var credential = makeNewCredential.Result!;
 
                 var credentialJson = System.Text.Json.JsonSerializer.Serialize(credential);
@@ -149,14 +151,16 @@ namespace MediaServer.Api
 
                 Module.ObjectStore!.Store(webAuthnCredential);
                 Module.CurrentModule!.AuthenticateWithAccessToken(Session.UniqueId, webAuthnCredential.AccessToken!);
-            }
+                result.Success = true;
+			}
             catch (Exception e)
             {
-                //return Json(new { status = "error", errorMessage = FormatException(e) });
-                throw e;
+				//return Json(new { status = "error", errorMessage = FormatException(e) });
+				result.FailureMessage = e.Message;
+				throw e;
             }
 
-            return "Success"; //TODO: Use a confirmation object
+            return result; //TODO: Use a confirmation object
         }
 
         [Api]
@@ -267,16 +271,17 @@ namespace MediaServer.Api
         private IFido2 GetFido2()
         {
             var host = Request.HeaderValues["Host"];
-            var schema = Request.IsSecure ? "HTTPS" : "HTTP";
+            var protocol = Request.IsSecure ? "HTTPS" : "HTTP";
+            var origins = $"{protocol}://{host}";
 
-            var configuration = new Fido2Configuration()
+			var configuration = new Fido2Configuration()
             {
                 ServerDomain = host,
                 ServerName = host,
-                Origins = new HashSet<string> { $"{schema}://{host}" },
+                Origins = new HashSet<string> { origins },
             };
 
-            return new Fido2(configuration); //Static?
+			return new Fido2(configuration); //Static?
         }
 
         private static string RandomString(int length)

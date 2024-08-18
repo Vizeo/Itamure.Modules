@@ -58,7 +58,6 @@ import { RatingVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/r
 import { GenreVideoGroupComponent } from './Videos/Settings/VideoGroupEditors/genreVideoGroup.component';
 import { ActivityWidgetComponent } from './widgets/activityWidget.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { WebAuthnComponent } from './Pwa/webAuthn.component';
 import { WebAppInstallComponent } from './Pwa/webAppInstall.component';
 import { StartComponent } from './Pwa/start.component';
 import { PwaComponent } from './Pwa/pwa.component';
@@ -121,8 +120,6 @@ import { PwaComponent } from './Pwa/pwa.component';
         WebAppInstallComponent,
         PwaComponent,
         StartComponent,
-
-        WebAuthnComponent,
     ],
     imports: [
         BrowserModule,

@@ -1822,7 +1822,7 @@ namespace MediaServer.Api
 			webSCreenController.AddWebSocket(screen, webSocket);
 		}
 
-		[Api]
+		[Api(true)]
 		[Authorize()]
 		public void UpdateMediaPosition(Guid userMediaId, double positionInSeconds)
 		{

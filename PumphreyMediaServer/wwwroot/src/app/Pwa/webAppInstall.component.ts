@@ -34,4 +34,8 @@ export class WebAppInstallComponent {
     public Install() {
         this._deferredPrompt.prompt();
     }
+
+    public Navigate() {
+        location.href = this.Address;
+    }
 }

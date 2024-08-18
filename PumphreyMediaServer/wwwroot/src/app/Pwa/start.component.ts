@@ -1,46 +1,95 @@
-import { Component } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { WebAuthnService } from '../Services/webAuthn.service';
 import { Router } from '@angular/router';
 
+declare var BarcodeDetector: any;
+
 @Component({
-    selector: 'start',
-    templateUrl: './start.component.html',
-    styleUrls: ['./start.component.less']
+	selector: 'start',
+	templateUrl: './start.component.html',
+	styleUrls: ['./start.component.less']
 })
 export class StartComponent {
-    constructor(private webAuthnService: WebAuthnService,
-        private router: Router) {
-        ///*
-        //1. If install id is null generate a new one but don't save it yet.
-        //    a. Set login required to true
-        //    b. Get the challange
-        //    c. GetCredentialOptions from server
-        //    d. RegisterNewCredential
+	constructor(private webAuthnService: WebAuthnService,
+		private router: Router,
+		private swUpdate: SwUpdate) {
+
+		this.WaitMessage = "Checking for updates";
+		this.swUpdate.checkForUpdate().then(t => {
+			if (t) {
+				alert("Your app has been updated");
+				location.reload();
+			}
+			else {
+				this._waitSpinner.nativeElement.close();
+				this.RunApp();
+			}
+		})
+
+		//this.SetupBarcode();
+	}
+
+	ngAfterViewInit() {
+		this._waitSpinner.nativeElement.showModal();
+	}
+
+	@ViewChild("waitSpinner")
+	private _waitSpinner!: ElementRef<HTMLDialogElement>;
+
+	private readonly INSTALL_ID: string = "installId";
+
+	private _installId: string | null = localStorage.getItem(this.INSTALL_ID);
+	private _challenge: string | null = null;
+
+	public CurrentStartState: StartState = StartState.CheckingForUpdates;
+	public StartState = StartState;
+	public Address: string = window.location.origin + "/accessCode";
+	public LoginCode: string | null = null;
+	public CanScan: boolean = false;
+	public WaitMessage: string | null = null;
+
+	public Navigate() {
+		location.href = this.Address;
+	}
+
+	private RunApp() {
+		///*
+		//1. If install id is null generate a new one but don't save it yet.
+		//    a. Set login required to true
+		//    b. Get the challange
+		//    c. GetCredentialOptions from server
+		//    d. RegisterNewCredential
 		//    e. Store UserName and InstallId in localstorage
 		//    f. Navigat to main page
 
-        //1. GetAssertionOptions using InstallId
-        //    a. If assution options fails go to 1
-        //    b. VerifyAssertionWithServer
-        //    c. Navigate to main page
-        //*/
+		//1. GetAssertionOptions using InstallId
+		//    a. If assution options fails go to 1
+		//    b. VerifyAssertionWithServer
+		//    c. Navigate to main page
+		//*/
 		if (this._installId == null) {
-			this.RequiresLogin = true;
+			this.CurrentStartState = StartState.RequestingAuthentication;
 			this.RegisterInstall();
 		}
 		else {
+			this.CurrentStartState = StartState.Authenticating;
 			this.Authenticate();
 		}
-    }
+	}
 
-    private readonly INSTALL_ID: string = "installId";
-	
-    private _installId: string | null = localStorage.getItem(this.INSTALL_ID);
-    private _challenge: string | null = null;
-
-	public Address: string = window.location.origin + "/accessToken";
-    public RequiresLogin: boolean = false;    
-	public LoginCode: string | null = null;
+	private SetupBarcode() {
+		if (!("BarcodeDetector" in globalThis)) {
+			console.log("Barcode Detector is not supported by this browser.");
+		} else {
+			console.log("Barcode Detector supported!");
+			this.CanScan = true;
+			// create new detector
+			const barcodeDetector = new BarcodeDetector({
+				formats: ["qr_code"],
+			});
+		}
+	}
 
 	public async RegisterInstall() {
 		this._installId = this.CreateInstallId();
@@ -48,7 +97,7 @@ export class StartComponent {
 
 	public async Authenticate() {
 		let credentials = await this.GetAuthenticationOptions();
-		if (credentials != null) {
+		if (credentials != null) {			
 			this.VerifyAssertionWithServer(credentials);
 			this.RouteToMainPage();
 		}
@@ -58,7 +107,7 @@ export class StartComponent {
 		this.router.navigate(['/']);
 	}
 
-	private async GetAuthenticationOptions() : Promise<any> {
+	private async GetAuthenticationOptions(): Promise<any> {
 		let assertOptionsJson = await this.webAuthnService.GetAssertionOptions(this._installId);
 		let assertOptions = JSON.parse(assertOptionsJson!);
 
@@ -113,42 +162,55 @@ export class StartComponent {
 		let response;
 		try {
 			let json = JSON.stringify(data);
+			this.ShowWaitMessage("Authenticating");
 			let res = await this.webAuthnService.MakeAssertion(json)
+			this.HideWaitMessage();
 		} catch (e) {
 			alert("Request to server failed " + e);
 			throw e;
 		}
 
 		console.log("Assertion Object", response);
+	}
 
-		alert("Dunzo");
+	private ShowWaitMessage(message: string) {
+		this.WaitMessage = message;
+		this._waitSpinner.nativeElement.showModal();
+	}
+
+	private HideWaitMessage() {
+		this._waitSpinner.nativeElement.close();
 	}
 
 	public async RegisterAuthentication() {
+		this.ShowWaitMessage("Validating login code.");
 		let createTokenResult = await this.webAuthnService.CreateToken(this.LoginCode, this._installId);
 		if (!createTokenResult.Success) {
+			this.HideWaitMessage();
 			alert(createTokenResult.FailureMessage);
 		}
 		else {
-			let credentials = await this.CreatNewLogin();
+			this.ShowWaitMessage("Creating credentials.");
+			let credentials = await this.CreateNewLogin();
 			if (credentials != null) {
-				await this.RegisterNewCredential(credentials);
+				if (await this.RegisterNewCredential(credentials)) {
+					localStorage.setItem(this.INSTALL_ID, this._installId!);
 
-				localStorage.setItem(this.INSTALL_ID, this._installId!);
-
-				this.RouteToMainPage();
+					this.HideWaitMessage();
+					this.RouteToMainPage();
+				}
 			}
 		}
 	}
 
-	private async CreatNewLogin(): Promise<any> {
-        this._challenge = await this.webAuthnService.GetChallenge(this._installId);
-        let optionsJson = await this.webAuthnService.GetCredentialOptions(this._challenge);
-        let options = JSON.parse(optionsJson!);
+	private async CreateNewLogin(): Promise<any> {
+		this._challenge = await this.webAuthnService.GetChallenge(this._installId);
+		let optionsJson = await this.webAuthnService.GetCredentialOptions(this._challenge);
+		let options = JSON.parse(optionsJson!);
 
-        options.challenge = this.CoerceToArrayBuffer(options.challenge);
-        // Turn ID into a UInt8Array Buffer for some reason
-        options.user.id = this.CoerceToArrayBuffer(options.user.id);
+		options.challenge = this.CoerceToArrayBuffer(options.challenge);
+		// Turn ID into a UInt8Array Buffer for some reason
+		options.user.id = this.CoerceToArrayBuffer(options.user.id);
 
 		options.excludeCredentials = options.excludeCredentials.map((c: any) => {
 			c.id = this.CoerceToArrayBuffer(c.id);
@@ -159,9 +221,8 @@ export class StartComponent {
 			options.authenticatorSelection.authenticatorAttachment = undefined;
 		}
 
-		let newCredential;
 		try {
-			newCredential = await navigator.credentials.create({
+			let newCredential = await navigator.credentials.create({
 				publicKey: options
 			});
 			return newCredential;
@@ -173,7 +234,7 @@ export class StartComponent {
 		}
 	}
 
-	private async RegisterNewCredential(newCredential: any) {
+	private async RegisterNewCredential(newCredential: any): Promise<boolean> {
 		// Move data into Arrays incase it is super long
 		let attestationObject = new Uint8Array(newCredential.response.attestationObject);
 		let clientDataJSON = new Uint8Array(newCredential.response.clientDataJSON);
@@ -192,19 +253,24 @@ export class StartComponent {
 		};
 
 		try {
-			await this.webAuthnService.SaveCredential(JSON.stringify(data))
+			let saveCredentailsResult = await this.webAuthnService.SaveCredential(JSON.stringify(data));
+			if (saveCredentailsResult.Success) {
+				return true;
+			}
+			else {
+				alert(saveCredentailsResult.FailureMessage);
+			}
 		} catch (e) {
 			console.log(e);
 			alert(e);
 		}
-
-		alert("Registration Successful");
+		return false;
 	}
 
 	//Helper functions
-    private CreateInstallId() {
-        return Math.random().toString(36).slice(2);
-    }
+	private CreateInstallId() {
+		return Math.random().toString(36).slice(2);
+	}
 
 	private CoerceToArrayBuffer(thing: any) {
 		if (typeof thing === "string") {
@@ -265,8 +331,12 @@ export class StartComponent {
 
 		// base64 to base64url
 		// NOTE: "=" at the end of challenge is optional, strip it off here
-		thing = thing.replace(/\+/g, "-").replace(/\//g, "_").replace(/=*$/g, "");
-
-		return thing;
+		return thing.replace(/\+/g, "-").replace(/\//g, "_").replace(/=*$/g, "");
 	};
+}
+
+enum StartState {
+	CheckingForUpdates,
+	RequestingAuthentication,
+	Authenticating
 }

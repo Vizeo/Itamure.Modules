@@ -7,12 +7,22 @@ export class CreateTokenResult
 	Success?: boolean; 
 	FailureMessage?: string | null; 
 }
+export class SaveCredentialResult
+{
+	Success?: boolean; 
+	FailureMessage?: string | null; 
+}
 
 import { Injectable } from '@angular/core';
 declare var hasSession: boolean;
 
 export interface ProgressCallback {
     (progress: number): void;
+}
+
+export class ApiCallOptions
+{
+    public Silent: boolean = false;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -75,24 +85,12 @@ export class WebAuthnService {
         return value;
     }
 
-    protected ApiCall<T>(method: string, url: string, sendData: any, progressCallback?: ProgressCallback | null): Promise<T> {
+    protected ApiCall<T>(method: string, url: string, sendData: any, apiCallOptions: ApiCallOptions): Promise<T> {
         let result = new Promise<T>((resolve, reject) => {
             let xhr = new XMLHttpRequest();
             xhr.open(method, url, true);
             xhr.setRequestHeader("Content-Type", "application/json");
-
-            if (progressCallback != null) {
-                xhr.upload.addEventListener("progress", (progressEvent: ProgressEvent) => {
-                    if (progressEvent.lengthComputable) {
-                        progressCallback(Math.round((progressEvent.loaded / progressEvent.total) * 100));
-                    }
-                }, false);
-
-                xhr.upload.addEventListener("load", (loadEvent: ProgressEvent) => {
-                    progressCallback(-1);
-                }, false);
-            }
-
+            
             xhr.onreadystatechange = () => {
                 if (xhr.readyState == 4) {
                     if (xhr.status == 200) {
@@ -100,13 +98,21 @@ export class WebAuthnService {
                             resolve(JSON.parse(xhr.responseText, (k, v) => this.DateTimeParser(k, v)));
                         }
                         else {
-                            alert("Error when processing api call to " + url + " unhandled content " + xhr.getResponseHeader("Content-Type"));
+                            let errorMessage = "Error when processing api call to " + url + " unhandled content " + xhr.getResponseHeader("Content-Type");
+                            if(!apiCallOptions.Silent)
+                            {
+                                alert(errorMessage);
+                            }
+                            throw errorMessage;
                         }
                     }
                     else if (xhr.status == 205) {
                         if (hasSession != null &&
                             hasSession == true) {
-                            alert("Your session has expired.")
+                            if(!apiCallOptions.Silent)
+                            {
+                                alert("Your session has expired.")
+                            }                            
                             location.reload();
                         }
                     }
@@ -114,7 +120,12 @@ export class WebAuthnService {
                         //alert("Could not connect to server");
                     }
                     else {
-                        alert("Error when processing api call to " + url);
+                        let errorMessage = "Error when processing api call to " + url;
+                        if(!apiCallOptions.Silent)
+                        {
+                            alert(errorMessage);
+                        }
+                        throw errorMessage;
                         reject(xhr.statusText);
                     }
                 }
@@ -151,41 +162,41 @@ export class WebAuthnService {
         }
     }
 
-	CreateToken(loginCode: string | null, installId: string | null): Promise<CreateTokenResult> {
+	CreateToken(accessCode: string | null, installId: string | null): Promise<CreateTokenResult> {
 		var jsonObject = <any>new Object();
-		jsonObject.loginCode = loginCode
+		jsonObject.accessCode = accessCode
 		jsonObject.installId = installId
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/CreateToken', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/CreateToken',jsonObject, { Silent: false } );
 	}
 
 	GetChallenge(installId: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
 		jsonObject.installId = installId
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetChallenge', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetChallenge',jsonObject, { Silent: false } );
 	}
 
 	GetCredentialOptions(challange: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
 		jsonObject.challange = challange
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetCredentialOptions', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetCredentialOptions',jsonObject, { Silent: false } );
 	}
 
-	SaveCredential(json: string | null): Promise<string | null> {
+	SaveCredential(json: string | null): Promise<SaveCredentialResult> {
 		var jsonObject = <any>new Object();
 		jsonObject.json = json
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/SaveCredential', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/SaveCredential',jsonObject, { Silent: false } );
 	}
 
 	GetAssertionOptions(installId: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
 		jsonObject.installId = installId
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetAssertionOptions', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/GetAssertionOptions',jsonObject, { Silent: false } );
 	}
 
 	MakeAssertion(json: string | null): Promise<string | null> {
 		var jsonObject = <any>new Object();
 		jsonObject.json = json
-		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/MakeAssertion', jsonObject);
+		return this.ApiCall<any>('POST', '/mediaServer/api/webAuthnService/MakeAssertion',jsonObject, { Silent: false } );
 	}
 
 }

@@ -142,7 +142,7 @@ namespace MediaServer
             }
             OmdbManager.ApiKey = settings.OmdbApiKey;
 
-            UpnpSubService.Start();
+            //UpnpSubService.Start();
 
             ShowWidget(new ActivityWidget());
         }
@@ -166,9 +166,9 @@ namespace MediaServer
             base.WriteToConsole(text);
         }
 
-        public CreateAccessTokenResult GetAccessToken(string loginCode)
+        public CreateAccessTokenResult CreateAccessToken(string loginCode)
         {
-            return base.GetAccessToken(loginCode);
+            return base.CreateAccessToken(loginCode);
         }
 
 		public new TokenAuthenticationResult AuthenticateWithAccessToken(Guid uniqueId, string token)

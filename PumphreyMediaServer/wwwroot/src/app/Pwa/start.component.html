@@ -1,13 +1,34 @@
-<ng-container *ngIf="RequiresLogin">
-    <div class="instructions">
-        Please navigate to {{Address}} to get a login code. Once you have a code you can enter it or scan the QR code on the page.
-    </div>
+<div class="center">
+	<div [ngSwitch]="CurrentStartState" class="messageArea">
+		<div *ngSwitchCase="StartState.CheckingForUpdates">
+			<!--Something should go here-->
+		</div>
 
-    <div>
-        <input [(ngModel)]="LoginCode"/>
-        <button [disabled]="LoginCode == null || LoginCode.length == 0" (click)="RegisterAuthentication()">Login</button>
-    </div>
-</ng-container>
-<ng-templage #login>
-    Welcome to Itamure Media Server
-</ng-templage>
+		<div *ngSwitchCase="StartState.RequestingAuthentication">
+			<div class="instructions">
+				Please navigate to <span class="link" (click)="Navigate()">{{Address}}</span> to get an access code.
+				<span *ngIf="CanScan">Once you have a code you can enter it below.</span>
+				<span *ngIf="!CanScan">Once you have a code you can enter it on the page.</span>
+			</div>
+
+			<div class="login">
+				<input autofocus type="text" [(ngModel)]="LoginCode" placeholder="Access Code" />
+				<button [disabled]="LoginCode == null || LoginCode.length == 0" (click)="RegisterAuthentication()">Login</button>
+			</div>
+		</div>
+
+		<div *ngSwitchCase="StartState.Authenticating">
+			Welcome to Itamure Media Server
+		</div>
+	</div>
+</div>
+
+<dialog #waitSpinner>
+	<div class="dialogContainer">
+		<div class="message">
+			{{WaitMessage}}
+		</div>
+		<div class="loader">
+		</div>
+	</div>
+</dialog>

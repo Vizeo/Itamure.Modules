@@ -80,7 +80,9 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<EmbeddedResource Include="MediaServerIcon.svg" />
+		<Content Include="MediaServerIcon.svg">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 	</ItemGroup>
 	
 	<ItemGroup>

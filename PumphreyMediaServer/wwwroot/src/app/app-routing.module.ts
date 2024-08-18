@@ -18,7 +18,6 @@ import { FullMovieGroupingComponent } from './Videos/fullMovieGrouping.component
 import { RemoteWebScreenComponent } from './remoteWebScreen.component';
 import { VideoGroupManagerComponent } from './Videos/Settings/videoGroupManager.component';
 import { ActivityWidgetComponent } from './widgets/activityWidget.component';
-import { WebAuthnComponent } from './Pwa/webAuthn.component';
 import { WebAppInstallComponent } from './Pwa/webAppInstall.component';
 import { StartComponent } from './Pwa/start.component';
 import { PwaComponent } from './Pwa/pwa.component';
@@ -71,8 +70,6 @@ const routes: Routes = [
 	},
 	
 	{ path: 'Install', component: WebAppInstallComponent }, 
-
-	{ path: 'WebAuthn', component: WebAuthnComponent },
 	{ path: '**', redirectTo: 'App/Movies', pathMatch: 'full' },
 ];
 
