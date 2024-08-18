@@ -17,8 +17,7 @@ export class StartComponent {
 
 		this.WaitMessage = "Checking for updates";
 		this.swUpdate.checkForUpdate().then(t => {
-			if (t) {
-				alert("Your app has been updated");
+			if (t) {				
 				location.reload();
 			}
 			else {

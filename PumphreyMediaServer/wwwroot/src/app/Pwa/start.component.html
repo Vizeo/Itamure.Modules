@@ -1,5 +1,7 @@
 <div class="center">
 	<div [ngSwitch]="CurrentStartState" class="messageArea">
+		<img src="./assets/MediaServerIcon.svg" />
+
 		<div *ngSwitchCase="StartState.CheckingForUpdates">
 			<!--Something should go here-->
 		</div>
@@ -18,7 +20,7 @@
 		</div>
 
 		<div *ngSwitchCase="StartState.Authenticating">
-			Welcome to Itamure Media Server
+			Welcome to Itamure Media Server. Please authenticate to continue.
 		</div>
 	</div>
 </div>

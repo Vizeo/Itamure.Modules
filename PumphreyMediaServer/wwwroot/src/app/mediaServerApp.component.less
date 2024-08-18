@@ -18,15 +18,20 @@
 
 	.installApp {
 		padding: 20px;
+		top: 60px;
+		left: 0px;
+		right: 0px;
+		z-index: 9;
 		display: flex;
+		position: absolute;
 		justify-content: center;
 		background: #5d5d83;
 		font-size: 25px;
 		overflow: clip;
 		animation-name: hideAppPrompt;
-		animation-duration: 1s;
-		animation-delay: 5s;
-		animation-fill-mode: both;
+		animation-duration: 8s;
+/*		animation-delay: 5s;
+*/		animation-fill-mode: both;
 	}
 }
 
@@ -44,11 +49,19 @@
 }
 
 @keyframes hideAppPrompt {
-	from {
-		transform: translateY(0%)
+	0% {
+		top: -60px;
 	}
 
-	to {
-		transform: translateY(-200%)
+	20% {
+		top: 60px;
+	}
+
+	80% {
+		top: 60px;
+	}
+
+	100% {
+		top: -60px;
 	}
 }

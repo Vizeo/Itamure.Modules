@@ -12,15 +12,16 @@ export class MediaServerAppComponent {
         mediaService: MediaService) {
         mediaService.GetAccess().then(a => this.Access = a);
 
-        // This variable will save the event for later use.
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); //Don't show install prompt
-        });
+        this.ShowInstallApp = !(window.matchMedia('(display-mode: standalone)').matches ||
+            (<any>window.navigator).standalone ||
+                document.referrer.includes('android-app://'));
+
     }
 
     public SelectedMenuItem: string = "Movies";
     public Receivers: Receiver[] | null = null;
     public Access?: Access;
+    public ShowInstallApp: boolean = false;
 
     @ViewChild("castDevicesDialog")
     private _castDevicesDialog!: ElementRef<HTMLDialogElement>;

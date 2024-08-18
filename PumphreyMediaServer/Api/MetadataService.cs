@@ -19,14 +19,14 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public bool ApiKeySet()
         {
             return _omdbManager != null;
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public async Task<SearchResult?> MovieSearch(string name)
         {
             if(_omdbManager == null)
@@ -38,7 +38,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public async Task<MovieResult?> GetMovieMetadata(string imdbId)
         {
             if (_omdbManager == null)
@@ -50,7 +50,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public async Task<SearchResult?> SeriesSearch(string name)
         {
             if (_omdbManager == null)
@@ -62,7 +62,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public async Task<SeriesResult?> GetSeriesMetadata(string imdbId)
         {
             if (_omdbManager == null)
@@ -74,7 +74,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public async Task<EpisodeResult?> EpisodeSearch(string series, int season, int episode)
         {
             if (_omdbManager == null)
@@ -86,7 +86,7 @@ namespace MediaServer.Api
         }
 
         [Api]
-        [Authorize]
+        [Authorize(MediaServerPermissions.SettingsPermissions)]
         public async Task<EpisodeResult?> GetEpisodeMetadata(string imdbId)
         {
             if (_omdbManager == null)

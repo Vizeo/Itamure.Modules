@@ -19,7 +19,7 @@
             </a>
         </div>
     </mainMenu>
-    <div class="installApp" (click)="NavigateToInstall()">
+    <div class="installApp" (click)="NavigateToInstall()" *ngIf="ShowInstallApp">
         Install App
     </div>
     <div class="outlet">

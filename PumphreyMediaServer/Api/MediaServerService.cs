@@ -239,8 +239,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<Rating> GetRatings(MediaSubType mediaSubType)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public IEnumerable<Rating> GetRatings(MediaSubType mediaSubType)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -252,7 +252,7 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize(MediaServerPermissions.SettingsPermissions)]
+		[Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
 		public Rating AddRating(string name, MediaSubType mediaSubType)
 		{
 			if (Module.ObjectStore == null)
@@ -319,8 +319,8 @@ namespace MediaServer.Api
 
 
 		[Api]
-		[Authorize]
-		public IEnumerable<Tag> GetTags(MediaSubType mediaSubType)
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public IEnumerable<Tag> GetTags(MediaSubType mediaSubType)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -398,8 +398,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<MediaFileType> GetMediaFileTypes()
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public IEnumerable<MediaFileType> GetMediaFileTypes()
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -605,8 +605,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public UserMediaItem GetVideoMediaItem(Guid UniqueKey)
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public UserMediaItem GetVideoMediaItem(Guid UniqueKey)
 		{
 			return GetUserMediaItems()[UniqueKey];
 		}
@@ -655,8 +655,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<Folder> GetFolders(long parentId)
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public IEnumerable<Folder> GetFolders(long parentId)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -770,8 +770,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<Series> GetSeriesList()
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public IEnumerable<Series> GetSeriesList()
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -783,8 +783,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public Series GetSeries(long id)
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public Series GetSeries(long id)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -1396,8 +1396,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<UserMediaItem> GetVideoGroupMedia(long videoGroupId, bool all)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public IEnumerable<UserMediaItem> GetVideoGroupMedia(long videoGroupId, bool all)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -1421,8 +1421,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<VideoGroup> GetVideoGroups()
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public IEnumerable<VideoGroup> GetVideoGroups()
 		{
 			var test = this.UserId;
 			var test2 = Module.CurrentModule!.GetUsers();	
@@ -1529,8 +1529,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize]
-		public IEnumerable<UserMediaItemSearchResult> Search(string search, int count)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public IEnumerable<UserMediaItemSearchResult> Search(string search, int count)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -1617,8 +1617,8 @@ namespace MediaServer.Api
 				.ToList();
 		}
 
-		[Api]
-		public Stream? GetUserMediaItemImage(Guid uniqueKey)
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public Stream? GetUserMediaItemImage(Guid uniqueKey)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -1650,8 +1650,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize()]
-		public IEnumerable<UserMediaItem> GetSeasonUserMediaItems(long seriesId, long seasonId)
+        [Authorize(MediaServerPermissions.SettingsPermissions, MediaServerPermissions.AppPermissions)]
+        public IEnumerable<UserMediaItem> GetSeasonUserMediaItems(long seriesId, long seasonId)
 		{
 			if (Module.ObjectStore == null)
 			{
@@ -1667,8 +1667,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize()]
-		public IEnumerable<MediaReceiver> GetMediaReceivers()
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public IEnumerable<MediaReceiver> GetMediaReceivers()
 		{
 			var result = new List<MediaReceiver>();
 			var receiverAdmin = this.HasAccess(MediaServerPermissions.ReceiverAdmin);
@@ -1732,8 +1732,8 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize()]
-		public MediaCastResult? CastToReceiver(string recieverType, string receiverId, Guid userMediaId, double position)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public MediaCastResult? CastToReceiver(string recieverType, string receiverId, Guid userMediaId, double position)
 		{
 			MediaCastResult? result = null;
 
@@ -1783,39 +1783,39 @@ namespace MediaServer.Api
 		}
 
 		[Api]
-		[Authorize()]
-		public void PauseMediaReceiver(string receiverId, string recieverType)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public void PauseMediaReceiver(string receiverId, string recieverType)
 		{
 			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
 			remotePlayer.Pause(receiverId);
 		}
 
 		[Api]
-		[Authorize()]
-		public void PlayMediaReceiver(string receiverId, string recieverType)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public void PlayMediaReceiver(string receiverId, string recieverType)
 		{
 			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
 			remotePlayer.Play(receiverId);
 		}
 
 		[Api]
-		[Authorize()]
-		public void StopMediaReceiver(string receiverId, string recieverType)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public void StopMediaReceiver(string receiverId, string recieverType)
 		{
 			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
 			remotePlayer.Stop(receiverId);
 		}
 
 		[Api]
-		[Authorize()]
-		public void SeekMediaReceiver(string receiverId, string recieverType, double second)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public void SeekMediaReceiver(string receiverId, string recieverType, double second)
 		{
 			var remotePlayer = RemoteControllerFactory.GetRemoteController(recieverType);
 			remotePlayer.Seek(receiverId, second);
 		}
 
-		[Authorize()]
-		public void WebScreenRemote(WebSocket webSocket, string screen)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public void WebScreenRemote(WebSocket webSocket, string screen)
 		{
 			//Validate that a screen was requested
 			var webSCreenController = new WebScreenController();
@@ -1823,8 +1823,8 @@ namespace MediaServer.Api
 		}
 
 		[Api(true)]
-		[Authorize()]
-		public void UpdateMediaPosition(Guid userMediaId, double positionInSeconds)
+        [Authorize(MediaServerPermissions.AppPermissions)]
+        public void UpdateMediaPosition(Guid userMediaId, double positionInSeconds)
 		{
 			if (GetUserMediaItems().TryGetValue(userMediaId, out var userMediaItem))
 			{
@@ -1892,7 +1892,7 @@ namespace MediaServer.Api
 			}
 		}
 
-		public static IPAddress? GetNetworkAddress(IPAddress address, IPAddress subnetMask)
+		private static IPAddress? GetNetworkAddress(IPAddress address, IPAddress subnetMask)
 		{
 			var ipAdressBytes = address.GetAddressBytes();
 			var subnetMaskBytes = subnetMask.GetAddressBytes();

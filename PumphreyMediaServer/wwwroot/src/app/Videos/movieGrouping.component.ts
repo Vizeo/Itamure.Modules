@@ -126,19 +126,19 @@ export class MovieGroupingComponent {
         }
     }
 
-    private _xStart: number = 0;
-    private _oldXScrollPos: number = 0;
+    //private _xStart: number = 0;
+    //private _oldXScrollPos: number = 0;
 
-    public Touchstart(event: TouchEvent) {
-        this._xStart = event.touches[0].clientX;
-        this._oldXScrollPos = this.MoviesList?.nativeElement.scrollLeft!;
-    }
+    //public Touchstart(event: TouchEvent) {
+    //    this._xStart = event.touches[0].clientX;
+    //    this._oldXScrollPos = this.MoviesList?.nativeElement.scrollLeft!;
+    //}
 
-    public Touchmove(event: TouchEvent) {
-        let x = event.touches[0].clientX;            
-        let xDiff = this._xStart - x;
-        this.MoviesList!.nativeElement.scrollLeft = this._oldXScrollPos + xDiff;
-    }
+    //public Touchmove(event: TouchEvent) {
+    //    let x = event.touches[0].clientX;            
+    //    let xDiff = this._xStart - x;
+    //    this.MoviesList!.nativeElement.scrollLeft = this._oldXScrollPos + xDiff;
+    //}
 }
 
 export interface IMovieEx {

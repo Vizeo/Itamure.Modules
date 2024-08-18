@@ -120,6 +120,8 @@ namespace MediaServer.Api
             var attestationResponse = System.Text.Json.JsonSerializer.Deserialize<AuthenticatorAttestationRawResponse>(json);
             var result = new SaveCredentialResult();
 
+            await Task.Delay(5000); //Make sure the claim has had enough time
+
 			try
             {
                 // 1. get the options we sent the client
@@ -157,6 +159,7 @@ namespace MediaServer.Api
             {
 				//return Json(new { status = "error", errorMessage = FormatException(e) });
 				result.FailureMessage = e.Message;
+                Module.CurrentModule!.LogException(e, SystemLogType.Warning, GetType().Assembly.FullName);
 				throw e;
             }
 
