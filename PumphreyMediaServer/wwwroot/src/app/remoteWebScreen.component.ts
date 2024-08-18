@@ -115,12 +115,18 @@ export class RemoteWebScreenComponent {
 
 	public PositionChanged() {
 		var date = new Date();
-		date.setSeconds(date.getSeconds() - 1);
+
+		//console.log("Position Change",this._lastPostionUpdate, date);
+
+		date.setSeconds(date.getSeconds() - 10);
 		if (this._lastPostionUpdate == null ||
 			this._lastPostionUpdate < date) {
+			//console.log("Should Send");
+
 			let positionUpdate = new PositionUpdate();
 			positionUpdate.State = "Position";
 			positionUpdate.Position = this._video.nativeElement.currentTime;
+			console.log("Sent", positionUpdate);
 			this.Send(positionUpdate);
 			this._lastPostionUpdate = new Date();
 		}

@@ -25,7 +25,7 @@ export class MediaServerAppComponent {
             else if (this._wasHidden == true &&
                 localStorage.getItem("installId") != null) {
                 //It it was hidden it should require a login again
-                this.router.navigate(['/','pwa', 'start']);
+                this.router.navigate(['/', 'pwa', 'Start']);
             }
         });
     }

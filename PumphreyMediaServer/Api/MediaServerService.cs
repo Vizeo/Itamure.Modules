@@ -1814,7 +1814,7 @@ namespace MediaServer.Api
 			remotePlayer.Seek(receiverId, second);
 		}
 
-        [Authorize(MediaServerPermissions.AppPermissions)]
+		//Don't authorize
         public void WebScreenRemote(WebSocket webSocket, string screen)
 		{
 			//Validate that a screen was requested

@@ -58,7 +58,7 @@ export class VideoPlayerComponent {
 
     public PositionChanged() {
         var date = new Date();
-        date.setSeconds(date.getSeconds() - 1);
+        date.setSeconds(date.getSeconds() - 10);
         if (this._lastPostionUpdate == null ||
             this._lastPostionUpdate < date) {
 
