@@ -27,6 +27,7 @@ export class videoDetailsComponent {
     public UserActive: boolean = false;
     public Receivers: Receiver[] | null = null;
     public PositionPercent: number = 0;
+    public Link: string | undefined;
     
     private _timout: number = 0;
 
@@ -47,6 +48,7 @@ export class videoDetailsComponent {
             this.Directors = this.CreateList(this.Movie.MetadataTags!, MetadataTagType.Director);
             this.PositionPercent = (this.Movie!.Position! / this.Movie!.Duration!) * 100;
             this.CalcDuration();
+            this.Link = window.location.origin + "/mediaServer/streamingService?UniqueKey=" + this.Movie!.UniqueKey;
         });        
     }
 
@@ -139,8 +141,13 @@ export class videoDetailsComponent {
         this.CloseMovie();
     }
 
-    Recast() {
+    public Recast() {
         this.ShowCastDevices();
+    }
+
+    public CopyLinkToClipboard() {
+        navigator.clipboard.writeText(this.Link!);
+        alert("Copied to clipboard");
     }
 
     @ViewChild(VideoPlayerComponent)

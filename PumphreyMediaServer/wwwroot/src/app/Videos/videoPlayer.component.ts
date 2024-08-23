@@ -12,8 +12,8 @@ export class VideoPlayerComponent {
 
     @ViewChild("player")
     private _player!: ElementRef<HTMLVideoElement>;
-    private _lastPostionUpdate: Date | null = null;
 
+    private _lastPostionUpdate: Date | null = null;
     private _videoFileMediaItem: UserMediaItem | undefined;
 
     @Input("videoFileMediaItem")

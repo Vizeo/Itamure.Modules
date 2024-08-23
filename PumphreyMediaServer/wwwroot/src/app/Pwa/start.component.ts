@@ -15,18 +15,17 @@ export class StartComponent {
 		private router: Router,
 		private swUpdate: SwUpdate) {
 
-		this.WaitMessage = "Checking for updates";
+		this.WaitMessage = "Checking for updates"; 
 		this.swUpdate.checkForUpdate().then(t => {
-			if (t) {				
+			if (t) {
 				location.reload();
 			}
 			else {
 				this._waitSpinner.nativeElement.close();
+				console.log("Starting App");
 				this.RunApp();
 			}
-		})
-
-		//this.SetupBarcode();
+		});
 	}
 
 	ngAfterViewInit() {
@@ -68,8 +67,10 @@ export class StartComponent {
 		//    c. Navigate to main page
 		//*/
 		if (this._installId == null) {
+			console.log("Install Required");
 			this.CurrentStartState = StartState.RequestingAuthentication;
 			this.RegisterInstall();
+			console.log("InstallId Created");
 		}
 		else {
 			this.CurrentStartState = StartState.Authenticating;
@@ -97,7 +98,7 @@ export class StartComponent {
 	public async Authenticate() {
 		let credentials = await this.GetAuthenticationOptions();
 		if (credentials != null) {			
-			this.VerifyAssertionWithServer(credentials);
+			await this.VerifyAssertionWithServer(credentials);
 			this.RouteToMainPage();
 		}
 	}
@@ -127,13 +128,11 @@ export class StartComponent {
 			credential.id = Uint8Array.from(atob(fixedId), c => c.charCodeAt(0));
 		}
 
-		console.log("Assertion options", assertOptions);
+		//console.log("Assertion options", assertOptions);
 
 		// ask browser for credentials (browser will ask connected authenticators)
-		let credential;
 		try {
-			credential = await navigator.credentials.get({ publicKey: assertOptions })
-			return credential;
+			return await navigator.credentials.get({ publicKey: assertOptions })
 		} catch (err) {
 			/*showErrorAlert(err.message ? err.message : err);*/
 			return null;

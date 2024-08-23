@@ -198,10 +198,18 @@ namespace MediaServer.Api
 		[Authorize]
 		public Access GetAccess()
 		{
-			return new Access()
+			try
 			{
-				SettingsPermissions = Module.CurrentModule!.UserHasAccess(Session.UniqueId, MediaServerPermissions.SettingsPermissions),
-			};
+				return new Access()
+				{
+					SettingsPermissions = Module.CurrentModule!.UserHasAccess(Session.UniqueId, MediaServerPermissions.SettingsPermissions),
+				};
+			}
+			catch (Exception ex)
+			{
+				Module.CurrentModule!.LogException(ex, SystemLogType.Warning, GetType().Assembly.FullName);
+				throw;
+			}
 		}
 
 		[Api]

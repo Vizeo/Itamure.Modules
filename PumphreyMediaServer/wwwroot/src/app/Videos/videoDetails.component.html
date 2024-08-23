@@ -8,6 +8,10 @@
             <div class="title">
                 {{Movie.Name}}
             </div>
+            <div class="link">
+                Direct Link: {{Link}}
+                <img class="ctc" (click)="CopyLinkToClipboard()" title="Copy to Clipboard" src="/MediaServer/assets/CopyToClipboard.svg"/>
+            </div>
             <div class="actions">
                 <img class="unknown" title="Restart" src="/MediaServer/assets/RestartButton.svg" *ngIf="ShowRestart" (click)="RestartMovie()" />
                 <img class="unknown" title="Play" src="/MediaServer/assets/PlayButton.svg" (click)="PlayMovie()" />
