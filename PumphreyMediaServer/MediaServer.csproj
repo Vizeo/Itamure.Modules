@@ -100,7 +100,7 @@
 		<ProjectReference Include="..\..\..\..\..\..\Source Code\IntegratedWebServer\Core\IntegratedWebServer.Core\IntegratedWebServer.Core.csproj" />
 		<ProjectReference Include="..\..\..\..\..\..\Source Code\Itamure\Itamure.Core\Itamure.Core.csproj" />
 		<ProjectReference Include="..\..\..\..\..\..\Source Code\RizeDb\RizeDb\RizeDb.csproj" />
-		<ProjectReference Include="..\UpnpLib\UpnpLib\UpnpLib.csproj" />
+		<ProjectReference Include="..\..\UpnpLib\UpnpLib\UpnpLib.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
