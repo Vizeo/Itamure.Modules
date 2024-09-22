@@ -45,7 +45,7 @@ namespace MediaServer.Tasks
 
 			if (!string.IsNullOrWhiteSpace(metaData.Tag.ISRC))
 			{
-				var rating = _ratings.FirstOrDefault(r => r.Name.ToUpper() == metaData.Tag.ISRC.ToUpper());
+				var rating = _ratings.FirstOrDefault(r => r.Name!.ToUpper() == metaData.Tag.ISRC.ToUpper());
 				if (rating != null)
 				{
 					videoFileMediaItem.RatingId = rating.Id;
