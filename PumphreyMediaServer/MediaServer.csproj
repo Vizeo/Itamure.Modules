@@ -58,6 +58,7 @@
 	  <Content Remove="wwwroot\src\app\Services\castService.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\mediaItem.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\metadata.service.tt" />
+	  <Content Remove="wwwroot\src\app\Services\view.service.ts" />
 	  <Content Remove="wwwroot\src\app\Services\webAuthn.service.tt" />
 	</ItemGroup>
 
@@ -182,6 +183,9 @@
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
 	    <DependentUpon>metadata.service.tt</DependentUpon>
+	  </TypeScriptCompile>
+	  <TypeScriptCompile Update="wwwroot\src\app\Services\view.service.ts">
+	    <SubType>Code</SubType>
 	  </TypeScriptCompile>
 	  <TypeScriptCompile Update="wwwroot\src\app\Services\webAuth.service.ts">
 	    <DesignTime>True</DesignTime>

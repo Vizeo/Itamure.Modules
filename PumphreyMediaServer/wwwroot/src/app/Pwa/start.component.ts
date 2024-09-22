@@ -2,6 +2,7 @@ import { SwUpdate } from '@angular/service-worker';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { WebAuthnService } from '../Services/webAuthn.service';
 import { Router } from '@angular/router';
+import { ViewService } from '../Services/view.service';
 
 declare var BarcodeDetector: any;
 
@@ -12,8 +13,11 @@ declare var BarcodeDetector: any;
 })
 export class StartComponent {
 	constructor(private webAuthnService: WebAuthnService,
+		private viewService: ViewService,
 		private router: Router,
 		private swUpdate: SwUpdate) {
+
+		viewService.IsApp = true;
 
 		this.WaitMessage = "Checking for updates"; 
 		this.swUpdate.checkForUpdate().then(t => {

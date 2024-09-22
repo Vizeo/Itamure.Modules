@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CastService, Receiver } from './Services/castService.service';
 import { Access, MediaService } from './Services/mediaServer.service';
 import { Router } from '@angular/router';
+import { ViewService } from './Services/view.service';
 
 @Component({
     selector: 'mediaServerApp',
@@ -10,24 +11,28 @@ import { Router } from '@angular/router';
 })
 export class MediaServerAppComponent {
     constructor(private castService: CastService,
+        private viewService: ViewService,
         private router: Router,
         mediaService: MediaService) {
         mediaService.GetAccess().then(a => this.Access = a);
 
         this.ShowInstallApp = !(window.matchMedia('(display-mode: standalone)').matches ||
             (<any>window.navigator).standalone ||
-                document.referrer.includes('android-app://'));
+            document.referrer.includes('android-app://')) &&
+            !viewService.IsApp;
 
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState == "hidden") {
-                this._wasHidden = true;
-            }
-            else if (this._wasHidden == true &&
-                localStorage.getItem("installId") != null) {
-                //It it was hidden it should require a login again
-                this.router.navigate(['/', 'pwa', 'Start']);
-            }
-        });
+        if (viewService.IsApp) {
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState == "hidden") {
+                    this._wasHidden = true;
+                }
+                else if (this._wasHidden == true &&
+                    localStorage.getItem("installId") != null) {
+                    //It it was hidden it should require a login again
+                    this.router.navigate(['/', 'pwa', 'Start']);
+                }
+            });
+        }
     }
 
     public SelectedMenuItem: string = "Movies";
